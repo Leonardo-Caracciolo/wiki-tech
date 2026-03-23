@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodologías de Desarrollo — Guía Completa BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#090d14;--surface:#0e1220;--card:#131828;--border:#1c2438;--border2:#283450;--text:#e8eef8;--text2:#7090c8;--text3:#364878;--accent:#06b6d4;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--blue:#3b82f6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:var(--accent);padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(6,182,212,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#50b8c8}
+  .meth{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:14px}
+  .meth-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+  .meth-name{font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+  .meth-quote{font-style:italic;font-size:13px;color:var(--text3);margin-bottom:10px}
+  .meth-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;align-self:flex-start}
+  .t-agil{background:rgba(6,182,212,.12);color:var(--accent)}
+  .t-trad{background:rgba(168,85,247,.12);color:var(--purple)}
+  .t-hybrid{background:rgba(245,158,11,.12);color:var(--amber)}
+  .meth-body{font-size:13.5px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .pros,.cons{padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.6}
+  .pros{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);color:#6ab87a}
+  .cons{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);color:#c06060}
+  .pros h4,.cons h4{font-size:10px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+  .pros ul,.cons ul{padding-left:16px}
+  .pros li,.cons li{margin-bottom:3px}
+  .when{font-size:12.5px;color:var(--text2);background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;margin-top:8px}
+  .when strong{color:var(--text)}
+  .values{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+  .val-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+  .val-over{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:3px}
+  .val-vs{font-size:10px;color:var(--text3);margin-bottom:3px}
+  .val-under{font-size:13px;color:var(--text2)}
+  .spectrum{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;font-size:11px;font-family:'JetBrains Mono',monospace}
+  .sp-label{color:var(--text3);font-size:10px;white-space:nowrap}
+  .sp-item{padding:3px 8px;border-radius:3px;color:var(--text2);background:#1c2438;border:1px solid var(--border2)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>⚡ Metodologías <span>de Desarrollo</span></h1>
+<p class="subtitle">15+ metodologías · Ágiles, Tradicionales e Híbridas · Guía completa con roles, eventos, ventajas, desventajas y cuándo usar cada una</p>
+
+<h2>Espectro de flexibilidad</h2>
+<div class="spectrum">
+  <span class="sp-label">← Rígido / Predictivo</span>
+  <span class="sp-item">Waterfall</span>
+  <span class="sp-item">V-Model</span>
+  <span class="sp-item">PRINCE2</span>
+  <span class="sp-item">Espiral</span>
+  <span class="sp-item" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)">RUP</span>
+  <span class="sp-item" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)">SAFe</span>
+  <span class="sp-item" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--amber)">DSDM</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">FDD</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">Crystal</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">Lean</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">XP</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">Kanban</span>
+  <span class="sp-item" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--accent)">Scrum</span>
+  <span class="sp-label">Adaptativo / Flexible →</span>
+</div>
+
+<h2>Comparativa rápida</h2>
+<table>
+  <thead><tr><th>Metodología</th><th>Familia</th><th>Iteraciones</th><th>Roles fijos</th><th>Ideal para</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Scrum</strong></td><td>Ágil</td><td>Sprints 1-4 sem</td><td>PO, SM, Dev Team</td><td>Proyectos con reqs cambiantes, cliente participativo</td></tr>
+    <tr><td><strong>Kanban</strong></td><td>Ágil</td><td>Flujo continuo</td><td>Ninguno</td><td>Soporte, mantenimiento, flujo continuo</td></tr>
+    <tr><td><strong>XP</strong></td><td>Ágil</td><td>1-2 semanas</td><td>Coach, Cliente, Devs</td><td>Proyectos técnicamente complejos, alta calidad</td></tr>
+    <tr><td><strong>Lean</strong></td><td>Ágil</td><td>Flujo continuo</td><td>Ninguno</td><td>Optimización de procesos, eliminar desperdicio</td></tr>
+    <tr><td><strong>Crystal</strong></td><td>Ágil</td><td>Variable</td><td>Varía por variante</td><td>Equipos pequeños a medianos, adaptables</td></tr>
+    <tr><td><strong>FDD</strong></td><td>Ágil</td><td>Por feature ≤2 sem</td><td>Chief Programmer, Dev, QA</td><td>Equipos grandes, proyectos orientados a OO</td></tr>
+    <tr><td><strong>Waterfall</strong></td><td>Tradicional</td><td>Sin iteraciones</td><td>PM, Devs, QA, etc.</td><td>Reqs fijos, alta criticidad, contratos cerrados</td></tr>
+    <tr><td><strong>V-Model</strong></td><td>Tradicional</td><td>Sin iteraciones</td><td>PM + QA desde inicio</td><td>Sistemas críticos, embedded, defensa</td></tr>
+    <tr><td><strong>Modelo Espiral</strong></td><td>Tradicional</td><td>Ciclos con análisis de riesgo</td><td>Gestor de riesgos</td><td>Proyectos grandes con riesgos altos</td></tr>
+    <tr><td><strong>SAFe</strong></td><td>Híbrida</td><td>PI Planning</td><td>RTE, PO, SM, Devs</td><td>Scrum a escala enterprise, múltiples equipos</td></tr>
+  </tbody>
+</table>
+
+<h2>El Manifiesto Ágil — Los 4 valores (2001)</h2>
+<p>Firmado por 17 desarrolladores en Snowbird, Utah. 68 palabras que cambiaron la industria. Los elementos de la derecha tienen valor — pero se valoran más los de la izquierda.</p>
+
+<div class="values">
+  <div class="val-card"><div class="val-over">Individuos e interacciones</div><div class="val-vs">sobre</div><div class="val-under">Procesos y herramientas</div></div>
+  <div class="val-card"><div class="val-over">Software funcionando</div><div class="val-vs">sobre</div><div class="val-under">Documentación extensiva</div></div>
+  <div class="val-card"><div class="val-over">Colaboración con el cliente</div><div class="val-vs">sobre</div><div class="val-under">Negociación contractual</div></div>
+  <div class="val-card"><div class="val-over">Responder al cambio</div><div class="val-vs">sobre</div><div class="val-under">Seguir un plan</div></div>
+</div>
+
+<h2>Metodologías Ágiles en detalle</h2>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">🏃 Scrum</div><div class="meth-quote">"Inspeccionar, adaptar y transparentar"</div></div><span class="meth-tag t-agil">Ágil · 1995 · Schwaber & Sutherland</span></div>
+  <p class="meth-body">El framework ágil más popular del mundo. Organiza el trabajo en <strong>Sprints</strong> — ciclos de 1 a 4 semanas con una entrega potencialmente desplegable al final de cada uno. Tiene roles bien definidos, eventos fijos y artefactos concretos.</p>
+  <h3>Roles</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Rol</th><th>Responsabilidad</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product Owner</strong></td><td>Dueño del Product Backlog. Prioriza según el valor de negocio. Es la voz del cliente dentro del equipo. Define el "qué".</td></tr>
+      <tr><td><strong>Scrum Master</strong></td><td>Facilitador del proceso. Elimina impedimentos. Protege al equipo. NO es el jefe — no asigna tareas ni toma decisiones técnicas.</td></tr>
+      <tr><td><strong>Development Team</strong></td><td>Autoorganizado y multifuncional (3-9 personas). Decide cómo hacer el trabajo. Nadie les dice cómo — ellos planifican y ejecutan.</td></tr>
+    </tbody>
+  </table>
+  <h3>Eventos (todos son obligatorios y tienen duración máxima)</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Evento</th><th>Duración máx (sprint 2 sem)</th><th>Propósito</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sprint Planning</strong></td><td>4 horas</td><td>Seleccionar items del backlog y crear el plan del sprint. Resultado: Sprint Goal + Sprint Backlog.</td></tr>
+      <tr><td><strong>Daily Scrum</strong></td><td>15 minutos</td><td>Sincronización diaria: ¿qué hice? ¿qué voy a hacer? ¿algún impedimento? Solo el Dev Team.</td></tr>
+      <tr><td><strong>Sprint Review</strong></td><td>2 horas</td><td>Demo del incremento a stakeholders. El PO acepta o rechaza ítems. Se adapta el Product Backlog.</td></tr>
+      <tr><td><strong>Retrospectiva</strong></td><td>1.5 horas</td><td>El equipo inspecciona su propio proceso. ¿Qué funcionó? ¿Qué no? ¿Qué cambia el próximo sprint?</td></tr>
+      <tr><td><strong>Refinamiento</strong></td><td>≤10% del sprint</td><td>Clarificar y estimar ítems del Product Backlog para futuros sprints. No es oficial en Scrum Guide pero es necesario.</td></tr>
+    </tbody>
+  </table>
+  <h3>Artefactos</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Artefacto</th><th>Qué es</th><th>Dueño</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Product Backlog</strong></td><td>Lista priorizada de TODO lo que el producto podría necesitar. Nunca está "terminado".</td><td>Product Owner</td></tr>
+      <tr><td><strong>Sprint Backlog</strong></td><td>Items seleccionados para el sprint + el plan de cómo hacerlos. Pertenece al Dev Team.</td><td>Dev Team</td></tr>
+      <tr><td><strong>Increment</strong></td><td>Suma de todos los ítems completados que cumplen el DoD. Debe ser potencialmente entregable.</td><td>Dev Team</td></tr>
+    </tbody>
+  </table>
+  <div class="pros-cons">
+    <div class="pros"><h4>✓ Ventajas</h4><ul><li>Entregas frecuentes de valor real</li><li>Alta visibilidad del progreso</li><li>Adaptación rápida al cambio</li><li>Equipos autogestionados y motivados</li><li>Feedback temprano del usuario</li></ul></div>
+    <div class="cons"><h4>✗ Desventajas</h4><ul><li>Difícil escalar sin SAFe/LeSS</li><li>Requiere compromiso total del PO</li><li>No apto para equipos muy distribuidos sin adaptación</li><li>Alcance total difícil de estimar</li></ul></div>
+  </div>
+  <div class="when"><strong>Usar cuando:</strong> Los requisitos cambian frecuentemente, el cliente puede participar activamente y se necesita entregar valor rápido. Es la metodología base del equipo BPS para proyectos de desarrollo.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">📋 Kanban</div><div class="meth-quote">"Visualizar el trabajo, limitar el WIP, maximizar el flujo"</div></div><span class="meth-tag t-agil">Ágil · Toyota 1950s → Software 2004 Anderson</span></div>
+  <p class="meth-body">Método de gestión del flujo de trabajo basado en <strong>visualización</strong> y <strong>limitación del trabajo en progreso (WIP)</strong>. No prescribe roles ni sprints fijos — el trabajo fluye de forma continua. Ideal para equipos de soporte y mantenimiento.</p>
+  <h3>5 Principios clave</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Principio</th><th>Aplicación práctica</th></tr></thead>
+    <tbody>
+      <tr><td>Visualizar el flujo</td><td>Tablero con columnas: Backlog → En progreso → En revisión → Hecho. Todo el trabajo visible.</td></tr>
+      <tr><td>Limitar el WIP</td><td>Número máximo de ítems simultáneos por columna. Ej: máximo 3 en "En progreso". Fuerza a terminar antes de empezar.</td></tr>
+      <tr><td>Gestionar el flujo</td><td>Medir lead time y cycle time. Identificar cuellos de botella. Optimizar el flujo, no el uso individual.</td></tr>
+      <tr><td>Políticas explícitas</td><td>Definition of Done por columna. Todos saben qué significa "Listo para QA" o "Bloqueado".</td></tr>
+      <tr><td>Mejora continua</td><td>Retrospectivas frecuentes para ajustar el proceso. Kaizen — mejora pequeña y constante.</td></tr>
+    </tbody>
+  </table>
+  <div class="pros-cons">
+    <div class="pros"><h4>✓ Ventajas</h4><ul><li>Sin iteraciones forzadas</li><li>Reduce cuellos de botella visualmente</li><li>Muy intuitivo y fácil de adoptar</li><li>Adaptable a cualquier flujo existente</li></ul></div>
+    <div class="cons"><h4>✗ Desventajas</h4><ul><li>Sin fechas de entrega predecibles</li><li>Sin roles formales — requiere disciplina</li><li>Fácil volverse caótico sin WIP limits</li></ul></div>
+  </div>
+  <div class="when"><strong>Usar cuando:</strong> Trabajo continuo de soporte, bugs o mantenimiento sin ciclos fijos. También útil como complemento a Scrum para gestionar tareas imprevistas.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">💡 Extreme Programming (XP)</div><div class="meth-quote">"Si algo es bueno, hacerlo al extremo"</div></div><span class="meth-tag t-agil">Ágil · 1996 · Kent Beck</span></div>
+  <p class="meth-body">Metodología centrada en la <strong>excelencia técnica</strong>. Lleva las buenas prácticas de desarrollo al extremo: si el code review es bueno, hacerlo constantemente (Pair Programming). Si los tests son buenos, escribirlos antes del código (TDD). Es el más técnico de todos los frameworks ágiles.</p>
+  <h3>Prácticas técnicas</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Práctica</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><strong>TDD</strong></td><td>Test-Driven Development — escribir el test antes del código. Red → Green → Refactor.</td></tr>
+      <tr><td><strong>Pair Programming</strong></td><td>Dos programadores, una estación. Uno escribe (Driver), el otro revisa (Navigator). Se rotan roles cada 30 min.</td></tr>
+      <tr><td><strong>Refactoring continuo</strong></td><td>Mejorar el diseño del código constantemente sin cambiar su comportamiento observable.</td></tr>
+      <tr><td><strong>Integración Continua</strong></td><td>Integrar y testear el código varias veces por día. Sin feature branches largos.</td></tr>
+      <tr><td><strong>Diseño simple / YAGNI</strong></td><td>"You Aren't Gonna Need It" — implementar solo lo necesario hoy, no lo que "podría" necesitarse.</td></tr>
+      <tr><td><strong>Releases pequeños</strong></td><td>Ciclos de 1-2 semanas. Feedback real del usuario, no hipotético.</td></tr>
+      <tr><td><strong>Estándares de código</strong></td><td>Todo el equipo sigue las mismas convenciones. El código es del equipo, no del individuo.</td></tr>
+    </tbody>
+  </table>
+  <div class="pros-cons">
+    <div class="pros"><h4>✓ Ventajas</h4><ul><li>Código de alta calidad desde el inicio</li><li>Feedback técnico inmediato</li><li>Reduce deuda técnica acumulada</li><li>El conocimiento es del equipo, no del individuo</li></ul></div>
+    <div class="cons"><h4>✗ Desventajas</h4><ul><li>Requiere devs experimentados y disciplinados</li><li>Pair programming duplica el costo aparente</li><li>Resistencia cultural frecuente</li><li>Difícil con equipos distribuidos</li></ul></div>
+  </div>
+  <div class="when"><strong>Usar cuando:</strong> El proyecto requiere alta calidad técnica, el equipo es pequeño y experimentado, y hay tolerancia cultural al pair programming.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">🌿 Lean Software Development</div><div class="meth-quote">"Eliminar desperdicio, entregar rápido, decidir tarde"</div></div><span class="meth-tag t-agil">Ágil · Toyota TPS → Software 2003 Poppendieck</span></div>
+  <p class="meth-body">Adaptación al software del Toyota Production System. Se centra en <strong>eliminar todo aquello que no agrega valor</strong> (waste). El desperdicio en software incluye: funcionalidades no usadas, esperas, retrabajos, procesos innecesarios, documentación excesiva y defectos.</p>
+  <h3>Los 7 Principios Lean</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>#</th><th>Principio</th><th>Aplicación en el equipo BPS</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Eliminar el desperdicio</strong></td><td>No implementar features que nadie pidió. No tener reuniones sin agenda ni output. No generar documentación que nadie lee.</td></tr>
+      <tr><td>2</td><td><strong>Amplificar el aprendizaje</strong></td><td>Iteraciones cortas, feedback frecuente, retrospectivas sin culpas. Cada error es información.</td></tr>
+      <tr><td>3</td><td><strong>Decidir lo más tarde posible</strong></td><td>No sobrediseñar antes de tener información suficiente. Las decisiones técnicas irreversibles deben postergarse.</td></tr>
+      <tr><td>4</td><td><strong>Entregar lo más rápido posible</strong></td><td>CI/CD, MVP antes que suite completa, ciclos cortos. La velocidad reduce el costo del error.</td></tr>
+      <tr><td>5</td><td><strong>Empoderar al equipo</strong></td><td>El equipo técnico toma decisiones técnicas. La gestión facilita, no micromanagea.</td></tr>
+      <tr><td>6</td><td><strong>Construir con integridad</strong></td><td>Calidad desde el inicio — no deuda técnica "para ir más rápido". La deuda técnica siempre se paga, con intereses.</td></tr>
+      <tr><td>7</td><td><strong>Ver el todo</strong></td><td>Optimizar el sistema completo, no una parte. Una parte optimizada que crea cuellos de botella no aporta valor.</td></tr>
+    </tbody>
+  </table>
+  <div class="when"><strong>Usar cuando:</strong> Se busca optimizar el proceso completo del equipo, eliminar burocracia innecesaria y maximizar el valor entregado por hora de trabajo.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">💎 Crystal</div><div class="meth-quote">"La metodología correcta depende del proyecto y del equipo"</div></div><span class="meth-tag t-agil">Ágil · 1990s · Alistair Cockburn</span></div>
+  <p class="meth-body">Una <strong>familia de metodologías</strong>, no una sola. Crystal escala según el tamaño del equipo y la criticidad del sistema. Cockburn descubrió que no existe una única metodología óptima — la metodología correcta varía con el contexto.</p>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Variante</th><th>Equipo</th><th>Criticidad</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Crystal Clear</strong></td><td>≤ 8 personas</td><td>No crítico</td><td>Startups, proyectos internos pequeños</td></tr>
+      <tr><td><strong>Crystal Yellow</strong></td><td>10-20 personas</td><td>Moderada</td><td>Proyectos medianos, pérdida económica tolerable</td></tr>
+      <tr><td><strong>Crystal Orange</strong></td><td>20-50 personas</td><td>Alta</td><td>Sistemas complejos, pérdida económica alta</td></tr>
+      <tr><td><strong>Crystal Red</strong></td><td>50-100 personas</td><td>Muy alta</td><td>Sistemas críticos, riesgo de vidas</td></tr>
+    </tbody>
+  </table>
+  <div class="when"><strong>Usar cuando:</strong> Se necesita una metodología adaptada al tamaño real del equipo. Es menos conocida pero muy pragmática.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">🎯 Feature-Driven Development (FDD)</div><div class="meth-quote">"Construir por features de negocio"</div></div><span class="meth-tag t-agil">Ágil · 1997 · Jeff De Luca & Peter Coad</span></div>
+  <p class="meth-body">Orientado a construir el software <strong>feature a feature</strong>, donde cada feature es una función de valor del tipo "<em>acción el/la resultado de/para el/la objeto</em>". Combina buenas prácticas OO con iteraciones cortas por feature (máximo 2 semanas).</p>
+  <h3>Los 5 procesos FDD</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Proceso</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>1. Desarrollar un Modelo General</td><td>El equipo construye un modelo de dominio de alto nivel del sistema completo</td></tr>
+      <tr><td>2. Construir una Lista de Features</td><td>Identificar y listar todas las features agrupadas por área de negocio</td></tr>
+      <tr><td>3. Planear por Feature</td><td>El equipo planifica en qué orden y en qué sprint se implementará cada feature</td></tr>
+      <tr><td>4. Diseñar por Feature</td><td>El Chief Programmer lidera el diseño de las features del sprint actual</td></tr>
+      <tr><td>5. Construir por Feature</td><td>Desarrollo e integración de la feature. Unit tests. Code review. Integración al build principal</td></tr>
+    </tbody>
+  </table>
+  <div class="when"><strong>Usar cuando:</strong> Equipos grandes con proyectos orientados a objetos donde el progreso por features es visible para el management.</div>
+</div>
+
+<h2>Metodologías Tradicionales en detalle</h2>
+<p>No son obsoletas. Son indispensables cuando los requisitos son fijos, la criticidad es alta, o los contratos exigen documentación total y trazabilidad. El error es usarlas donde no corresponde.</p>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">💧 Waterfall (Cascada)</div><div class="meth-quote">"Cada fase debe completarse antes de pasar a la siguiente"</div></div><span class="meth-tag t-trad">Tradicional · 1970 · Winston W. Royce</span></div>
+  <p class="meth-body">El modelo más clásico. Las fases se ejecutan de forma <strong>secuencial y lineal</strong>. No existe retorno formal a una fase anterior. Paradójicamente, Royce en su paper original ya advertía sobre las limitaciones del modelo puro.</p>
+  <h3>Fases del modelo</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Fase</th><th>Entregable</th></tr></thead>
+    <tbody>
+      <tr><td>1. Requisitos</td><td>Documento de requisitos firmado y aprobado</td></tr>
+      <tr><td>2. Diseño del Sistema</td><td>Arquitectura del sistema, modelo de datos, interfaces</td></tr>
+      <tr><td>3. Diseño del Programa</td><td>Diseño detallado de componentes y módulos</td></tr>
+      <tr><td>4. Codificación</td><td>Código fuente completo y testeado</td></tr>
+      <tr><td>5. Testing y Verificación</td><td>Plan de tests, ejecución, reporte de defectos</td></tr>
+      <tr><td>6. Operaciones & Mantenimiento</td><td>Deploy, manuales, soporte post-deploy</td></tr>
+    </tbody>
+  </table>
+  <div class="pros-cons">
+    <div class="pros"><h4>✓ Ventajas</h4><ul><li>Simple de entender y gestionar</li><li>Documentación completa en cada fase</li><li>Milestones claros y medibles</li><li>Contratos cerrados posibles</li></ul></div>
+    <div class="cons"><h4>✗ Desventajas</h4><ul><li>Sin adaptación al cambio</li><li>El cliente ve el producto al final</li><li>Errores tardíos son 10-100x más costosos</li><li>Riesgo concentrado en las últimas fases</li></ul></div>
+  </div>
+  <div class="when"><strong>Usar cuando:</strong> Requisitos completamente definidos y estables, proyectos de alta criticidad (aeronáutica, medicina), contratos que exigen entregables fijos.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">✅ V-Model (Modelo en V)</div><div class="meth-quote">"Cada fase de desarrollo tiene su fase de testing correspondiente"</div></div><span class="meth-tag t-trad">Tradicional · 1980s · Alemania</span></div>
+  <p class="meth-body">Extensión del Waterfall donde cada fase de desarrollo tiene una <strong>fase de verificación o validación correspondiente</strong>. La "V" representa cómo las actividades de testing se planifican desde el inicio, en paralelo a las de desarrollo. Muy usado en sistemas embebidos, aeronáutica y defensa.</p>
+  <h3>Las dos ramas de la V</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Rama izquierda (bajada)</th><th>↔</th><th>Rama derecha (subida)</th></tr></thead>
+    <tbody>
+      <tr><td>Análisis de Requisitos</td><td>↔</td><td>Acceptance Testing (UAT)</td></tr>
+      <tr><td>Diseño de Sistema</td><td>↔</td><td>System Testing</td></tr>
+      <tr><td>Diseño de Arquitectura</td><td>↔</td><td>Integration Testing</td></tr>
+      <tr><td>Diseño Detallado</td><td>↔</td><td>Unit Testing</td></tr>
+      <tr><td colspan="3" style="text-align:center;color:var(--text3)">Codificación (vértice de la V)</td></tr>
+    </tbody>
+  </table>
+  <div class="when"><strong>Usar cuando:</strong> El testing necesita planificarse desde el inicio del proyecto. Sistemas críticos donde los defectos tienen consecuencias graves.</div>
+</div>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">🌀 Modelo Espiral</div><div class="meth-quote">"Gestión explícita del riesgo en cada ciclo"</div></div><span class="meth-tag t-trad">Tradicional · 1986 · Barry Boehm</span></div>
+  <p class="meth-body">Combina el modelo incremental con énfasis en la <strong>gestión del riesgo</strong>. El desarrollo se organiza como una espiral de ciclos, donde cada vuelta pasa por 4 cuadrantes. Es el primer modelo formal en incluir el análisis de riesgo como actividad central.</p>
+  <h3>Los 4 cuadrantes de cada ciclo</h3>
+  <table style="margin-bottom:12px">
+    <thead><tr><th>Cuadrante</th><th>Actividades</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Determinar objetivos</strong></td><td>Requisitos del ciclo, restricciones, alternativas</td></tr>
+      <tr><td><strong>2. Analizar riesgos</strong></td><td>Identificar, estimar probabilidad e impacto, desarrollar prototipo para reducir riesgo</td></tr>
+      <tr><td><strong>3. Desarrollar y validar</strong></td><td>Construir el producto del ciclo, testing, validación con el cliente</td></tr>
+      <tr><td><strong>4. Planificar</strong></td><td>Revisar resultados, planear el próximo ciclo, decidir si continuar</td></tr>
+    </tbody>
+  </table>
+  <div class="when"><strong>Usar cuando:</strong> Proyectos grandes con riesgos altos e inciertos. No apto para proyectos pequeños — el costo de gestión del riesgo es alto.</div>
+</div>
+
+<h2>Metodologías Híbridas</h2>
+
+<div class="meth">
+  <div class="meth-head"><div><div class="meth-name">⚡ SAFe (Scaled Agile Framework)</div><div class="meth-quote">"Scrum a escala para organizaciones enterprise"</div></div><span class="meth-tag t-hybrid">Híbrida · 2011 · Dean Leffingwell</span></div>
+  <p class="meth-body">Permite aplicar Scrum y Lean en organizaciones grandes con múltiples equipos trabajando en el mismo producto. Define roles adicionales (Release Train Engineer, Solution Architect) y eventos coordinados entre equipos (PI Planning — Program Increment).</p>
+  <div class="when"><strong>Usar cuando:</strong> Múltiples equipos Scrum que deben coordinarse para entregar un producto coherente. Alto overhead de coordinación — no justificado para equipos pequeños.</div>
+</div>
+
+<h2>¿Cuándo usar cada una? — Árbol de decisión</h2>
+<table>
+  <thead><tr><th>Situación</th><th>Metodología recomendada</th></tr></thead>
+  <tbody>
+    <tr><td>Proyecto nuevo, requisitos cambiantes, cliente disponible</td><td><strong>Scrum</strong></td></tr>
+    <tr><td>Soporte, bugs, mantenimiento continuo, sin sprints fijos</td><td><strong>Kanban</strong></td></tr>
+    <tr><td>Alta calidad técnica, equipo experimentado, TDD</td><td><strong>XP</strong></td></tr>
+    <tr><td>Requisitos 100% fijos, contrato cerrado, criticidad alta</td><td><strong>Waterfall</strong></td></tr>
+    <tr><td>Sistema embebido, defensa, aeronáutica</td><td><strong>V-Model</strong></td></tr>
+    <tr><td>Proyecto grande con riesgos técnicos altos e inciertos</td><td><strong>Modelo Espiral</strong></td></tr>
+    <tr><td>10+ equipos Scrum coordinados en un producto</td><td><strong>SAFe</strong></td></tr>
+    <tr><td>Equipo pequeño que necesita proceso liviano y adaptable</td><td><strong>Crystal Clear</strong></td></tr>
+    <tr><td>Optimizar flujo del equipo, eliminar desperdicios</td><td><strong>Lean</strong></td></tr>
+  </tbody>
+</table>
+
+<div class="tip">💡 En el equipo BPS: Scrum como base para proyectos nuevos + Kanban para gestionar tareas imprevistas y bugs que surgen durante el sprint. Los dos conviven bien.</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

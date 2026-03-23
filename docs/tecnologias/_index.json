@@ -1,0 +1,42 @@
+{
+  "python-guia-completa.html": {
+    "titulo": "Python — Guía Completa",
+    "descripcion": "Stack recomendado, estructura de proyectos, tipado, docstrings, MkDocs, logging y patrones BPS",
+    "tags": ["python", "docstrings", "mkdocs", "typing", "logging", "pydantic", "fastapi"]
+  },
+  "pandas_referencia.html": {
+    "titulo": "Pandas — Referencia Rápida",
+    "descripcion": "Métodos esenciales: limpieza, merge, filtrado, agrupación y export con ejemplos de input/output",
+    "tags": ["pandas", "dataframe", "merge", "groupby", "limpieza", "excel", "csv"]
+  },
+  "scraping_playwright_bs4_selenium.html": {
+    "titulo": "Web Scraping — Playwright, BS4 y Selenium",
+    "descripcion": "Comparativa y referencia completa con ejemplos y testing con pytest",
+    "tags": ["playwright", "beautifulsoup", "selenium", "scraping", "pytest"]
+  },
+  "dax_referencia_powerbi.html": {
+    "titulo": "DAX — Referencia Power BI",
+    "descripcion": "Medidas, columnas calculadas, CALCULATE, Time Intelligence e iteradores con ejemplos",
+    "tags": ["dax", "powerbi", "medidas", "calculate", "time-intelligence", "kpi"]
+  },
+  "recursos-excel-sql-powerbi.html": {
+    "titulo": "Pipeline Excel → SQL Server → Power BI",
+    "descripcion": "36 recursos curados: pandas, SQL Server, ETL pipeline, Power BI y DAX — todo en español",
+    "tags": ["excel", "sql-server", "pandas", "power-bi", "dax", "etl", "pipeline"]
+  },
+  "csharp-guia-completa.html": {
+    "titulo": "C# / .NET — Guía Completa",
+    "descripcion": "XML Docs, async/await, LINQ, pattern matching, inyección de dependencias y convenciones del equipo",
+    "tags": ["csharp", "dotnet", "async", "linq", "di", "xml-docs", "nullable"]
+  },
+  "vba-guia-completa.html": {
+    "titulo": "VBA — Guía Completa",
+    "descripcion": "Rubberduck, convenciones de código, manejo de errores, optimización y código testeable en Excel",
+    "tags": ["vba", "excel", "rubberduck", "macros", "errores", "option-explicit"]
+  },
+  "referencia-sql.html": {
+    "titulo": "SQL — Referencia Completa",
+    "descripcion": "SELECTs, JOINs, window functions, CTEs, funciones de agregación y optimización",
+    "tags": ["sql", "joins", "cte", "window-functions", "groupby", "optimizacion"]
+  }
+}

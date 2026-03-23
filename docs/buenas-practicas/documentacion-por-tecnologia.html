@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentación por Tecnología — Python · VBA · C#</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d14;--surface:#0f1320;--card:#141928;--border:#1e2540;--border2:#2a3560;--text:#e8eef8;--text2:#7a90c8;--text3:#3a4a80;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  pre{font-family:'JetBrains Mono',monospace;background:#060a10;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#b8d0f0}
+  .kw{color:#60a5fa;font-weight:600}
+  .fn{color:#34d399}
+  .str{color:#fcd34d}
+  .cm{color:var(--text3);font-style:italic}
+  .dec{color:#c4b5fd}
+  .cls{color:#f9a8d4}
+  .xml{color:#6ee7b7}
+  .vba-kw{color:#fbbf24;font-weight:600}
+  .vba-cm{color:#585028;font-style:italic}
+  .vba-an{color:#f9a8d4}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(59,130,246,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#90b8f8}
+  .best{background:rgba(34,197,94,.07);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6ab87a}
+  .steps{counter-reset:step}
+  .step{counter-increment:step;display:flex;gap:16px;margin-bottom:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+  .step::before{content:counter(step);width:26px;height:26px;background:var(--accent);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px}
+  .step-body{font-size:13px;color:var(--text2)}
+  .step-body strong{color:var(--text);display:block;margin-bottom:3px}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+  .lang-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:10px}
+  .lang-icon{font-size:24px}
+  .lang-title{font-size:16px;font-weight:700;color:var(--text)}
+  .lang-sub{font-size:12px;color:var(--text3);margin-top:2px}
+</style>
+</head>
+<body>
+
+<h1>📚 Documentación <span>por Tecnología</span></h1>
+<p class="subtitle">Cómo documentar código en Python (MkDocs + docstrings), VBA (Rubberduck + convención manual) y C# (XML Docs + DocFX) — con ejemplos reales del equipo BPS</p>
+
+<h2>Comparativa de herramientas</h2>
+<table>
+  <thead><tr><th>Tecnología</th><th>Herramienta recomendada</th><th>Formato</th><th>Genera sitio web</th><th>Requiere</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Python</strong></td><td>MkDocs + mkdocstrings</td><td>Google-style docstrings</td><td>Sí, HTML completo</td><td>pip install</td></tr>
+    <tr><td><strong>VBA</strong></td><td>Rubberduck VBA</td><td>Anotaciones @Description</td><td>Panel en IDE</td><td>Add-in gratuito</td></tr>
+    <tr><td><strong>VBA</strong> (alternativa)</td><td>Convención manual BPS</td><td>Comentarios estructurados</td><td>No</td><td>Solo disciplina</td></tr>
+    <tr><td><strong>C#</strong></td><td>XML Docs + DocFX</td><td>/// comentarios XML</td><td>Sí, estático</td><td>DocFX CLI</td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════════════════════ PYTHON ═══════════════════════════════ -->
+<h2>🐍 Python — MkDocs + mkdocstrings</h2>
+
+<div class="lang-header">
+  <div class="lang-icon">🐍</div>
+  <div>
+    <div class="lang-title">Stack recomendado</div>
+    <div class="lang-sub">Docstrings Google-style en el código → mkdocstrings los lee → MkDocs genera el sitio → pipeline lo publica en cada push. Cero escritura manual.</div>
+  </div>
+</div>
+
+<h3>Formatos de docstring</h3>
+<table>
+  <thead><tr><th>Formato</th><th>Sintaxis</th><th>Cuándo usar</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Google Style ★ Recomendado</strong></td><td><code>Args:</code> <code>Returns:</code> <code>Raises:</code> <code>Example:</code></td><td>Proyectos del equipo BPS — legible como texto plano, bien soportado por mkdocstrings</td></tr>
+    <tr><td>NumPy Style</td><td><code>Parameters\n----------</code></td><td>Ciencia de datos, pandas. Muy detallado, verboso para proyectos cortos</td></tr>
+    <tr><td>Sphinx Style</td><td><code>:param name:</code> <code>:type name:</code></td><td>Proyectos legacy, integración con Sphinx</td></tr>
+  </tbody>
+</table>
+
+<h3>Docstring Google-style completo — ejemplo real del equipo (módulo ARCA)</h3>
+<pre>
+<span class="str">"""
+Módulo para procesamiento y validación de comprobantes ARCA.
+
+Este módulo provee utilidades para descargar, parsear y validar
+comprobantes electrónicos obtenidos mediante los web services de ARCA.
+"""</span>
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+<span class="kw">from</span> typing <span class="kw">import</span> Optional
+
+<span class="dec">@dataclass</span>
+<span class="kw">class</span> <span class="cls">Invoice</span>:
+    <span class="str">"""Representa un comprobante electrónico de ARCA.
+
+    Attributes:
+        cuit_emisor: CUIT del emisor sin guiones (11 dígitos).
+        numero: Número de comprobante (punto de venta + número).
+        fecha: Fecha de emisión del comprobante.
+        importe_total: Importe total incluyendo impuestos.
+        cae: Código de Autorización Electrónico otorgado por ARCA.
+        tipo: Tipo de comprobante (A, B, C, M, E).
+    """</span>
+    cuit_emisor:   str
+    numero:        str
+    fecha:         date
+    importe_total: float
+    cae:           str
+    tipo:          str
+
+
+<span class="kw">def</span> <span class="fn">validar_comprobante</span>(invoice: <span class="cls">Invoice</span>, cuit_receptor: str) -> bool:
+    <span class="str">"""Valida un comprobante electrónico contra los criterios del receptor.
+
+    Verifica que el comprobante sea del tipo correcto según la condición
+    fiscal del receptor y que el CAE sea formalmente válido (no verifica
+    contra ARCA, solo formato local).
+
+    Args:
+        invoice: Instancia del comprobante a validar.
+        cuit_receptor: CUIT del receptor sin guiones (11 dígitos).
+
+    Returns:
+        True si el comprobante pasa todas las validaciones, False en caso
+        contrario.
+
+    Raises:
+        ValueError: Si el CUIT del receptor no tiene exactamente 11 dígitos.
+        TypeError: Si invoice no es una instancia de Invoice.
+
+    Example:
+        >>> from datetime import date
+        >>> inv = Invoice(
+        ...     cuit_emisor="20123456789",
+        ...     numero="0001-00001234",
+        ...     fecha=date(2024, 3, 1),
+        ...     importe_total=12100.00,
+        ...     cae="74123456789012",
+        ...     tipo="A"
+        ... )
+        >>> validar_comprobante(inv, "30987654321")
+        True
+    """</span>
+    <span class="kw">if not isinstance</span>(invoice, <span class="cls">Invoice</span>):
+        <span class="kw">raise</span> <span class="cls">TypeError</span>(<span class="str">f"Se esperaba Invoice, se recibió {type(invoice).__name__}"</span>)
+    <span class="kw">if len</span>(cuit_receptor.replace(<span class="str">"-"</span>, <span class="str">""</span>)) != <span class="fn">11</span>:
+        <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">f"CUIT inválido: {cuit_receptor!r}. Debe tener 11 dígitos."</span>)
+    <span class="kw">if len</span>(invoice.cae) != <span class="fn">14</span>:
+        <span class="kw">return False</span>
+    <span class="kw">if</span> invoice.importe_total <= <span class="fn">0</span>:
+        <span class="kw">return False</span>
+    <span class="kw">return True</span></pre>
+
+<h3>Configuración MkDocs — mkdocs.yml</h3>
+<pre>
+<span class="cm"># mkdocs.yml — config mínima para generar docs desde docstrings</span>
+site_name: Mi Proyecto RPA
+site_description: Documentación generada desde el código
+repo_url: https://dev.azure.com/org/proyecto
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: green
+  features:
+    - navigation.tabs
+    - search.suggest
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+nav:
+  - Inicio: index.md
+  - API Reference:
+    - Comprobantes: api/invoices.md
+    - Reportes:     api/reports.md</pre>
+
+<pre>
+<span class="cm"># docs/api/invoices.md — un archivo .md por módulo</span>
+# Comprobantes
+
+Módulo de procesamiento de comprobantes ARCA.
+
+## Referencia de API
+
+::: invoice_processor.Invoice
+
+::: invoice_processor.validar_comprobante
+
+::: invoice_processor.descargar_comprobantes</pre>
+
+<h3>Setup paso a paso</h3>
+<div class="steps">
+  <div class="step"><div class="step-body"><strong>Instalar dependencias</strong><code>pip install mkdocs mkdocs-material mkdocstrings[python]</code></div></div>
+  <div class="step"><div class="step-body"><strong>Crear estructura de docs</strong>Crear carpeta <code>docs/</code> con un <code>index.md</code> y subcarpetas por módulo</div></div>
+  <div class="step"><div class="step-body"><strong>Crear archivos de referencia</strong>En cada .md agregar <code>::: modulo.Clase</code> o <code>::: modulo.funcion</code> — mkdocstrings hace el resto</div></div>
+  <div class="step"><div class="step-body"><strong>Preview local</strong><code>mkdocs serve</code> → abre en localhost:8000 con live reload</div></div>
+  <div class="step"><div class="step-body"><strong>Publicar (CD pipeline)</strong><code>mkdocs build</code> genera carpeta <code>site/</code> · <code>mkdocs gh-deploy</code> para GitHub Pages · En Azure DevOps usar Azure Static Web Apps</div></div>
+</div>
+
+<!-- ═══════════════════════════════ VBA ═══════════════════════════════ -->
+<h2>📊 VBA — Rubberduck & Convención manual</h2>
+
+<p>VBA no tiene docstrings nativos. Dos opciones según el entorno corporativo:</p>
+
+<table>
+  <thead><tr><th>Opción</th><th>Requiere</th><th>Cuándo usar</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Rubberduck VBA ★</strong></td><td>Instalar add-in gratuito</td><td>Entorno que permite instalar add-ins en VBE</td></tr>
+    <tr><td><strong>Convención manual BPS</strong></td><td>Solo disciplina del equipo</td><td>Entorno corporativo sin permisos de instalación</td></tr>
+  </tbody>
+</table>
+
+<h3>Opción A — Rubberduck VBA (recomendado)</h3>
+<pre>
+<span class="vba-cm">' @ModuleDescription("Procesamiento de comprobantes para reportes de Transfer Pricing.")</span>
+<span class="vba-cm">' @Folder("Comprobantes")</span>
+<span class="vba-kw">Option Explicit</span>
+
+<span class="vba-cm">' @Description("Tipo que representa un comprobante fiscal.")</span>
+<span class="vba-kw">Public Type</span> TComprobante
+    CUIT        <span class="vba-kw">As String</span>
+    Numero      <span class="vba-kw">As String</span>
+    Fecha       <span class="vba-kw">As</span> Date
+    ImporteTotal <span class="vba-kw">As Double</span>
+    TipoComp    <span class="vba-kw">As String</span>
+<span class="vba-kw">End Type</span>
+
+<span class="vba-cm">' @Description("Valida que un comprobante tenga todos los campos requeridos.")</span>
+<span class="vba-cm">' @Param comprobante  "Estructura TComprobante a validar."</span>
+<span class="vba-cm">' @Param cuitReceptor "CUIT del receptor sin guiones (11 dígitos)."</span>
+<span class="vba-cm">' @Returns "True si es válido, False en caso contrario."</span>
+<span class="vba-cm">' @Remarks "No verifica el CAE contra ARCA, solo validación de formato local."</span>
+<span class="vba-kw">Public Function</span> ValidarComprobante(<span class="vba-kw">ByVal</span> comprobante <span class="vba-kw">As</span> TComprobante, _
+                                     <span class="vba-kw">ByVal</span> cuitReceptor <span class="vba-kw">As String</span>) <span class="vba-kw">As Boolean</span>
+    ValidarComprobante = <span class="vba-kw">False</span>
+    <span class="vba-kw">If</span> Len(Replace(cuitReceptor, <span class="str">"-"</span>, <span class="str">""</span>)) <> 11 <span class="vba-kw">Then Exit Function</span>
+    <span class="vba-kw">If</span> Len(Trim(comprobante.CUIT)) = 0 <span class="vba-kw">Then Exit Function</span>
+    <span class="vba-kw">If</span> comprobante.ImporteTotal <= 0 <span class="vba-kw">Then Exit Function</span>
+    ValidarComprobante = <span class="vba-kw">True</span>
+<span class="vba-kw">End Function</span>
+
+<span class="vba-cm">' @Description("Lee todos los comprobantes de la hoja indicada.")</span>
+<span class="vba-cm">' @Param nombreHoja "Nombre de la hoja de Excel con los datos."</span>
+<span class="vba-cm">' @Param filaInicio "Número de fila donde comienzan los datos (sin encabezado)."</span>
+<span class="vba-cm">' @Returns "Array de TComprobante con los registros leídos."</span>
+<span class="vba-cm">' @Error "Lanza error 9 si la hoja no existe en el libro activo."</span>
+<span class="vba-cm">' @Example</span>
+<span class="vba-cm">'   Dim comp() As TComprobante</span>
+<span class="vba-cm">'   comp = LeerComprobantes("Facturas", 2)</span>
+<span class="vba-cm">'   Debug.Print UBound(comp) + 1 & " registros leídos"</span>
+<span class="vba-kw">Public Function</span> LeerComprobantes(<span class="vba-kw">ByVal</span> nombreHoja <span class="vba-kw">As String</span>, _
+                                    <span class="vba-kw">ByVal</span> filaInicio <span class="vba-kw">As Long</span>) <span class="vba-kw">As</span> TComprobante()
+    <span class="vba-kw">Dim</span> ws <span class="vba-kw">As</span> Worksheet
+    <span class="vba-kw">On Error GoTo</span> ErrorHandler
+    <span class="vba-kw">Set</span> ws = ThisWorkbook.Worksheets(nombreHoja)
+    <span class="vba-cm">'... implementación</span>
+<span class="vba-kw">ErrorHandler</span>:
+    <span class="vba-kw">If</span> Err.Number = 9 <span class="vba-kw">Then</span>
+        Err.Raise 9, <span class="str">"LeerComprobantes"</span>, <span class="str">"Hoja '"</span> & nombreHoja & <span class="str">"' no existe."</span>
+    <span class="vba-kw">End If</span>
+<span class="vba-kw">End Function</span></pre>
+
+<h3>Instalación de Rubberduck</h3>
+<div class="steps">
+  <div class="step"><div class="step-body"><strong>Descargar</strong>Ir a rubberduckvba.com → descargar <code>Rubberduck.Setup.exe</code></div></div>
+  <div class="step"><div class="step-body"><strong>Cerrar Excel</strong>Cerrar completamente Excel y todo Office antes de instalar</div></div>
+  <div class="step"><div class="step-body"><strong>Instalar como administrador</strong>Click derecho → "Ejecutar como administrador" → seguir el wizard</div></div>
+  <div class="step"><div class="step-body"><strong>Verificar</strong>Abrir Excel → ALT+F11 → aparece el menú Rubberduck en la barra superior</div></div>
+  <div class="step"><div class="step-body"><strong>Usar</strong>Agregar <code>'@Description</code>, <code>'@Param</code>, <code>'@Returns</code> antes de cada función. Rubberduck → Code Inspections para sugerencias de calidad.</div></div>
+</div>
+
+<h3>Opción B — Convención manual BPS (sin add-ins)</h3>
+<pre>
+<span class="vba-cm">' ==============================================================</span>
+<span class="vba-cm">' Módulo:      ModuloComprobantes</span>
+<span class="vba-cm">' Descripción: Procesamiento de comprobantes para Transfer Pricing.</span>
+<span class="vba-cm">' Autor:       Dev Team BPS</span>
+<span class="vba-cm">' Creado:      2024-03-01</span>
+<span class="vba-cm">' Modificado:  2025-02-10 — agrega validación de CUIT con guiones</span>
+<span class="vba-cm">' ==============================================================</span>
+<span class="vba-kw">Option Explicit</span>
+
+<span class="vba-cm">' --------------------------------------------------------------</span>
+<span class="vba-cm">' Función:     ValidarComprobante</span>
+<span class="vba-cm">' Descripción: Valida campos requeridos y rangos de un comprobante.</span>
+<span class="vba-cm">' Parámetros:</span>
+<span class="vba-cm">'   comprobante  (TComprobante) — Datos del comprobante a validar.</span>
+<span class="vba-cm">'   cuitReceptor (String)       — CUIT receptor, sin guiones, 11 dígitos.</span>
+<span class="vba-cm">' Retorna:     Boolean — True si válido, False en caso contrario.</span>
+<span class="vba-cm">' Notas:       No valida el CAE contra ARCA. Solo validación local.</span>
+<span class="vba-cm">' Ejemplo:</span>
+<span class="vba-cm">'   Dim ok As Boolean</span>
+<span class="vba-cm">'   ok = ValidarComprobante(comp, "20123456789")</span>
+<span class="vba-cm">' --------------------------------------------------------------</span>
+<span class="vba-kw">Public Function</span> ValidarComprobante(<span class="vba-kw">ByVal</span> comprobante <span class="vba-kw">As</span> TComprobante, _
+                                     <span class="vba-kw">ByVal</span> cuitReceptor <span class="vba-kw">As String</span>) <span class="vba-kw">As Boolean</span>
+    ValidarComprobante = <span class="vba-kw">False</span>
+    <span class="vba-kw">If</span> Len(Replace(cuitReceptor, <span class="str">"-"</span>, <span class="str">""</span>)) <> 11 <span class="vba-kw">Then Exit Function</span>
+    <span class="vba-kw">If</span> Len(Trim(comprobante.CUIT)) = 0 <span class="vba-kw">Then Exit Function</span>
+    <span class="vba-kw">If</span> comprobante.ImporteTotal <= 0 <span class="vba-kw">Then Exit Function</span>
+    ValidarComprobante = <span class="vba-kw">True</span>
+<span class="vba-kw">End Function</span></pre>
+
+<!-- ═══════════════════════════════ C# ═══════════════════════════════ -->
+<h2>⚡ C# — XML Docs + DocFX</h2>
+
+<p>C# tiene documentación XML nativa integrada al compilador. Visual Studio ya la muestra como IntelliSense al hacer hover. Con DocFX se convierte en un sitio web estático.</p>
+
+<h3>XML Docs — tags esenciales</h3>
+<table>
+  <thead><tr><th>Tag</th><th>Propósito</th></tr></thead>
+  <tbody>
+    <tr><td><code>&lt;summary&gt;</code></td><td>Descripción corta — aparece en IntelliSense al hacer hover</td></tr>
+    <tr><td><code>&lt;param name="x"&gt;</code></td><td>Descripción del parámetro x</td></tr>
+    <tr><td><code>&lt;returns&gt;</code></td><td>Descripción del valor de retorno</td></tr>
+    <tr><td><code>&lt;exception cref="Ex"&gt;</code></td><td>Excepción que puede lanzar y cuándo</td></tr>
+    <tr><td><code>&lt;example&gt;&lt;code&gt;</code></td><td>Ejemplo de uso del método</td></tr>
+    <tr><td><code>&lt;see cref="Clase"/&gt;</code></td><td>Referencia cruzada a otra clase o método</td></tr>
+    <tr><td><code>&lt;remarks&gt;</code></td><td>Información adicional extendida</td></tr>
+  </tbody>
+</table>
+
+<h3>XML Docs completo — ejemplo real del equipo</h3>
+<pre>
+<span class="xml">/// &lt;summary&gt;</span>
+<span class="xml">/// Procesa y valida un comprobante fiscal contra los datos de ARCA.</span>
+<span class="xml">/// &lt;/summary&gt;</span>
+<span class="xml">/// &lt;param name="comprobante"&gt;El comprobante a validar. No puede ser null.&lt;/param&gt;</span>
+<span class="xml">/// &lt;param name="cuitReceptor"&gt;CUIT del receptor sin guiones (11 dígitos).&lt;/param&gt;</span>
+<span class="xml">/// &lt;param name="ct"&gt;Token de cancelación para operaciones asíncronas.&lt;/param&gt;</span>
+<span class="xml">/// &lt;returns&gt;</span>
+<span class="xml">/// Un &lt;see cref="ValidationResult"/&gt; con IsValid=true si el comprobante</span>
+<span class="xml">/// pasa todas las validaciones locales y de ARCA.</span>
+<span class="xml">/// &lt;/returns&gt;</span>
+<span class="xml">/// &lt;exception cref="ArgumentNullException"&gt;Si comprobante es null.&lt;/exception&gt;</span>
+<span class="xml">/// &lt;exception cref="FormatException"&gt;Si cuitReceptor no tiene exactamente 11 dígitos.&lt;/exception&gt;</span>
+<span class="xml">/// &lt;example&gt;</span>
+<span class="xml">/// &lt;code&gt;</span>
+<span class="xml">/// var result = await validador.ValidarAsync(comprobante, "20123456789");</span>
+<span class="xml">/// if (result.IsValid) Console.WriteLine("Comprobante válido");</span>
+<span class="xml">/// &lt;/code&gt;</span>
+<span class="xml">/// &lt;/example&gt;</span>
+<span class="kw">public async</span> Task&lt;ValidationResult&gt; <span class="fn">ValidarAsync</span>(
+    Comprobante comprobante,
+    <span class="kw">string</span> cuitReceptor,
+    CancellationToken ct = <span class="kw">default</span>)
+{
+    ArgumentNullException.<span class="fn">ThrowIfNull</span>(comprobante);
+    <span class="kw">if</span> (cuitReceptor?.Length != 11)
+        <span class="kw">throw new</span> FormatException(<span class="str">"CUIT debe tener exactamente 11 dígitos"</span>);
+    <span class="kw">return await</span> _arcaClient.<span class="fn">ConsultarAsync</span>(comprobante, cuitReceptor, ct);
+}</pre>
+
+<h3>Generar el sitio con DocFX</h3>
+<pre>
+<span class="cm"># Instalar DocFX</span>
+dotnet tool install -g docfx
+
+<span class="cm"># Inicializar en el proyecto</span>
+docfx init -q
+
+<span class="cm"># docfx.json — configuración mínima</span>
+{
+  "metadata": [{
+    "src": [{ "files": ["**/*.csproj"], "src": "../src" }],
+    "dest": "api"
+  }],
+  "build": {
+    "content": [
+      { "files": ["api/**.yml", "api/index.md"] },
+      { "files": ["docs/**.md", "*.md"] }
+    ],
+    "dest": "_site",
+    "globalMetadata": {
+      "_appName": "Wiki BPS",
+      "_enableSearch": true
+    }
+  }
+}
+
+<span class="cm"># Generar y previsualizar</span>
+docfx docfx.json --serve   <span class="cm"># → http://localhost:8080</span>
+
+<span class="cm"># Solo generar (para CI/CD)</span>
+docfx docfx.json</pre>
+
+<div class="best">✅ Activar <code>&lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;</code> en el .csproj para que el compilador genere el XML de documentación automáticamente en el build.</div>
+
+<h3>Equivalencia entre tecnologías</h3>
+<table>
+  <thead><tr><th>Concepto</th><th>Python</th><th>VBA</th><th>C#</th></tr></thead>
+  <tbody>
+    <tr><td>Descripción</td><td>Primera línea del docstring</td><td><code>'@Description(...)</code></td><td><code>/// &lt;summary&gt;</code></td></tr>
+    <tr><td>Parámetro</td><td>Sección <code>Args:</code></td><td><code>'@Param nombre "desc"</code></td><td><code>/// &lt;param name="x"&gt;</code></td></tr>
+    <tr><td>Retorno</td><td>Sección <code>Returns:</code></td><td><code>'@Returns "desc"</code></td><td><code>/// &lt;returns&gt;</code></td></tr>
+    <tr><td>Excepción</td><td>Sección <code>Raises:</code></td><td><code>'@Error "desc"</code></td><td><code>/// &lt;exception cref="Ex"&gt;</code></td></tr>
+    <tr><td>Ejemplo</td><td>Sección <code>Example:</code></td><td><code>'@Example</code></td><td><code>/// &lt;example&gt;&lt;code&gt;</code></td></tr>
+    <tr><td>Generador</td><td>mkdocstrings + MkDocs</td><td>Rubberduck (panel IDE)</td><td>DocFX</td></tr>
+  </tbody>
+</table>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

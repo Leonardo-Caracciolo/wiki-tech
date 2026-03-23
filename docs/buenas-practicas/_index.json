@@ -1,0 +1,27 @@
+{
+  "metodologias-completas.html": {
+    "titulo": "Metodologías de Desarrollo — Guía Completa",
+    "descripcion": "Scrum, Kanban, XP, Lean, Crystal, FDD, Waterfall, V-Model, Espiral y SAFe con roles, eventos y cuándo aplicar cada una",
+    "tags": ["scrum", "kanban", "xp", "lean", "waterfall", "agile", "sprint", "retrospectiva"]
+  },
+  "flujo-proyecto-devops-commits.html": {
+    "titulo": "Flujo de Proyecto · Azure DevOps · Commits",
+    "descripcion": "7 etapas E2E, Azure Boards, User Stories, Definition of Done y Conventional Commits con ejemplos reales del equipo",
+    "tags": ["flujo", "proyecto", "pdd", "sdd", "uat", "sprints", "dod", "commits", "azure-devops"]
+  },
+  "documentacion-por-tecnologia.html": {
+    "titulo": "Documentación por Tecnología",
+    "descripcion": "Cómo documentar en Python (MkDocs + docstrings), VBA (Rubberduck) y C# (XML Docs + DocFX) con código real",
+    "tags": ["documentacion", "mkdocs", "docstrings", "rubberduck", "xml-docs", "python", "vba", "csharp"]
+  },
+  "guia-github.html": {
+    "titulo": "Flujo de trabajo GitHub",
+    "descripcion": "Branching, commits convencionales, PRs, code review y comandos útiles del equipo",
+    "tags": ["github", "git", "branching", "commits", "pull-request", "workflow"]
+  },
+  "guia-cookiecutter.html": {
+    "titulo": "Guía Cookiecutter — Templates de proyectos",
+    "descripcion": "Cómo crear y usar templates para estandarizar la estructura de proyectos del equipo",
+    "tags": ["cookiecutter", "template", "scaffold", "proyecto", "estructura", "jinja2"]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "guia-github.html": {
+    "titulo": "Flujo de trabajo GitHub",
+    "descripcion": "Branching, commits convencionales, PRs y comandos útiles del equipo",
+    "tags": ["github", "git", "branching", "commits", "pull-request", "workflow"]
+  }
+}

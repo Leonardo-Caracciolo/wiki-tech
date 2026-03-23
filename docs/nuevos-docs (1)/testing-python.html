@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing Python — pytest · Robot Framework · Smoke Tests</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d14;--surface:#0f1320;--card:#141928;--border:#1e2540;--border2:#2a3560;--text:#e8eef8;--text2:#7a90c8;--text3:#3a4a80;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:14px;font-weight:700;color:var(--text2);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  pre{font-family:'JetBrains Mono',monospace;background:#060a10;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#b8d0f0}
+  .kw{color:#60a5fa;font-weight:600}
+  .fn{color:#34d399}
+  .str{color:#fcd34d}
+  .cm{color:var(--text3);font-style:italic}
+  .dec{color:#c4b5fd}
+  .cls{color:#f9a8d4}
+  .num{color:#fb923c}
+  .rf-kw{color:#67e8f9;font-weight:600}
+  .rf-lib{color:#34d399}
+  .rf-var{color:#fbbf24}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(59,130,246,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#90b8f8}
+  .best{background:rgba(34,197,94,.07);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6ab87a}
+  .warn{background:rgba(245,158,11,.08);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#c4900a}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+  .card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .card-desc{font-size:12.5px;color:var(--text2);line-height:1.55}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase}
+  .b-must{background:rgba(34,197,94,.12);color:var(--green)}
+  .b-adv{background:rgba(168,85,247,.12);color:var(--purple)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>🧪 Testing Python <span>—</span> Guía Completa</h1>
+<p class="subtitle">pytest, unittest, Robot Framework, smoke tests, mocking, parametrización y testing avanzado para el equipo BPS.</p>
+
+<h2>Stack de testing recomendado</h2>
+<table>
+  <thead><tr><th>Herramienta</th><th>Tipo de test</th><th>Cuándo usarla</th><th>Nivel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pytest</strong></td><td>Unitarios + integración</td><td>Lógica de negocio, parsers, validaciones</td><td><span class="badge b-must">Siempre</span></td></tr>
+    <tr><td><strong>pytest-cov</strong></td><td>Cobertura de código</td><td>Con pytest, medir qué está cubierto</td><td><span class="badge b-must">Siempre</span></td></tr>
+    <tr><td><strong>unittest.mock</strong></td><td>Mocking</td><td>Aislar dependencias externas (ARCA, Excel, APIs)</td><td><span class="badge b-must">Necesario</span></td></tr>
+    <tr><td><strong>Robot Framework</strong></td><td>E2E / aceptación</td><td>Flujo completo del proceso, QA final</td><td><span class="badge b-must">QA Final</span></td></tr>
+    <tr><td><strong>hypothesis</strong></td><td>Property-based</td><td>Encontrar edge cases automáticamente</td><td><span class="badge b-adv">Avanzado</span></td></tr>
+    <tr><td><strong>pytest-bdd</strong></td><td>BDD / Gherkin</td><td>Tests que entiende el cliente</td><td><span class="badge b-adv">Avanzado</span></td></tr>
+  </tbody>
+</table>
+
+<h2>pytest — Template base del equipo</h2>
+
+<pre>
+<span class="cm">"""
+Template base para tests unitarios con pytest.
+
+Convenciones BPS:
+  - Un archivo test_módulo.py por módulo a testear
+  - Una clase TestXxx por clase/función principal
+  - Método: test_&lt;caso&gt;_&lt;condición&gt;_&lt;resultado_esperado&gt;
+  - Fixtures compartidas en conftest.py
+  - Mocks para TODAS las dependencias externas
+"""</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> unittest.mock <span class="kw">import</span> MagicMock, patch
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+
+<span class="kw">from</span> src.mi_proyecto.processors <span class="kw">import</span> validar_comprobante, InvoiceProcessor
+<span class="kw">from</span> src.mi_proyecto.models <span class="kw">import</span> Comprobante
+
+
+<span class="cm"># ── FIXTURES ──────────────────────────────────────────────────────────────────</span>
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">comprobante_valido</span>() -> Comprobante:
+    <span class="str">"""Comprobante válido para happy path tests."""</span>
+    <span class="kw">return</span> <span class="cls">Comprobante</span>(
+        cuit_emisor=<span class="str">"20123456789"</span>,
+        numero=<span class="str">"0001-00001234"</span>,
+        fecha=date(<span class="num">2025</span>, <span class="num">3</span>, <span class="num">1</span>),
+        importe=<span class="num">12100.00</span>,
+        tipo=<span class="str">"A"</span>,
+    )
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">mock_arca_client</span>():
+    <span class="str">"""Mock del cliente ARCA para no hacer llamadas reales."""</span>
+    <span class="kw">with</span> patch(<span class="str">"src.mi_proyecto.processors.ArcaClient"</span>) <span class="kw">as</span> mock:
+        mock.return_value.consultar.return_value = {<span class="str">"valido"</span>: <span class="kw">True</span>}
+        <span class="kw">yield</span> mock
+
+
+<span class="cm"># ── TESTS ─────────────────────────────────────────────────────────────────────</span>
+
+<span class="kw">class</span> <span class="cls">TestValidarComprobante</span>:
+    <span class="str">"""Tests para la función validar_comprobante."""</span>
+
+    <span class="kw">def</span> <span class="fn">test_comprobante_valido_retorna_true</span>(self, comprobante_valido):
+        <span class="str">"""Happy path — comprobante con todos los campos correctos."""</span>
+        resultado = <span class="fn">validar_comprobante</span>(comprobante_valido, <span class="str">"30987654321"</span>)
+        <span class="kw">assert</span> resultado <span class="kw">is True</span>
+
+    <span class="kw">def</span> <span class="fn">test_importe_negativo_retorna_false</span>(self, comprobante_valido):
+        comprobante_valido.importe = -<span class="num">100.0</span>
+        <span class="kw">assert</span> <span class="fn">validar_comprobante</span>(comprobante_valido, <span class="str">"30987654321"</span>) <span class="kw">is False</span>
+
+    <span class="kw">def</span> <span class="fn">test_cuit_invalido_lanza_value_error</span>(self, comprobante_valido):
+        <span class="kw">with</span> pytest.<span class="fn">raises</span>(<span class="cls">ValueError</span>, match=<span class="str">"11 dígitos"</span>):
+            <span class="fn">validar_comprobante</span>(comprobante_valido, <span class="str">"123"</span>)
+
+    <span class="dec">@pytest.mark.parametrize</span>(<span class="str">"importe"</span>, [<span class="num">0.0</span>, -<span class="num">1.0</span>, -<span class="num">999.99</span>])
+    <span class="kw">def</span> <span class="fn">test_importes_invalidos_retornan_false</span>(self, comprobante_valido, importe):
+        <span class="str">"""Parametrize — mismo test para múltiples valores."""</span>
+        comprobante_valido.importe = importe
+        <span class="kw">assert</span> <span class="fn">validar_comprobante</span>(comprobante_valido, <span class="str">"30987654321"</span>) <span class="kw">is False</span>
+
+
+<span class="kw">class</span> <span class="cls">TestInvoiceProcessor</span>:
+    <span class="str">"""Tests con mocking de dependencias externas."""</span>
+
+    <span class="kw">def</span> <span class="fn">test_procesar_llama_a_arca</span>(self, comprobante_valido, mock_arca_client):
+        processor = <span class="cls">InvoiceProcessor</span>()
+        processor.<span class="fn">procesar</span>(comprobante_valido)
+        mock_arca_client.return_value.consultar.<span class="fn">assert_called_once</span>()
+
+    <span class="kw">def</span> <span class="fn">test_procesar_retorna_false_si_arca_falla</span>(self, comprobante_valido):
+        <span class="kw">with</span> patch(<span class="str">"src.mi_proyecto.processors.ArcaClient"</span>) <span class="kw">as</span> mock:
+            mock.return_value.consultar.side_effect = <span class="cls">ConnectionError</span>(<span class="str">"timeout"</span>)
+            processor = <span class="cls">InvoiceProcessor</span>()
+            resultado = processor.<span class="fn">procesar</span>(comprobante_valido)
+            <span class="kw">assert</span> resultado <span class="kw">is False</span></pre>
+
+<h2>conftest.py — Fixtures compartidas</h2>
+
+<pre>
+<span class="cm"># tests/conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine
+<span class="kw">from</span> sqlalchemy.orm <span class="kw">import</span> sessionmaker
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"session"</span>)
+<span class="kw">def</span> <span class="fn">engine</span>():
+    <span class="str">"""Engine de SQLite en memoria — cero setup, tests rápidos."""</span>
+    <span class="kw">return</span> <span class="fn">create_engine</span>(<span class="str">"sqlite:///:memory:"</span>)
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"function"</span>)
+<span class="kw">def</span> <span class="fn">db_session</span>(engine):
+    <span class="str">"""Sesión de DB con rollback automático después de cada test."""</span>
+    connection = engine.<span class="fn">connect</span>()
+    transaction = connection.<span class="fn">begin</span>()
+    Session = <span class="fn">sessionmaker</span>(bind=connection)
+    session = <span class="fn">Session</span>()
+    <span class="kw">yield</span> session
+    session.<span class="fn">close</span>()
+    transaction.<span class="fn">rollback</span>()  <span class="cm"># ← cada test arranca con DB limpia</span>
+    connection.<span class="fn">close</span>()</pre>
+
+<h2>Smoke Tests — verificación rápida de producción</h2>
+<p>Los smoke tests son una suite mínima que verifica que el sistema está vivo y las funciones críticas responden. Se corren <strong>después de cada deploy</strong>.</p>
+
+<pre>
+<span class="cm"># tests/smoke/test_smoke.py</span>
+<span class="cm">"""
+Smoke tests — verificación post-deploy.
+Correr con: pytest tests/smoke/ -m smoke
+
+Estos tests NUNCA deben:
+  - Modificar datos de producción
+  - Ser lentos (máximo 30 segundos total)
+  - Fallar por datos variables (ej: fecha del día)
+"""</span>
+<span class="kw">import</span> pytest
+<span class="kw">import</span> requests
+
+BASE_URL = <span class="str">"http://localhost:8000"</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_health_endpoint_responde</span>():
+    <span class="str">"""La API debe estar viva."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/health"</span>, timeout=<span class="num">5</span>)
+    <span class="kw">assert</span> resp.status_code == <span class="num">200</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_db_connection_ok</span>():
+    <span class="str">"""La DB debe estar accesible."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/health/db"</span>, timeout=<span class="num">5</span>)
+    <span class="kw">assert</span> resp.json()[<span class="str">"status"</span>] == <span class="str">"ok"</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_endpoint_clientes_responde</span>():
+    <span class="str">"""El endpoint crítico de clientes debe responder."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/api/clientes"</span>, timeout=<span class="num">10</span>)
+    <span class="kw">assert</span> resp.status_code <span class="kw">in</span> (<span class="num">200</span>, <span class="num">401</span>)  <span class="cm"># OK o requiere auth — ambos son "vivo"</span></pre>
+
+<h2>Robot Framework — Tests E2E</h2>
+<p>Robot Framework es el estándar del equipo para tests de aceptación y E2E. Su sintaxis es legible por no-técnicos.</p>
+
+<pre>
+<span class="cm">*** Settings ***</span>
+<span class="rf-lib">Library</span>    RequestsLibrary
+<span class="rf-lib">Library</span>    Collections
+<span class="rf-lib">Library</span>    OperatingSystem
+<span class="rf-lib">Suite Setup</span>      Crear Sesión API
+<span class="rf-lib">Suite Teardown</span>   Cerrar Sesión
+
+<span class="cm">*** Variables ***</span>
+<span class="rf-var">${BASE_URL}</span>       http://localhost:8000
+<span class="rf-var">${CUIT_VALIDO}</span>    20123456789
+
+<span class="cm">*** Test Cases ***</span>
+<span class="rf-kw">Flujo Completo Validación de Comprobante</span>
+    [<span class="rf-lib">Documentation</span>]    Test E2E del flujo de validación
+    <span class="rf-kw">Dado que</span> tengo un comprobante válido
+    <span class="rf-kw">Cuando</span> envío el comprobante a validar
+    <span class="rf-kw">Entonces</span> la respuesta es exitosa
+    <span class="rf-kw">Y</span> el resultado contiene valido=True
+
+<span class="cm">*** Keywords ***</span>
+<span class="rf-kw">Crear Sesión API</span>
+    Create Session    api    <span class="rf-var">${BASE_URL}</span>
+
+<span class="rf-kw">Dado que tengo un comprobante válido</span>
+    <span class="rf-var">${comp}</span>=    Create Dictionary
+    ...    cuit=<span class="rf-var">${CUIT_VALIDO}</span>    importe=<span class="num">12100</span>    tipo=A
+    Set Suite Variable    <span class="rf-var">${COMPROBANTE}</span>    <span class="rf-var">${comp}</span>
+
+<span class="rf-kw">Cuando envío el comprobante a validar</span>
+    <span class="rf-var">${resp}</span>=    POST On Session    api    /api/validar    json=<span class="rf-var">${COMPROBANTE}</span>
+    Set Suite Variable    <span class="rf-var">${RESPONSE}</span>    <span class="rf-var">${resp}</span>
+
+<span class="rf-kw">Entonces la respuesta es exitosa</span>
+    Should Be Equal As Integers    <span class="rf-var">${RESPONSE.status_code}</span>    200
+
+<span class="rf-kw">Y el resultado contiene valido=True</span>
+    <span class="rf-var">${body}</span>=    Set Variable    <span class="rf-var">${RESPONSE.json()}</span>
+    Should Be True    <span class="rf-var">${body['valido']}</span></pre>
+
+<pre>
+<span class="cm"># Correr Robot Framework</span>
+robot tests/e2e/                     <span class="cm"># todos los tests</span>
+robot --include smoke tests/          <span class="cm"># solo smoke</span>
+robot --output results/ tests/        <span class="cm"># guardar resultados</span></pre>
+
+<h2>Testing avanzado — Mocking y Test Doubles</h2>
+
+<pre>
+<span class="kw">from</span> unittest.mock <span class="kw">import</span> MagicMock, patch, call
+<span class="kw">from</span> pytest_mock <span class="kw">import</span> MockerFixture
+
+<span class="cm"># ── MagicMock básico ──────────────────────────────────────────</span>
+mock_service = <span class="fn">MagicMock</span>()
+mock_service.get_datos.return_value = [{<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"nombre"</span>: <span class="str">"Test"</span>}]
+mock_service.get_datos.<span class="fn">assert_called_once_with</span>(<span class="num">42</span>)
+
+<span class="cm"># ── patch como decorator ──────────────────────────────────────</span>
+<span class="dec">@patch</span>(<span class="str">"mymodule.requests.get"</span>)
+<span class="kw">def</span> <span class="fn">test_api_call</span>(mock_get):
+    mock_get.return_value.json.return_value = {<span class="str">"status"</span>: <span class="str">"ok"</span>}
+    resultado = <span class="fn">mi_funcion_que_llama_api</span>()
+    <span class="kw">assert</span> resultado == <span class="str">"ok"</span>
+
+<span class="cm"># ── spy con mocker (pytest-mock) ──────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">test_con_spy</span>(mocker: <span class="cls">MockerFixture</span>):
+    spy = mocker.<span class="fn">spy</span>(mi_objeto, <span class="str">"mi_metodo"</span>)
+    mi_objeto.<span class="fn">mi_metodo</span>(<span class="str">"arg"</span>)
+    spy.<span class="fn">assert_called_once_with</span>(<span class="str">"arg"</span>)
+
+<span class="cm"># ── hypothesis — property-based testing ──────────────────────</span>
+<span class="kw">from</span> hypothesis <span class="kw">import</span> given, strategies <span class="kw">as</span> st
+
+<span class="dec">@given</span>(st.<span class="fn">floats</span>(min_value=<span class="num">0</span>, max_value=<span class="num">1_000_000</span>))
+<span class="kw">def</span> <span class="fn">test_calculo_margen_nunca_supera_uno</span>(precio):
+    margen = <span class="fn">calcular_margen</span>(precio, precio * <span class="num">0.6</span>)
+    <span class="kw">assert</span> <span class="num">0</span> <= margen <= <span class="num">1</span></pre>
+
+<pre>
+<span class="cm"># Comandos clave de pytest</span>
+pytest                              <span class="cm"># todos los tests</span>
+pytest -v                           <span class="cm"># verbose</span>
+pytest -k "validar"                 <span class="cm"># solo tests con "validar" en el nombre</span>
+pytest -m smoke                     <span class="cm"># solo tests marcados como smoke</span>
+pytest --cov=src --cov-report=html  <span class="cm"># coverage + reporte HTML</span>
+pytest --tb=short                   <span class="cm"># traceback corto al fallar</span>
+pytest -x                           <span class="cm"># parar al primer fallo</span>
+pytest --lf                         <span class="cm"># solo los que fallaron última vez</span></pre>
+
+<div class="best">✅ Regla del equipo: cobertura ≥ 80% en lógica de negocio. No buscar el 100% — testear los caminos importantes, no las getters/setters.</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

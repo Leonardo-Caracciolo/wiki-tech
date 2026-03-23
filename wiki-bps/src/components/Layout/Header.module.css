@@ -1,0 +1,159 @@
+.header {
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  z-index: 40;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Brand */
+.brand {
+  width: 248px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  height: 100%;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.brand:hover { background: var(--card); }
+
+.logoMark {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(91, 110, 245, 0.3);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.brandName {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.brandSub {
+  font-size: 10px;
+  color: var(--text-3);
+  line-height: 1;
+}
+
+/* Search */
+.searchWrap {
+  flex: 1;
+  padding: 0 24px;
+  max-width: 560px;
+}
+
+.searchInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInner svg {
+  position: absolute;
+  left: 12px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 70px 8px 34px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.searchInput::placeholder { color: var(--text-4); }
+
+.searchHint {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  gap: 3px;
+  pointer-events: none;
+}
+
+kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  background: var(--border2);
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border3);
+}
+
+/* Actions */
+.actions {
+  margin-left: auto;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: 1px solid var(--border2);
+  background: var(--card);
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.iconBtn:hover {
+  background: var(--card-hov);
+  color: var(--text);
+  border-color: var(--border3);
+}
+
+.versionPill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text-3);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}

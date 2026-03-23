@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo de Proyecto · Azure DevOps · Commits — BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#09100f;--surface:#0d1510;--card:#111c14;--border:#1a2e1e;--border2:#254030;--text:#e8f5ec;--text2:#6a9870;--text3:#354a38;--accent:#22c55e;--blue:#3b82f6;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  pre{font-family:'JetBrains Mono',monospace;background:#050c06;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#a8d8b0}
+  .cm{color:var(--text3);font-style:italic}
+  .kw{color:#86efac;font-weight:600}
+  .str{color:#fcd34d}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#22c55e;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(34,197,94,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6ab87a}
+  .warn{background:rgba(239,68,68,.07);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#c04040}
+  .rule{background:rgba(245,158,11,.07);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#c4900a}
+  .flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin:14px 0}
+  .flow-step{background:#1a2e1e;border:1px solid var(--border2);padding:7px 14px;border-radius:6px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);white-space:nowrap}
+  .flow-sep{color:var(--text3);font-size:18px}
+  .stage{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:20px 24px;margin-bottom:12px}
+  .stage-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .stage-num{width:32px;height:32px;background:rgba(34,197,94,.12);border:1px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);flex-shrink:0}
+  .stage-title{font-size:14px;font-weight:700;color:var(--text)}
+  .stage-resp{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-left:auto}
+  .stage-body{font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.65}
+  .stage-output{font-size:11.5px;color:var(--accent);background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);padding:5px 12px;border-radius:5px;display:inline-block}
+  .checklist{list-style:none;padding:0}
+  .checklist li{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2);display:flex;align-items:flex-start;gap:10px}
+  .checklist li:last-child{border-bottom:none}
+  .checklist li::before{content:'□';color:var(--accent);font-size:16px;line-height:1;flex-shrink:0;margin-top:1px}
+  .checklist li strong{color:var(--text)}
+  .board-col{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
+  .board-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+  .board-name{font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .board-who{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+  .commit-type{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin:3px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)}
+  .commit-type strong{color:var(--accent)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>🗂️ Flujo de Proyecto <span>·</span> DevOps <span>·</span> Commits</h1>
+<p class="subtitle">Metodología E2E del equipo BPS — 7 etapas desde detección hasta cierre · Azure DevOps · Conventional Commits · Definition of Done</p>
+
+<h2>Flujo E2E — 7 etapas</h2>
+<p>Principio central: <strong>ninguna etapa comienza sin los entregables de la anterior.</strong> El flujo es secuencial. Cada salida alimenta la siguiente entrada. No hay atajos.</p>
+
+<div class="flow">
+  <span class="flow-step">01 Detección</span><span class="flow-sep">→</span>
+  <span class="flow-step">02 Kick-Off</span><span class="flow-sep">→</span>
+  <span class="flow-step">03 Relevamiento</span><span class="flow-sep">→</span>
+  <span class="flow-step">04 Excepciones</span><span class="flow-sep">→</span>
+  <span class="flow-step">05 Sprints</span><span class="flow-sep">→</span>
+  <span class="flow-step">06 UAT</span><span class="flow-sep">→</span>
+  <span class="flow-step">07 Cierre</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">01</div><div class="stage-title">Detección & Venta</div><div class="stage-resp">SR Dev</div></div>
+  <div class="stage-body">Se identifica la necesidad del cliente o área interna. El SR Dev evalúa viabilidad técnica y fit con las capacidades del equipo. Genera interés en el dueño del problema y obtiene aprobación inicial. Sin esta aprobación formal no existe el proyecto.</div>
+  <span class="stage-output">Salida obligatoria: Alta de Proyecto firmada por el responsable de negocio</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">02</div><div class="stage-title">Kick-Off</div><div class="stage-resp">SR + JR Dev</div></div>
+  <div class="stage-body">Reunión inicial con todos los involucrados — equipo técnico y responsables del cliente. Se definen objetivos, alcance, participantes clave y fechas tentativas. Todos salen alineados. Si alguien no está alineado, el proyecto fracasa en sprints posteriores.</div>
+  <span class="stage-output">Salida obligatoria: Documento de alcance con participantes y responsabilidades definidas</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">03</div><div class="stage-title">Relevamiento Detallado</div><div class="stage-resp">SR Dev + QA</div></div>
+  <div class="stage-body">Se documenta el proceso tal como existe hoy (As-Is). Si el proceso no está estandarizado, la automatización no es posible — primero se estandariza el proceso manual, luego se automatiza. QA ingresa al proyecto en esta etapa para entender el proceso desde el inicio. Artefactos: Work Instruction (WI), SOP del área, Diagrama As-Is, User Stories.</div>
+  <span class="stage-output">Salida obligatoria: Diagrama As-Is aprobado + User Stories validadas</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">04</div><div class="stage-title">Errores & Excepciones</div><div class="stage-resp">SR + JR Dev + QA</div></div>
+  <div class="stage-body">Se mapean todas las excepciones conocidas y se diseñan estrategias para las desconocidas. Se diseña el proceso To-Be con el manejo de errores incluido desde el diseño. Se acuerda con el usuario el comportamiento ante cada tipo de falla.<br><br>Tipos de excepción: <strong>Business Exception</strong> — dato inválido, regla de negocio fallida, caso no contemplado. <strong>Application Exception</strong> — sistema caído, timeout, error inesperado del entorno.</div>
+  <span class="stage-output">Salida obligatoria: PDD completo + Diagrama To-Be aprobado por el usuario</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">05</div><div class="stage-title">Sprints Iterativos</div><div class="stage-resp">Todo el equipo</div></div>
+  <div class="stage-body">Ciclos de 1–2 semanas. El MVP del sprint se entrega al usuario al finalizar cada ciclo para validación real. El costo de un cambio en sprint 2 es 10x menor que en producción. El usuario ve resultados reales desde el sprint 1.</div>
+  <div class="flow" style="margin:10px 0 10px">
+    <span class="flow-step">Planificación ½ día</span><span class="flow-sep">→</span>
+    <span class="flow-step">Desarrollo 1-2 sem</span><span class="flow-sep">→</span>
+    <span class="flow-step">Testing QA</span><span class="flow-sep">→</span>
+    <span class="flow-step">Demo Usuario</span><span class="flow-sep">→</span>
+    <span class="flow-step">Retrospectiva</span>
+  </div>
+  <span class="stage-output">Salida por sprint: MVP funcional con testing completado y aprobado por QA</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">06</div><div class="stage-title">UAT & Validación Final</div><div class="stage-resp">Todo el equipo</div></div>
+  <div class="stage-body">El usuario valida el producto completo en su entorno real con datos reales — no datos de prueba. Se documentan los ajustes finales. QA acompaña todo el proceso de validación. Sin UAT firmado no hay pase a producción.</div>
+  <span class="stage-output">Salida obligatoria: Documento de UAT firmado por el responsable del área usuaria</span>
+</div>
+
+<div class="stage">
+  <div class="stage-header"><div class="stage-num">07</div><div class="stage-title">Cierre & Documentación</div><div class="stage-resp">Todo el equipo</div></div>
+  <div class="stage-body">PDD final actualizado con todos los cambios del proyecto. Documento técnico (SDD). Manual de usuario. Handoff a soporte. Retrospectiva del equipo para registrar aprendizajes que aplican al próximo proyecto.</div>
+  <span class="stage-output">Salida obligatoria: Paquete completo de documentación entregado y archivado en el repositorio</span>
+</div>
+
+<h2>Azure DevOps — Tablero del equipo</h2>
+<p>Cada proyecto vive en Azure Boards. El seguimiento es visible para todo el equipo y el gerente sin reuniones de status intermedias.</p>
+
+<div class="board-col">
+  <div class="board-card"><div class="board-name">Backlog</div><div class="board-who">SR Dev mueve en planning</div></div>
+  <div class="board-card"><div class="board-name">En Progreso</div><div class="board-who">Dev al empezar</div></div>
+  <div class="board-card"><div class="board-name">En Revisión / QA</div><div class="board-who">Dev al terminar dev</div></div>
+  <div class="board-card"><div class="board-name">Listo</div><div class="board-who">QA al validar</div></div>
+  <div class="board-card" style="border-color:rgba(239,68,68,.3)"><div class="board-name" style="color:var(--red)">Bloqueado</div><div class="board-who">Dev + descripción</div></div>
+</div>
+
+<h3>Formato de User Stories y Tasks</h3>
+<pre>
+<span class="cm"># USER STORY — perspectiva del usuario, valor de negocio</span>
+Como [rol del usuario]
+quiero [acción o funcionalidad]
+para [beneficio o resultado esperado]
+
+<span class="cm"># Ejemplos reales del equipo:</span>
+Como operador del área contable
+quiero que el bot descargue los comprobantes de ARCA automáticamente
+para no tener que hacerlo manualmente cada día
+
+Como gerente de proyecto
+quiero ver el estado de cada bot en un dashboard
+para conocer el volumen procesado sin pedir reportes
+
+<span class="cm"># TASK — técnica, concreta, accionable</span>
+<span class="cm"># Formato: [VERBO] + [QUÉ] + [DÓNDE / CONTEXTO]</span>
+
+Implementar función de lectura de Excel en módulo DataAccess
+Agregar manejo de timeout en llamada a API ARCA
+Crear test unitario para ValidarComprobante con CUIT inválido
+Documentar excepciones en PDD sección 4.3
+Refactorizar parser de fechas para soportar formato DD/MM/YYYY</pre>
+
+<h3>Reglas de seguimiento del Board</h3>
+<table>
+  <thead><tr><th>Regla</th><th>Por qué importa</th></tr></thead>
+  <tbody>
+    <tr><td><strong>📌 Una tarea = un responsable</strong></td><td>Si dos personas trabajan en algo, se crean dos tareas o una sub-tarea. Nunca responsabilidad compartida sin dueño.</td></tr>
+    <tr><td><strong>📅 Actualizar el board el mismo día</strong></td><td>Un board desactualizado es peor que no tener board. El estado debe reflejar la realidad en tiempo real.</td></tr>
+    <tr><td><strong>🔴 Bloqueos visibles inmediatamente</strong></td><td>Si algo te bloquea, mover a Bloqueado y describir el impedimento ese mismo día. El SR Dev puede desbloquear si lo ve a tiempo.</td></tr>
+    <tr><td><strong>📝 Decisiones en comentarios de la tarea</strong></td><td>Cambios de alcance, acuerdos con el cliente, decisiones técnicas importantes van como comentario en la tarea. No en Teams, no en el chat.</td></tr>
+  </tbody>
+</table>
+
+<h2>Definition of Done — Checklist de entrega a QA</h2>
+<p>Ningún desarrollo puede pasar a "En Revisión / QA" sin completar este checklist. Es el contrato entre DEV y QA.</p>
+
+<ul class="checklist">
+  <li><span><strong>¿Qué hace el desarrollo?</strong> — Descripción en 3 líneas máximo. QA debe entender sin ver el código fuente.</span></li>
+  <li><span><strong>¿Cuáles son los inputs?</strong> — Con ejemplos reales. Si procesa Excel, adjuntar un Excel de prueba con datos correctos.</span></li>
+  <li><span><strong>¿Cuáles son los outputs?</strong> — Describir exactamente qué se genera: archivo, registro en BD, email, log, etc.</span></li>
+  <li><span><strong>¿Casos borde identificados?</strong> — Datos vacíos, formatos incorrectos, valores límite. Documentar cómo se maneja cada uno.</span></li>
+  <li><span><strong>¿Comportamiento ante errores?</strong> — Qué mensaje ve el usuario, qué se loguea, si hay rollback o acción compensatoria.</span></li>
+  <li><span><strong>¿Fue probado localmente?</strong> — El DEV confirma que funcionó el happy path en su propio entorno antes de entregar.</span></li>
+  <li><span><strong>¿Tiene logs y trazabilidad?</strong> — QA debe poder reproducir cualquier problema. Sin logs, no hay debugging posible.</span></li>
+  <li><span><strong>¿Ambiente de QA listo?</strong> — Datos de prueba cargados, accesos configurados y dependencias disponibles.</span></li>
+</ul>
+
+<div class="warn">🚫 Si algún ítem del checklist está sin completar, la tarea NO se mueve a "En Revisión / QA". No es una sugerencia. Es el proceso.</div>
+
+<h2>Conventional Commits — Estándar del equipo</h2>
+<p>Un buen historial de commits es documentación gratuita: te dice qué cambió, por qué y quién. Se usa en Python, C# y VBA por igual.</p>
+
+<h3>Estructura del mensaje</h3>
+<pre>
+<span class="cm"># LÍNEA 1 — Obligatoria, máximo 72 caracteres</span>
+&lt;tipo&gt;(&lt;scope&gt;): &lt;descripción corta en presente, minúsculas&gt;
+
+<span class="cm"># CUERPO — Opcional. Por qué se hizo el cambio (no el qué, eso ya está en la línea 1)</span>
+
+<span class="cm"># FOOTER — Opcional. Referencia a tarea de Azure DevOps</span>
+<span class="cm"># Refs: AB#1234</span>
+
+<span class="cm"># EJEMPLOS REALES DEL EQUIPO:</span>
+feat(ratio-report): agregar soporte para tipo PLI = CB
+fix(parser): corregir formato de fechas con locale español
+fix(cuit): corregir validación para CUITs con guiones
+refactor(docx): migrar de pywin32 a python-docx
+docs(readme): actualizar instrucciones de instalación local
+chore(deps): actualizar openpyxl a 3.1.2
+test(ratio): agregar casos borde para importe negativo y cero
+perf(db): agregar índice en columna fecha_emision
+style: formatear con black — sin cambios funcionales
+ci(azure): agregar pipeline de tests en PR</pre>
+
+<h3>Tipos de commit y cuándo usar cada uno</h3>
+<table>
+  <thead><tr><th>Tipo</th><th>Cuándo</th><th>Ejemplo</th></tr></thead>
+  <tbody>
+    <tr><td><code>feat</code></td><td>Nueva funcionalidad que antes no existía</td><td><code>feat(lector): soporte xlsx con múltiples hojas</code></td></tr>
+    <tr><td><code>fix</code></td><td>Corrección de un bug</td><td><code>fix(validacion): regex CUIT para formato con guiones</code></td></tr>
+    <tr><td><code>refactor</code></td><td>Reestructuración sin cambiar comportamiento</td><td><code>refactor(data-access): extraer conexión a clase propia</code></td></tr>
+    <tr><td><code>docs</code></td><td>Solo documentación, sin código funcional</td><td><code>docs(readme): agregar instrucciones de setup</code></td></tr>
+    <tr><td><code>test</code></td><td>Agregar o corregir tests</td><td><code>test(validacion): casos borde importe negativo</code></td></tr>
+    <tr><td><code>chore</code></td><td>Mantenimiento: deps, config, build</td><td><code>chore(deps): actualizar fastapi a 0.110</code></td></tr>
+    <tr><td><code>perf</code></td><td>Mejora de performance sin cambio de comportamiento</td><td><code>perf(query): agregar índice en fecha_emision</code></td></tr>
+    <tr><td><code>style</code></td><td>Formato, espacios — cero cambio de lógica</td><td><code>style: formatear con black</code></td></tr>
+    <tr><td><code>ci</code></td><td>Configuración de CI/CD</td><td><code>ci(azure): pipeline tests en cada PR</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Reglas obligatorias</h3>
+<table>
+  <thead><tr><th>Regla</th><th>Correcto</th><th>Incorrecto</th></tr></thead>
+  <tbody>
+    <tr><td>Imperativo presente</td><td><code>agregar validación de CUIT</code></td><td><code>agregué validación</code> / <code>validación agregada</code></td></tr>
+    <tr><td>Minúsculas siempre</td><td><code>feat(parser): corregir fecha</code></td><td><code>FEAT(Parser): Corregir Fecha</code></td></tr>
+    <tr><td>Máximo 72 chars línea 1</td><td>Resumen conciso + cuerpo si hace falta</td><td>Una línea de 150 caracteres</td></tr>
+    <tr><td>Un commit = una cosa</td><td>Dos commits separados</td><td><code>fix bug y refactorizar módulo</code></td></tr>
+  </tbody>
+</table>
+
+<div class="tip">💡 Un commit bien escrito se entiende sin abrir el diff. Si necesitás leer el código para entender qué hizo el commit, el mensaje está mal escrito.</div>
+
+<h2>Versionado semántico</h2>
+<pre>
+<span class="kw">MAJOR</span>.<span class="kw">MINOR</span>.<span class="kw">PATCH</span>   →   1.4.2
+
+PATCH  → fix: corrección de bug sin romper nada         → 1.4.2 → 1.4.3
+MINOR  → feat: nueva funcionalidad compatible            → 1.4.2 → 1.5.0
+MAJOR  → breaking change: API incompatible con versión anterior → 1.4.2 → 2.0.0
+
+<span class="cm"># Tags en Git</span>
+git tag -a v1.5.0 -m "feat: soporte multi-empresa en ratio report"
+git push origin v1.5.0</pre>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

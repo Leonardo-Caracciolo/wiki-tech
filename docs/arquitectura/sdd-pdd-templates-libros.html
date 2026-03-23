@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates SDD/PDD + Libros de Arquitectura — BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d0f;--surface:#0e1214;--card:#131820;--border:#1c2430;--border2:#283550;--text:#e0eaf8;--text2:#6888b8;--text3:#344060;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(59,130,246,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6090c8}
+  .resource{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:10px}
+  .res-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .res-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+  .res-author{font-size:12px;color:var(--text3);margin-bottom:6px}
+  .res-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+  .res-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+  .res-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:var(--border);color:var(--text2);border:1px solid var(--border2)}
+  .res-links{display:flex;gap:8px;flex-wrap:wrap}
+  .res-link{font-size:11.5px;color:var(--accent);text-decoration:none;font-family:'JetBrains Mono',monospace;padding:3px 8px;border:1px solid var(--border2);border-radius:4px;background:var(--surface)}
+  .res-link:hover{border-color:var(--accent)}
+  .res-link.free{color:var(--green);border-color:rgba(34,197,94,.3)}
+  .res-link.es{color:var(--amber);border-color:rgba(245,158,11,.3)}
+  .level{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--text3);flex-shrink:0;align-self:flex-start}
+  .sdd-section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px}
+  .sdd-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);margin-bottom:4px;font-weight:700}
+  .sdd-title{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .sdd-desc{font-size:12.5px;color:var(--text2);line-height:1.55}
+  .roadmap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin:14px 0}
+  .rm-step{font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--border2);padding:5px 10px;border-radius:5px;color:var(--text2);white-space:nowrap}
+  .rm-sep{color:var(--text3);font-size:16px}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>📐 Templates SDD/PDD <span>+</span> Libros de Arquitectura</h1>
+<p class="subtitle">Templates de documentación técnica, secciones clave de un SDD, libros esenciales de arquitectura, patrones y principios con links directos</p>
+
+<h2>Secciones clave de un SDD Backend Python</h2>
+<p>Un SDD (Solution Design Document) profesional para un backend Python debe cubrir al menos estas secciones. Sirve de checklist para evaluar si un documento está completo.</p>
+
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 01</div><div class="sdd-title">🎯 Propósito y Contexto</div><div class="sdd-desc">Objetivo del sistema, necesidad del negocio que resuelve, stakeholders involucrados, alcance funcional y exclusiones explícitas. Qué está dentro del scope y qué no.</div></div>
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 02</div><div class="sdd-title">🗺️ Arquitectura del Sistema</div><div class="sdd-desc">Diagrama C4 o UML. Capas y responsabilidades. Microservicios o módulos. Comunicación entre componentes. APIs externas integradas (ARCA, SharePoint, etc.).</div></div>
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 03</div><div class="sdd-title">🔌 Diseño de API</div><div class="sdd-desc">Endpoints REST, contratos OpenAPI/Swagger, autenticación (JWT/OAuth2), versionado de la API, manejo de errores y formatos de respuesta.</div></div>
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 04</div><div class="sdd-title">🗄️ Diseño de Datos</div><div class="sdd-desc">Modelos de datos, esquemas de BD SQL/NoSQL, migraciones (Alembic), estrategia de caché (Redis), índices y consideraciones de performance.</div></div>
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 05</div><div class="sdd-title">⚙️ ADRs — Decisiones de Arquitectura</div><div class="sdd-desc">Por qué FastAPI vs Django, PostgreSQL vs MongoDB, sync vs async, REST vs GraphQL. Cada decisión importante con su contexto, opciones evaluadas y trade-offs documentados.</div></div>
+<div class="sdd-section"><div class="sdd-num">SECCIÓN 06</div><div class="sdd-title">🚀 Deploy & Operaciones</div><div class="sdd-desc">Dockerfile, Kubernetes (si aplica), CI/CD pipeline, observabilidad (logging, métricas, tracing), estrategia de escalado y runbook de incidentes.</div></div>
+
+<h2>Templates de SDD/PDD — Recursos recomendados</h2>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">🏗️ IEEE 1016 SDD Template (jam01)</div><span class="level">Estándar internacional</span></div>
+  <div class="res-author">Alineado con IEEE 1016-2009 · Markdown · ADRs incluidos</div>
+  <div class="res-desc">El template más completo. Cubre arquitectura, ADRs y trazabilidad de requisitos a código. Estructura basada en el estándar internacional IEEE 1016. Ideal para proyectos que requieren documentación formal.</div>
+  <div class="res-tags"><span class="res-tag">IEEE 1016</span><span class="res-tag">Markdown</span><span class="res-tag">ADRs</span><span class="res-tag">Formal</span></div>
+  <div class="res-links"><a class="res-link" href="https://github.com/jam01/SDD-Template">⭐ github.com/jam01/SDD-Template</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">⚡ FastAPI Microservice Template</div><span class="level">Avanzado</span></div>
+  <div class="res-author">Clean Architecture + DDD · FastAPI · Kubernetes · onlythompson</div>
+  <div class="res-desc">Clean Architecture y DDD con FastAPI. ADRs, docs de API, deploy, testing. Listo para producción con Kubernetes y CI/CD. El más relevante para proyectos Python del equipo BPS.</div>
+  <div class="res-tags"><span class="res-tag">FastAPI</span><span class="res-tag">Clean Arch</span><span class="res-tag">DDD</span><span class="res-tag">K8s</span><span class="res-tag">Python</span></div>
+  <div class="res-links"><a class="res-link" href="https://github.com/onlythompson/fastapi-microservice-template">⭐ GitHub</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">🐍 Python Backend Template (alvinchow86)</div><span class="level">Intermedio</span></div>
+  <div class="res-author">Framework-agnostic · SQLAlchemy · Repository Pattern</div>
+  <div class="res-desc">Minimalista, probado en producción. Separa capas api/, db/, service/ con patrón Repository. Sin overhead de frameworks pesados — enfocado en la estructura.</div>
+  <div class="res-tags"><span class="res-tag">Python</span><span class="res-tag">Repository</span><span class="res-tag">Docker</span><span class="res-tag">SQLAlchemy</span></div>
+  <div class="res-links"><a class="res-link" href="https://github.com/alvinchow86/python-backend-template">⭐ GitHub</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">🔷 Arc42 Template</div><span class="level">Todo nivel</span></div>
+  <div class="res-author">12 secciones · Agile-friendly · Multi-stack · Gratis</div>
+  <div class="res-desc">12 secciones: contexto, restricciones, vistas de building blocks, runtime y deployment. Compatible con Agile y Waterfall. Agnóstico de tecnología. Muy usado en Europa.</div>
+  <div class="res-tags"><span class="res-tag">Arc42</span><span class="res-tag">Agile</span><span class="res-tag">Multi-stack</span><span class="res-tag">Gratis</span></div>
+  <div class="res-links"><a class="res-link free" href="https://arc42.org/download">🆓 arc42.org/download</a><a class="res-link" href="https://github.com/arc42/arc42-template">⭐ GitHub</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">☁️ Microsoft Azure Architecture Center</div><span class="level">Enterprise</span></div>
+  <div class="res-author">Enterprise · Cloud-native · Patrones cloud</div>
+  <div class="res-desc">Arquitecturas de referencia, patrones cloud (CQRS, Saga, Circuit Breaker), guías de diseño y DevOps. Gratuito y actualizado permanentemente por Microsoft.</div>
+  <div class="res-tags"><span class="res-tag">Azure</span><span class="res-tag">Enterprise</span><span class="res-tag">CQRS</span><span class="res-tag">DevOps</span></div>
+  <div class="res-links"><a class="res-link free" href="https://learn.microsoft.com/en-us/azure/architecture/">🆓 Microsoft Docs</a></div>
+</div>
+
+<h2>Libros de Arquitectura de Software</h2>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Fundamentals of Software Architecture (2ª Ed. 2024)</div><span class="level">Intermedio · Avanzado</span></div>
+  <div class="res-author">Mark Richards & Neal Ford — O'Reilly · Top #1 recomendado</div>
+  <div class="res-desc">Visión completa: patrones arquitecturales, componentes, diagramas, arquitectura evolutiva. Agnóstico de tecnología. El libro más completo sobre arquitectura moderna. Segunda edición 2024.</div>
+  <div class="res-tags"><span class="res-tag">Arquitectura</span><span class="res-tag">Patrones</span><span class="res-tag">Evolutiva</span><span class="res-tag">Agnóstico</span></div>
+  <div class="res-links"><a class="res-link" href="https://www.amazon.com/dp/1098134253">🛒 Amazon 2ª Ed. 2024</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Designing Data-Intensive Applications (2ª Ed. 2025)</div><span class="level">Avanzado</span></div>
+  <div class="res-author">Martin Kleppmann — O'Reilly</div>
+  <div class="res-desc">La "biblia" de sistemas distribuidos. Bases de datos, replicación, stream processing, escalabilidad, consistencia. Imprescindible para backends a escala. Segunda edición 2025.</div>
+  <div class="res-tags"><span class="res-tag">Distribuidos</span><span class="res-tag">Bases de datos</span><span class="res-tag">Replicación</span><span class="res-tag">Kafka</span></div>
+  <div class="res-links"><a class="res-link free" href="https://dataintensive.net">🌐 dataintensive.net</a><a class="res-link" href="https://www.amazon.com/dp/1449373321">🛒 Amazon 1ª Ed.</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Arquitectura Limpia / Clean Architecture 🇪🇸</div><span class="level">Todo nivel</span></div>
+  <div class="res-author">Robert C. Martin (Uncle Bob)</div>
+  <div class="res-desc">El libro fundamental. SOLID, separación de concerns, dependency inversion, boundaries entre capas. Aplicable a Python, C# y cualquier stack. Disponible en español.</div>
+  <div class="res-tags"><span class="res-tag">SOLID</span><span class="res-tag">Clean Arch</span><span class="res-tag">Boundaries</span><span class="res-tag">Español</span></div>
+  <div class="res-links"><a class="res-link es" href="https://www.amazon.es/dp/8441543607">🛒 Amazon ES (español)</a><a class="res-link" href="https://www.amazon.com/dp/0134494164">🛒 Amazon EN</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Building Microservices (2ª Ed.)</div><span class="level">Intermedio</span></div>
+  <div class="res-author">Sam Newman — O'Reilly</div>
+  <div class="res-desc">El estándar para microservicios. Comunicación entre servicios, testing, CI/CD, observabilidad, migración desde monolitos. Actualizado con Kubernetes y service mesh.</div>
+  <div class="res-tags"><span class="res-tag">Microservicios</span><span class="res-tag">K8s</span><span class="res-tag">CI/CD</span><span class="res-tag">Migración</span></div>
+  <div class="res-links"><a class="res-link" href="https://www.amazon.com/dp/1492034029">🛒 Amazon</a></div>
+</div>
+
+<h2>Libros de Patrones de Diseño</h2>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Design Patterns — Gang of Four (GoF)</div><span class="level">Referencia universal</span></div>
+  <div class="res-author">Gamma, Helm, Johnson, Vlissides</div>
+  <div class="res-desc">El libro fundacional. 23 patrones clásicos: Creacionales (5), Estructurales (7), Comportamentales (11). Base de todo framework moderno. Antes de comprarlo, ver el recurso gratuito de refactoring.guru.</div>
+  <div class="res-tags"><span class="res-tag">GoF</span><span class="res-tag">23 patrones</span><span class="res-tag">Creacionales</span><span class="res-tag">Comportamiento</span></div>
+  <div class="res-links"><a class="res-link free" href="https://refactoring.guru/es/design-patterns">🆓 refactoring.guru (gratis, español)</a><a class="res-link" href="https://www.amazon.com/dp/0201633612">🛒 Amazon</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Architecture Patterns with Python (Cosmic Python) 🆓</div><span class="level">Intermedio</span></div>
+  <div class="res-author">Harry Percival & Bob Gregory — O'Reilly · 100% GRATIS online</div>
+  <div class="res-desc">El más relevante para el equipo BPS. DDD, Repository, Service Layer, Unit of Work, CQRS y event-driven en Python puro con Flask/SQLAlchemy y ejemplos reales. Leer gratis online.</div>
+  <div class="res-tags"><span class="res-tag">DDD</span><span class="res-tag">Repository</span><span class="res-tag">CQRS</span><span class="res-tag">Python</span><span class="res-tag">Gratis</span></div>
+  <div class="res-links"><a class="res-link free" href="https://cosmicpython.com/book/preface.html">🆓 Leer gratis — cosmicpython.com</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Patterns of Enterprise Application Architecture</div><span class="level">Intermedio</span></div>
+  <div class="res-author">Martin Fowler · Catálogo gratuito online</div>
+  <div class="res-desc">Los patrones detrás de Django y SQLAlchemy: Active Record, Repository, Service Layer, Unit of Work. Indispensable para entender el "por qué" de los frameworks Python.</div>
+  <div class="res-tags"><span class="res-tag">Repository</span><span class="res-tag">Active Record</span><span class="res-tag">Unit of Work</span><span class="res-tag">ORM</span></div>
+  <div class="res-links"><a class="res-link free" href="https://martinfowler.com/eaaCatalog/">🆓 Catálogo gratis online</a><a class="res-link" href="https://www.amazon.com/dp/0321127420">🛒 Amazon</a></div>
+</div>
+
+<h2>Libros de Principios de Desarrollo</h2>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Código Limpio / Clean Code 🇪🇸</div><span class="level">Todo nivel · Lectura obligatoria</span></div>
+  <div class="res-author">Robert C. Martin · Disponible en español</div>
+  <div class="res-desc">El estándar para código legible y mantenible. Naming, funciones, comentarios, formato, tests. Lectura obligatoria para cualquier desarrollador del equipo.</div>
+  <div class="res-links"><a class="res-link es" href="https://www.amazon.es/dp/8441542759">🛒 Amazon ES (español)</a><a class="res-link" href="https://www.amazon.com/dp/0132350882">🛒 Amazon EN</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">El Programador Pragmático 🇪🇸</div><span class="level">Todo nivel</span></div>
+  <div class="res-author">David Thomas & Andrew Hunt · Edición 20 aniversario 2019</div>
+  <div class="res-desc">DRY, ortogonalidad, reversibilidad, tracer bullets, design by contract. Libro de cabecera para desarrolladores de todos los niveles.</div>
+  <div class="res-links"><a class="res-link es" href="https://www.amazon.es/dp/8441544441">🛒 Amazon ES (español)</a></div>
+</div>
+
+<div class="resource">
+  <div class="res-header"><div class="res-title">Software Engineering at Google 🆓</div><span class="level">Senior / Lead</span></div>
+  <div class="res-author">Winters, Manshreck, Wright · Titus Winters</div>
+  <div class="res-desc">Cómo Google escala su ingeniería. Code health, testing a escala, trade-offs velocidad/calidad. Para tech leads y seniors. Disponible gratis online completo.</div>
+  <div class="res-links"><a class="res-link free" href="https://abseil.io/resources/swe-book">🆓 Leer gratis completo</a></div>
+</div>
+
+<h2>Recursos online gratuitos</h2>
+<table>
+  <thead><tr><th>Recurso</th><th>Contenido</th><th>URL</th></tr></thead>
+  <tbody>
+    <tr><td><strong>refactoring.guru</strong> 🇪🇸</td><td>23 patrones GoF con diagramas UML y código Python en español</td><td><code>refactoring.guru/es/design-patterns</code></td></tr>
+    <tr><td><strong>Cosmic Python</strong></td><td>DDD, Repository, CQRS, event-driven en Python — libro completo</td><td><code>cosmicpython.com</code></td></tr>
+    <tr><td><strong>Martin Fowler Blog</strong></td><td>CQRS, Event Sourcing, Strangler Fig, DDD, microservicios — vivo</td><td><code>martinfowler.com/architecture/</code></td></tr>
+    <tr><td><strong>PoEAA Catálogo</strong></td><td>Catálogo completo de Patterns of Enterprise Application Architecture</td><td><code>martinfowler.com/eaaCatalog/</code></td></tr>
+    <tr><td><strong>Enterprise Integration</strong></td><td>65 patrones de mensajería y sistemas distribuidos</td><td><code>enterpriseintegrationpatterns.com</code></td></tr>
+  </tbody>
+</table>
+
+<h2>Ruta de lectura recomendada</h2>
+
+<div class="roadmap">
+  <span class="rm-step">1. Código Limpio 🇪🇸</span><span class="rm-sep">→</span>
+  <span class="rm-step">2. Programador Pragmático 🇪🇸</span><span class="rm-sep">→</span>
+  <span class="rm-step">3. refactoring.guru 🆓🇪🇸</span><span class="rm-sep">→</span>
+  <span class="rm-step">4. Cosmic Python 🆓</span><span class="rm-sep">→</span>
+  <span class="rm-step">5. Arquitectura Limpia 🇪🇸</span><span class="rm-sep">→</span>
+  <span class="rm-step">6. Fundamentals of SW Arch</span><span class="rm-sep">→</span>
+  <span class="rm-step">7. DDIA</span>
+</div>
+
+<div class="tip">💡 Arrancar con <strong>Cosmic Python</strong> (gratis en cosmicpython.com) porque implementa DDD, Repository, CQRS y Event-Driven directo en Python con código real. Una vez que lo veas en código, los libros más abstractos tienen mucho más sentido.</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

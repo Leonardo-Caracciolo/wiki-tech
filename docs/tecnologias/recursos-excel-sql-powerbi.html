@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Excel → SQL → Power BI — Recursos BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d14;--surface:#0f1320;--card:#141928;--border:#1e2540;--border2:#2a3560;--text:#e8eef8;--text2:#7a90c8;--text3:#3a4a80;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:40px 0 16px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  pre{font-family:'JetBrains Mono',monospace;background:#060a10;border:1px solid var(--border);border-radius:8px;padding:18px 22px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#b8d0f0}
+  .kw{color:#60a5fa;font-weight:600}
+  .fn{color:#34d399}
+  .str{color:#fcd34d}
+  .cm{color:var(--text3);font-style:italic}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  .tip{background:rgba(59,130,246,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6090c8}
+  .flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:16px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin:14px 0 24px}
+  .flow-step{background:var(--surface);border:1px solid var(--border2);padding:8px 14px;border-radius:6px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);white-space:nowrap}
+  .flow-step.active{background:rgba(59,130,246,.12);border-color:var(--accent);color:var(--accent)}
+  .flow-sep{color:var(--text3);font-size:18px}
+  .module{margin-bottom:36px}
+  .mod-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .mod-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);padding:3px 9px;border-radius:4px;font-weight:700}
+  .mod-title{font-size:16px;font-weight:700;color:var(--text)}
+  .mod-desc{font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.65}
+  .resource{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+  .res-icon{font-size:16px;flex-shrink:0;margin-top:2px}
+  .res-body{flex:1;min-width:0}
+  .res-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+  .res-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+  .res-tags{display:flex;gap:4px;flex-wrap:wrap}
+  .res-tag{font-family:'JetBrains Mono',monospace;font-size:9px;padding:1px 6px;border-radius:3px;background:var(--border);color:var(--text3);border:1px solid var(--border2)}
+  .res-tag.es{background:rgba(245,158,11,.08);color:var(--amber);border-color:rgba(245,158,11,.2)}
+  .res-tag.free{background:rgba(34,197,94,.08);color:var(--green);border-color:rgba(34,197,94,.2)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>📊 Pipeline <span>Excel → SQL → Power BI</span></h1>
+<p class="subtitle">36 recursos curados — documentación oficial, videos en español, herramientas y referencia técnica para el proyecto de integración completo</p>
+
+<div class="flow">
+  <span class="flow-step active">01 Mapeo</span><span class="flow-sep">→</span>
+  <span class="flow-step">02 Normalización</span><span class="flow-sep">→</span>
+  <span class="flow-step">03 pandas/Python</span><span class="flow-sep">→</span>
+  <span class="flow-step">04 SQL Server</span><span class="flow-sep">→</span>
+  <span class="flow-step">05 Pipeline ETL</span><span class="flow-sep">→</span>
+  <span class="flow-step">06 Power BI</span>
+</div>
+
+<!-- MODULE 01 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 01</span><div class="mod-title">Mapeo del problema real</div></div>
+  <p class="mod-desc">Antes de escribir una línea de código, hay que entender exactamente qué hay en el Excel: qué representa cada columna, qué reglas de negocio existen y cómo se relacionan los datos. Este paso define todo lo demás. Un modelo mal diseñado genera deuda técnica que crece exponencialmente.</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Database Design Course — Full Course (freeCodeCamp)</div><div class="res-desc">Cómo analizar un problema real y convertirlo en un modelo de datos. Conceptos de entidades, relaciones y atributos desde cero. El mejor punto de partida.</div><div class="res-tags"><span class="res-tag">modelado</span><span class="res-tag">entidades</span><span class="res-tag">relaciones</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Diseño de bases de datos desde cero — Píldoras Informáticas 🇪🇸</div><div class="res-desc">Serie completa en español. Entidades, relaciones y claves con ejemplos concretos. El mejor recurso en castellano para modelado desde cero.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">modelado</span><span class="res-tag">DER</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">🔧</div><div class="res-body"><div class="res-title">drawDB — Diseñador de esquemas online gratuito</div><div class="res-desc">Diseñar el esquema de la base de datos visualmente y exportar el SQL directamente. Sin instalación. Ideal para mapear el modelo antes de tocar código.</div><div class="res-tags"><span class="res-tag free">gratis</span><span class="res-tag">visual</span><span class="res-tag">SQL export</span></div></div></div>
+</div>
+
+<!-- MODULE 02 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 02</span><div class="mod-title">Normalización de datos</div></div>
+  <p class="mod-desc">La normalización no es limpiar datos sucios — es <strong>eliminar redundancia y dependencias incorrectas</strong>. Un Excel con todo en una hoja es casi siempre una tabla desnormalizada. Hay que convertirla en varias tablas relacionadas correctamente hasta al menos 3NF.</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Normalización 1FN, 2FN, 3FN — ejercicio práctico en español 🇪🇸</div><div class="res-desc">Canal Programación ATS. Walkthrough completo en castellano con tablas de ventas/facturas hasta 3NF paso a paso. El mejor video en español sobre este tema.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">1NF</span><span class="res-tag">2NF</span><span class="res-tag">3NF</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">Database Normalization — Microsoft Docs (en español)</div><div class="res-desc">Descripción oficial de las formas normales con ejemplos de SQL Server. Relevante porque es el motor que se usa en el proyecto.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">SQL Server</span><span class="res-tag">oficial</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Data Cleaning with pandas — Real Project</div><div class="res-desc">Separar columnas compuestas, estandarizar formatos, detectar duplicados y manejar nulos en un dataset real. Exactamente lo que se encuentra en un Excel de proyecto.</div><div class="res-tags"><span class="res-tag">pandas</span><span class="res-tag">limpieza</span><span class="res-tag">proyecto real</span></div></div></div>
+</div>
+
+<!-- MODULE 03 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 03</span><div class="mod-title">pandas — Transformación y merge</div></div>
+  <p class="mod-desc">Con pandas se lee el Excel, se limpian columnas, se aplican transformaciones y se mergea con otras fuentes antes de cargar a SQL Server. Los temas críticos: <code>merge/join</code>, <code>groupby</code>, <code>apply</code>, manejo de nulos y tipos de datos.</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Pandas desde cero — curso completo en español (Fazt) 🇪🇸</div><div class="res-desc">El mejor curso gratuito de pandas en español. DataFrames, lectura de Excel/CSV, limpieza, merge, groupby y exportación. Muy bien explicado.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">completo</span><span class="res-tag">Fazt</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">Merge, Join, Concatenate — documentación oficial pandas</div><div class="res-desc">Referencia oficial de pd.merge(), join() y concat(). Todos los parámetros, sufijos, validación de claves. Página de referencia permanente durante el desarrollo.</div><div class="res-tags"><span class="res-tag">oficial</span><span class="res-tag">merge</span><span class="res-tag">join</span><span class="res-tag">concat</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">pd.read_excel() — referencia completa de parámetros</div><div class="res-desc">Todos los parámetros de lectura de Excel: sheet_name, header, usecols, dtype, na_values, skiprows. Fundamental para leer archivos con formato irregular.</div><div class="res-tags"><span class="res-tag">excel</span><span class="res-tag">lectura</span><span class="res-tag">parámetros</span></div></div></div>
+
+  <h3>Código de referencia — merge y limpieza</h3>
+  <pre>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Leer Excel con múltiples hojas</span>
+df_clientes  = pd.<span class="fn">read_excel</span>(<span class="str">"datos.xlsx"</span>, sheet_name=<span class="str">"Clientes"</span>, header=<span class="num">0</span>)
+df_ventas    = pd.<span class="fn">read_excel</span>(<span class="str">"datos.xlsx"</span>, sheet_name=<span class="str">"Ventas"</span>,   dtype={<span class="str">"CUIT"</span>: str})
+
+<span class="cm"># Limpieza estándar</span>
+df_clientes[<span class="str">"nombre"</span>] = df_clientes[<span class="str">"nombre"</span>].<span class="fn">str.strip</span>().<span class="fn">str.replace</span>(<span class="str">r"\s+"</span>, <span class="str">" "</span>, regex=<span class="kw">True</span>)
+df_ventas[<span class="str">"monto"</span>]    = pd.<span class="fn">to_numeric</span>(df_ventas[<span class="str">"monto"</span>], errors=<span class="str">"coerce"</span>)
+df_ventas               = df_ventas.<span class="fn">dropna</span>(subset=[<span class="str">"id_cliente"</span>, <span class="str">"monto"</span>])
+
+<span class="cm"># Merge — todos los clientes, hayan vendido o no</span>
+df = pd.<span class="fn">merge</span>(df_clientes, df_ventas, on=<span class="str">"id_cliente"</span>, how=<span class="str">"left"</span>)
+
+<span class="cm"># Agrupar para Power BI</span>
+resumen = df.<span class="fn">groupby</span>([<span class="str">"region"</span>, <span class="str">"producto"</span>]).<span class="fn">agg</span>(
+    total_ventas=(<span class="str">"monto"</span>, <span class="str">"sum"</span>),
+    cant_facturas=(<span class="str">"id_factura"</span>, <span class="str">"count"</span>),
+).<span class="fn">reset_index</span>()</pre>
+</div>
+
+<!-- MODULE 04 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 04</span><div class="mod-title">SQL Server — Esquema y consultas</div></div>
+  <p class="mod-desc">SQL Server tiene diferencias sintácticas con PostgreSQL — principalmente en tipos de datos, funciones de fecha e IDENTITY columns. <code>pyodbc</code> con el string de conexión correcto y <code>pd.to_sql()</code> son las herramientas principales.</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">SQL Server desde cero — curso completo en español 🇪🇸</div><div class="res-desc">Canal hdeleonch. Tablas, relaciones, índices, vistas y queries avanzadas en castellano. Más de 200k vistas.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">SQL Server</span><span class="res-tag">completo</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Python + SQL Server con pyodbc y SQLAlchemy 🇪🇸</div><div class="res-desc">Conectar Python a SQL Server, ejecutar queries, usar pd.read_sql() y pd.to_sql() para cargar DataFrames directamente a tablas. Tutorial en español.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">pyodbc</span><span class="res-tag">SQLAlchemy</span><span class="res-tag">to_sql</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">SQLAlchemy — Dialecto mssql (SQL Server)</div><div class="res-desc">Connection strings, tipos específicos de SQL Server, IDENTITY columns. Referencia si se usa SQLAlchemy en lugar de pyodbc puro.</div><div class="res-tags"><span class="res-tag">SQLAlchemy</span><span class="res-tag">mssql</span><span class="res-tag">conexión</span></div></div></div>
+
+  <h3>Código de referencia — conexión y carga</h3>
+  <pre>
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># String de conexión SQL Server con SQLAlchemy</span>
+engine = <span class="fn">create_engine</span>(
+    <span class="str">"mssql+pyodbc://usuario:contraseña@servidor/base_datos"</span>
+    <span class="str">"?driver=ODBC+Driver+17+for+SQL+Server"</span>
+)
+
+<span class="cm"># Cargar DataFrame a SQL Server</span>
+df.<span class="fn">to_sql</span>(
+    name=<span class="str">"ventas"</span>,
+    con=engine,
+    if_exists=<span class="str">"append"</span>,   <span class="cm"># append = no borrar datos existentes</span>
+    index=<span class="kw">False</span>,
+    chunksize=<span class="num">1000</span>,       <span class="cm"># batch para mejor performance</span>
+)
+
+<span class="cm"># Leer desde vista SQL Server</span>
+df_reporte = pd.<span class="fn">read_sql</span>(<span class="str">"SELECT * FROM vw_resumen_mensual"</span>, engine)</pre>
+</div>
+
+<!-- MODULE 05 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 05</span><div class="mod-title">Pipeline ETL — Integración completa</div></div>
+  <p class="mod-desc">El pipeline une todo. El diseño importa: <strong>idempotencia</strong> (se puede correr dos veces sin duplicar datos), <strong>logging</strong> (saber qué falló y dónde), <strong>manejo de errores</strong> (un registro malo no rompe todo el proceso).</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">ETL con Python — Excel a base de datos, proyecto completo 🇪🇸</div><div class="res-desc">Build de un pipeline ETL de punta a punta en español: extracción de Excel, transformación con pandas, carga a SQL. El caso de uso exacto del proyecto.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">ETL</span><span class="res-tag">end-to-end</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">Pydantic — validación de datos antes de insertar</div><div class="res-desc">Validar cada fila del Excel antes de insertarla. Si un CUIT tiene 10 dígitos o un importe es negativo, Pydantic lo detecta y permite manejar el error sin romper el proceso.</div><div class="res-tags"><span class="res-tag">validación</span><span class="res-tag">pydantic</span><span class="res-tag">schemas</span></div></div></div>
+
+  <h3>Pipeline idempotente — estructura recomendada</h3>
+  <pre>
+<span class="kw">import</span> logging
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel, ValidationError
+
+logger = logging.<span class="fn">getLogger</span>(__name__)
+
+<span class="kw">class</span> <span class="cls">RowSchema</span>(BaseModel):
+    id_cliente: int
+    cuit:       str
+    monto:      float
+    fecha:      str
+
+<span class="kw">def</span> <span class="fn">run_pipeline</span>(excel_path: str, engine) -> dict:
+    <span class="str">"""Pipeline idempotente: leer → validar → limpiar → cargar."""</span>
+    stats = {<span class="str">"ok"</span>: <span class="num">0</span>, <span class="str">"skipped"</span>: <span class="num">0</span>, <span class="str">"errors"</span>: []}
+
+    df_raw = pd.<span class="fn">read_excel</span>(excel_path)
+    rows_validas = []
+
+    <span class="kw">for</span> _, row <span class="kw">in</span> df_raw.<span class="fn">iterrows</span>():
+        <span class="kw">try</span>:
+            validated = <span class="cls">RowSchema</span>(**row.<span class="fn">to_dict</span>())
+            rows_validas.<span class="fn">append</span>(validated.<span class="fn">model_dump</span>())
+            stats[<span class="str">"ok"</span>] += <span class="num">1</span>
+        <span class="kw">except</span> <span class="cls">ValidationError</span> <span class="kw">as</span> e:
+            logger.<span class="fn">warning</span>(<span class="str">f"Fila inválida: {e}"</span>)
+            stats[<span class="str">"errors"</span>].<span class="fn">append</span>(str(e))
+            stats[<span class="str">"skipped"</span>] += <span class="num">1</span>
+
+    <span class="kw">if</span> rows_validas:
+        pd.<span class="cls">DataFrame</span>(rows_validas).<span class="fn">to_sql</span>(
+            <span class="str">"ventas"</span>, engine, if_exists=<span class="str">"append"</span>, index=<span class="kw">False</span>
+        )
+
+    logger.<span class="fn">info</span>(<span class="str">f"Pipeline completo — OK: {stats['ok']} | Saltados: {stats['skipped']}"</span>)
+    <span class="kw">return</span> stats</pre>
+</div>
+
+<!-- MODULE 06 -->
+<div class="module">
+  <div class="mod-header"><span class="mod-num">MÓDULO 06</span><div class="mod-title">Power BI — Modelo y presentación</div></div>
+  <p class="mod-desc">Power BI no es solo hacer gráficos. La calidad del reporte depende 90% del <strong>modelo de datos</strong>. Si el modelo es bueno (star schema, relaciones limpias, medidas DAX correctas), el reporte se hace casi solo.</p>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Power BI completo desde cero — El Futuro de los Datos 🇪🇸</div><div class="res-desc">El tutorial más completo en español: conecta SQL, Excel y CSV, integra DAX, crea informes analíticos. Canal referencia en castellano para Power BI.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">completo</span><span class="res-tag">SQL + Excel + DAX</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">Modelo Estrella en Power BI — datdata 🇪🇸</div><div class="res-desc">Por qué el star schema es el estándar de Power BI, cómo pasar de tablas planas a dimensiones y tabla de hechos, y su impacto en performance y DAX.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">star schema</span><span class="res-tag">dimensiones</span><span class="res-tag">datdata</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">▶️</div><div class="res-body"><div class="res-title">DAX desde cero — CALCULATE, SUMX y medidas en español 🇪🇸</div><div class="res-desc">CALCULATE, SUMX, RELATED, DISTINCTCOUNT, DIVIDE y funciones de fecha con ejemplos reales de ventas y reportes. En castellano.</div><div class="res-tags"><span class="res-tag es">en español</span><span class="res-tag">DAX</span><span class="res-tag">CALCULATE</span><span class="res-tag">SUMX</span></div></div></div>
+
+  <div class="resource"><div class="res-icon">📄</div><div class="res-body"><div class="res-title">DAX Function Reference — Microsoft Docs</div><div class="res-desc">Referencia oficial de todas las funciones DAX. Críticas: CALCULATE, SUMX, RELATED, DISTINCTCOUNT, IF, DIVIDE y las funciones de fecha. Bookmark obligatorio.</div><div class="res-tags"><span class="res-tag">oficial</span><span class="res-tag">DAX</span><span class="res-tag">referencia</span></div></div></div>
+
+  <div class="tip">💡 Usar <strong>vistas de SQL Server</strong> como fuente en Power BI en lugar de tablas directas. Las vistas permiten hacer transformaciones en la capa de datos (sin tocar Power Query) y desacoplan el modelo de Power BI de la estructura interna de la DB.</div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte · Actualizado Marzo 2026</p>
+</body>
+</html>

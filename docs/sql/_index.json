@@ -1,0 +1,7 @@
+{
+  "referencia-sql.html": {
+    "titulo": "SQL — Referencia completa",
+    "descripcion": "SELECTs, JOINs, window functions, CTEs, optimización y buenas prácticas",
+    "tags": ["sql", "joins", "cte", "window-functions", "optimizacion"]
+  }
+}

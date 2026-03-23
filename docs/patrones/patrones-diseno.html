@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrones de Diseño — Referencia BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0d090f;--surface:#110d15;--card:#161020;--border:#221a2e;--border2:#302442;--text:#eee8f5;--text2:#9988b8;--text3:#524070;--accent:#a855f7;--blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--pink:#ec4899}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7}
+  h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:18px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:18px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:14px;font-weight:700;color:var(--text);margin:24px 0 10px}
+  p{color:var(--text2);font-size:14px;margin-bottom:12px}
+  pre{font-family:'JetBrains Mono',monospace;background:#090610;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#d8c8f0}
+  .kw{color:#c4b5fd;font-weight:600}
+  .cls{color:#f9a8d4}
+  .fn{color:#93c5fd}
+  .str{color:#86efac}
+  .cm{color:var(--text3);font-style:italic}
+  .dec{color:#fcd34d}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#150f20;color:#c4b5fd;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  .pattern-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:12px;border-left:3px solid var(--accent)}
+  .pattern-card.creacional{border-left-color:var(--green)}
+  .pattern-card.estructural{border-left-color:var(--blue)}
+  .pattern-card.comportamiento{border-left-color:var(--pink)}
+  .pc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .pc-name{font-size:15px;font-weight:700;color:var(--text)}
+  .pc-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px}
+  .b-crea{background:rgba(34,197,94,.1);color:var(--green)}
+  .b-estr{background:rgba(59,130,246,.1);color:var(--blue)}
+  .b-comp{background:rgba(236,72,153,.1);color:var(--pink)}
+  .pc-when{font-size:12.5px;color:var(--text2);margin-bottom:14px}
+  .pc-when strong{color:var(--text)}
+  .tip{background:rgba(168,85,247,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0 20px;font-size:13px;color:#a87acc}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+  .group-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;text-align:center}
+  .gc-icon{font-size:28px;margin-bottom:10px}
+  .gc-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .gc-desc{font-size:12px;color:var(--text2)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>🧩 Patrones <span>de</span> Diseño</h1>
+<p class="subtitle">Los 12 patrones GoF más usados con ejemplos en Python y C#. Guía práctica para el equipo BPS.</p>
+
+<div class="grid-3">
+  <div class="group-card">
+    <div class="gc-icon">🏗️</div>
+    <div class="gc-name" style="color:var(--green)">Creacionales</div>
+    <div class="gc-desc">Cómo se crean los objetos. Singleton, Factory, Builder, Prototype, Abstract Factory.</div>
+  </div>
+  <div class="group-card">
+    <div class="gc-icon">🔗</div>
+    <div class="gc-name" style="color:var(--blue)">Estructurales</div>
+    <div class="gc-desc">Cómo se componen las clases. Adapter, Decorator, Facade, Proxy, Composite.</div>
+  </div>
+  <div class="group-card">
+    <div class="gc-icon">💬</div>
+    <div class="gc-name" style="color:var(--pink)">De Comportamiento</div>
+    <div class="gc-desc">Cómo se comunican. Observer, Strategy, Command, Iterator, Template Method.</div>
+  </div>
+</div>
+
+<h2>Creacionales</h2>
+
+<div class="pattern-card creacional">
+  <div class="pc-header">
+    <span class="pc-name">Singleton</span>
+    <span class="pc-badge b-crea">Creacional</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Una sola instancia en toda la app — configuración, conexión a DB, logger.</p>
+  <pre><span class="kw">class</span> <span class="cls">DatabaseConnection</span>:
+    _instance = <span class="kw">None</span>
+
+    <span class="kw">def</span> <span class="fn">__new__</span>(cls):
+        <span class="kw">if</span> cls._instance <span class="kw">is None</span>:
+            cls._instance = <span class="kw">super</span>().__new__(cls)
+            cls._instance.connection = <span class="fn">create_connection</span>()
+        <span class="kw">return</span> cls._instance
+
+<span class="cm"># Ambas variables apuntan a la misma instancia</span>
+db1 = <span class="cls">DatabaseConnection</span>()
+db2 = <span class="cls">DatabaseConnection</span>()
+<span class="fn">assert</span> db1 <span class="kw">is</span> db2  <span class="cm"># True</span></pre>
+</div>
+
+<div class="pattern-card creacional">
+  <div class="pc-header">
+    <span class="pc-name">Factory Method</span>
+    <span class="pc-badge b-crea">Creacional</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Crear objetos sin especificar la clase exacta. El equipo lo usa para el parser de documentos.</p>
+  <pre><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+<span class="kw">class</span> <span class="cls">DocumentParser</span>(ABC):
+    <span class="dec">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">parse</span>(self, filepath: str) -> str: ...
+
+<span class="kw">class</span> <span class="cls">MarkdownParser</span>(<span class="cls">DocumentParser</span>):
+    <span class="kw">def</span> <span class="fn">parse</span>(self, filepath): <span class="kw">return</span> <span class="fn">parse_md</span>(filepath)
+
+<span class="kw">class</span> <span class="cls">DocxParser</span>(<span class="cls">DocumentParser</span>):
+    <span class="kw">def</span> <span class="fn">parse</span>(self, filepath): <span class="kw">return</span> <span class="fn">parse_docx</span>(filepath)
+
+<span class="kw">def</span> <span class="fn">get_parser</span>(extension: str) -> <span class="cls">DocumentParser</span>:
+    parsers = {<span class="str">"md"</span>: <span class="cls">MarkdownParser</span>, <span class="str">"docx"</span>: <span class="cls">DocxParser</span>}
+    <span class="kw">return</span> parsers[extension]()</pre>
+</div>
+
+<div class="pattern-card creacional">
+  <div class="pc-header">
+    <span class="pc-name">Builder</span>
+    <span class="pc-badge b-crea">Creacional</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Construir objetos complejos paso a paso. Reportes, queries dinámicas, emails.</p>
+  <pre><span class="kw">class</span> <span class="cls">ReportBuilder</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self._report = {}
+
+    <span class="kw">def</span> <span class="fn">with_title</span>(self, title: str) -> <span class="str">"ReportBuilder"</span>:
+        self._report[<span class="str">"title"</span>] = title
+        <span class="kw">return</span> self
+
+    <span class="kw">def</span> <span class="fn">with_data</span>(self, data) -> <span class="str">"ReportBuilder"</span>:
+        self._report[<span class="str">"data"</span>] = data
+        <span class="kw">return</span> self
+
+    <span class="kw">def</span> <span class="fn">build</span>(self) -> dict:
+        <span class="kw">return</span> self._report
+
+<span class="cm"># Uso: method chaining</span>
+report = <span class="cls">ReportBuilder</span>().<span class="fn">with_title</span>(<span class="str">"Ratio Q1"</span>).<span class="fn">with_data</span>(df).<span class="fn">build</span>()</pre>
+</div>
+
+<h2>Estructurales</h2>
+
+<div class="pattern-card estructural">
+  <div class="pc-header">
+    <span class="pc-name">Adapter</span>
+    <span class="pc-badge b-estr">Estructural</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Integrar una interfaz incompatible. Lo usamos al migrar de pywin32 a python-docx.</p>
+  <pre><span class="cm"># Interfaz vieja (pywin32)</span>
+<span class="kw">class</span> <span class="cls">LegacyWordCOM</span>:
+    <span class="kw">def</span> <span class="fn">open_document</span>(self, path): ...
+    <span class="kw">def</span> <span class="fn">save_as_pdf</span>(self, path): ...
+
+<span class="cm"># Interfaz nueva que queremos usar</span>
+<span class="kw">class</span> <span class="cls">WordAdapter</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, legacy: <span class="cls">LegacyWordCOM</span>):
+        self._legacy = legacy
+
+    <span class="kw">def</span> <span class="fn">render</span>(self, path) -> bytes:
+        self._legacy.<span class="fn">open_document</span>(path)
+        <span class="kw">return</span> self._legacy.<span class="fn">save_as_pdf</span>(path)</pre>
+</div>
+
+<div class="pattern-card estructural">
+  <div class="pc-header">
+    <span class="pc-name">Decorator</span>
+    <span class="pc-badge b-estr">Estructural</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Agregar comportamiento sin modificar la clase original. Logging, caché, validación.</p>
+  <pre><span class="kw">import</span> functools, logging
+
+<span class="kw">def</span> <span class="fn">log_execution</span>(func):
+    <span class="dec">@functools.wraps</span>(func)
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        logging.<span class="fn">info</span>(<span class="str">f"Ejecutando {func.__name__}"</span>)
+        result = <span class="fn">func</span>(*args, **kwargs)
+        logging.<span class="fn">info</span>(<span class="str">f"{func.__name__} finalizado"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+
+<span class="dec">@log_execution</span>
+<span class="kw">def</span> <span class="fn">generar_ratio_report</span>(cliente_id: int): ...</pre>
+</div>
+
+<div class="pattern-card estructural">
+  <div class="pc-header">
+    <span class="pc-name">Facade</span>
+    <span class="pc-badge b-estr">Estructural</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Simplificar una interfaz compleja. Un punto de entrada que orquesta múltiples subsistemas.</p>
+  <pre><span class="kw">class</span> <span class="cls">RatioReportFacade</span>:
+    <span class="cm">"""Un método público que orquesta todo el proceso."""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self._reader   = <span class="cls">ExcelReader</span>()
+        self._parser   = <span class="cls">DataParser</span>()
+        self._renderer = <span class="cls">DocxRenderer</span>()
+
+    <span class="kw">def</span> <span class="fn">generate</span>(self, excel_path: str, output_path: str):
+        raw   = self._reader.<span class="fn">read</span>(excel_path)
+        data  = self._parser.<span class="fn">parse</span>(raw)
+        self._renderer.<span class="fn">render</span>(data, output_path)</pre>
+</div>
+
+<h2>Comportamiento</h2>
+
+<div class="pattern-card comportamiento">
+  <div class="pc-header">
+    <span class="pc-name">Strategy</span>
+    <span class="pc-badge b-comp">Comportamiento</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Intercambiar algoritmos en runtime. Diferentes formatos de export, diferentes parsers por tipo PLI.</p>
+  <pre><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+<span class="kw">class</span> <span class="cls">ExportStrategy</span>(ABC):
+    <span class="dec">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">export</span>(self, data) -> bytes: ...
+
+<span class="kw">class</span> <span class="cls">ExcelExport</span>(<span class="cls">ExportStrategy</span>):
+    <span class="kw">def</span> <span class="fn">export</span>(self, data) -> bytes: <span class="kw">return</span> <span class="fn">to_excel</span>(data)
+
+<span class="kw">class</span> <span class="cls">PDFExport</span>(<span class="cls">ExportStrategy</span>):
+    <span class="kw">def</span> <span class="fn">export</span>(self, data) -> bytes: <span class="kw">return</span> <span class="fn">to_pdf</span>(data)
+
+<span class="kw">class</span> <span class="cls">ReportExporter</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, strategy: <span class="cls">ExportStrategy</span>):
+        self._strategy = strategy
+
+    <span class="kw">def</span> <span class="fn">export</span>(self, data): <span class="kw">return</span> self._strategy.<span class="fn">export</span>(data)</pre>
+</div>
+
+<div class="pattern-card comportamiento">
+  <div class="pc-header">
+    <span class="pc-name">Observer</span>
+    <span class="pc-badge b-comp">Comportamiento</span>
+  </div>
+  <p class="pc-when"><strong>Cuándo:</strong> Notificar cambios a múltiples oyentes. Eventos de bot, notificaciones de proceso, webhooks.</p>
+  <pre><span class="kw">class</span> <span class="cls">EventBus</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self._listeners = {}
+
+    <span class="kw">def</span> <span class="fn">subscribe</span>(self, event: str, handler):
+        self._listeners.<span class="fn">setdefault</span>(event, []).<span class="fn">append</span>(handler)
+
+    <span class="kw">def</span> <span class="fn">publish</span>(self, event: str, data=<span class="kw">None</span>):
+        <span class="kw">for</span> handler <span class="kw">in</span> self._listeners.<span class="fn">get</span>(event, []):
+            <span class="fn">handler</span>(data)
+
+bus = <span class="cls">EventBus</span>()
+bus.<span class="fn">subscribe</span>(<span class="str">"bot_completed"</span>, <span class="fn">send_email_notification</span>)
+bus.<span class="fn">subscribe</span>(<span class="str">"bot_completed"</span>, <span class="fn">log_to_database</span>)
+bus.<span class="fn">publish</span>(<span class="str">"bot_completed"</span>, {<span class="str">"bot"</span>: <span class="str">"ratio-report"</span>, <span class="str">"status"</span>: <span class="str">"ok"</span>})</pre>
+</div>
+
+<div class="tip">💡 <strong>Regla práctica:</strong> Si tenés un <code>if/elif</code> largo para elegir comportamiento → Strategy. Si necesitás notificar a múltiples partes → Observer. Si la API es compleja → Facade.</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

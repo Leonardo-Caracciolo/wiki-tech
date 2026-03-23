@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Scraping — Playwright · BeautifulSoup · Selenium</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #060a06;
+    --surface: #0d150d;
+    --card:    #111a11;
+    --border:  #1a2e1a;
+    --g1:      #00ff41;   /* matrix green */
+    --g2:      #39ff14;   /* neon green */
+    --b1:      #00d4ff;   /* cyan */
+    --o1:      #ff8c00;   /* orange */
+    --r1:      #ff4444;   /* red */
+    --y1:      #ffd700;   /* gold */
+    --text:    #c8e6c8;
+    --muted:   #4a6b4a;
+    --codebg:  #080d08;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,65,0.015) 2px,
+      rgba(0,255,65,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    padding: 56px 64px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--g1), transparent);
+  }
+
+  .term-line {
+    font-size: 11px;
+    color: var(--g1);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  .term-line::before { content: '$ '; }
+
+  h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(32px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: var(--g1);
+    text-shadow: 0 0 40px rgba(0,255,65,0.3);
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--b1);
+    text-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+
+  .header-sub {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .lib-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .badge-pw  { border: 1px solid #2d9e2d; color: #2d9e2d; background: rgba(45,158,45,0.1); }
+  .badge-bs  { border: 1px solid var(--o1); color: var(--o1); background: rgba(255,140,0,0.1); }
+  .badge-sel { border: 1px solid var(--b1); color: var(--b1); background: rgba(0,212,255,0.1); }
+  .badge-test { border: 1px solid var(--y1); color: var(--y1); background: rgba(255,215,0,0.1); }
+
+  /* ─── NAV ─── */
+  nav {
+    padding: 16px 64px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(6,10,6,0.97);
+    backdrop-filter: blur(8px);
+    z-index: 99;
+  }
+
+  nav a {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all .2s;
+    text-transform: uppercase;
+  }
+
+  nav a:hover { color: var(--g1); border-color: var(--g1); box-shadow: 0 0 8px rgba(0,255,65,0.2); }
+
+  /* ─── MAIN ─── */
+  main { padding: 56px 64px; max-width: 1440px; margin: 0 auto; }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 80px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .s-pw   .section-title { color: var(--g1); }
+  .s-bs   .section-title { color: var(--o1); }
+  .s-sel  .section-title { color: var(--b1); }
+  .s-test .section-title { color: var(--y1); }
+
+  .section-num {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 3px 10px;
+    text-transform: uppercase;
+  }
+
+  .s-pw   .section-tag { border: 1px solid var(--g1); color: var(--g1); }
+  .s-bs   .section-tag { border: 1px solid var(--o1); color: var(--o1); }
+  .s-sel  .section-tag { border: 1px solid var(--b1); color: var(--b1); }
+  .s-test .section-tag { border: 1px solid var(--y1); color: var(--y1); }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    padding: 16px 20px;
+    border-left: 3px solid;
+    margin-bottom: 28px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #8aab8a;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .s-pw   .intro-box { border-color: var(--g1); }
+  .s-bs   .intro-box { border-color: var(--o1); }
+  .s-sel  .intro-box { border-color: var(--b1); }
+  .s-test .intro-box { border-color: var(--y1); }
+
+  /* ─── CARDS ─── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    gap: 14px;
+  }
+
+  .cards-wide {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+  }
+
+  .s-pw   .card:hover { border-color: var(--g1); box-shadow: 0 0 16px rgba(0,255,65,0.08); }
+  .s-bs   .card:hover { border-color: var(--o1); box-shadow: 0 0 16px rgba(255,140,0,0.08); }
+  .s-sel  .card:hover { border-color: var(--b1); box-shadow: 0 0 16px rgba(0,212,255,0.08); }
+  .s-test .card:hover { border-color: var(--y1); box-shadow: 0 0 16px rgba(255,215,0,0.08); }
+
+  .card-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .method-name {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .s-pw   .method-name { color: var(--g1); }
+  .s-bs   .method-name { color: var(--o1); }
+  .s-sel  .method-name { color: var(--b1); }
+  .s-test .method-name { color: var(--y1); }
+
+  .method-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .card-body { padding: 14px 18px; }
+
+  /* ─── CODE BLOCKS ─── */
+  .code-block {
+    background: var(--codebg);
+    border: 1px solid #131f13;
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-size: 11.5px;
+    line-height: 1.75;
+    overflow-x: auto;
+    position: relative;
+  }
+
+  .code-block:last-child { margin-bottom: 0; }
+
+  .code-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .code-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .lbl-input  .code-label { color: var(--b1); }
+  .lbl-output .code-label { color: var(--g1); }
+  .lbl-args   .code-label { color: #c77dff; }
+  .lbl-test   .code-label { color: var(--y1); }
+
+  /* syntax */
+  .kw  { color: #569cd6; }
+  .fn  { color: var(--g2); }
+  .fn2 { color: var(--b1); }
+  .str { color: #ce9178; }
+  .cm  { color: #3a5c3a; font-style: italic; }
+  .num { color: var(--o1); }
+  .dec { color: #c792ea; }
+  .cls { color: var(--y1); }
+  .op  { color: #c77dff; }
+
+  /* ─── ARGS TABLE ─── */
+  .args-block {
+    border: 1px solid #1a2e1a;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .arg-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0;
+    border-bottom: 1px solid #111a11;
+    font-size: 11px;
+  }
+
+  .arg-row:last-child { border-bottom: none; }
+
+  .arg-name {
+    padding: 6px 12px;
+    color: #c77dff;
+    background: rgba(199,125,255,0.05);
+    border-right: 1px solid #1a2e1a;
+  }
+
+  .arg-val { padding: 6px 12px; color: var(--muted); }
+
+  /* ─── INSTALL BOX ─── */
+  .install-box {
+    background: var(--codebg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-size: 11px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .install-cmd { color: var(--g1); }
+  .install-cmd::before { content: '$ '; color: var(--muted); }
+
+  /* ─── NOTE ─── */
+  .note {
+    font-size: 11px;
+    color: #5a7a5a;
+    padding: 8px 12px;
+    border-left: 2px solid var(--border);
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 20px;
+  }
+
+  .comp-table th {
+    padding: 10px 14px;
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .comp-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table td:first-child { color: var(--g1); font-weight: 700; }
+
+  .tick { color: var(--g2); }
+  .cross { color: var(--r1); }
+  .partial { color: var(--o1); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 24px 64px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 700px) {
+    header, main, nav, footer { padding: 24px 20px; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="term-line">python -m scraper --lib playwright,bs4,selenium --lang es</div>
+  <h1>WEB SCRAPING<br><em>& TESTING</em></h1>
+  <p class="header-sub">// playwright · beautifulsoup · selenium · pytest · unittest</p>
+  <div class="lib-badges">
+    <span class="badge badge-pw">Playwright</span>
+    <span class="badge badge-bs">BeautifulSoup</span>
+    <span class="badge badge-sel">Selenium</span>
+    <span class="badge badge-test">Testing</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#comparativa">Comparativa</a>
+  <a href="#playwright">Playwright</a>
+  <a href="#bs4">BeautifulSoup</a>
+  <a href="#selenium">Selenium</a>
+  <a href="#testing">Testing</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════
+     COMPARATIVA
+══════════════════════════════════ -->
+<section class="section" id="comparativa">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2 class="section-title" style="color: var(--g1);">¿Cuál usar?</h2>
+  </div>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Librería</th>
+        <th>Caso de uso ideal</th>
+        <th>JS rendering</th>
+        <th>Velocidad</th>
+        <th>Dificultad</th>
+        <th>Async</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Playwright</td>
+        <td>SPAs, páginas con mucho JS, testing E2E, scraping moderno</td>
+        <td class="tick">✓ nativo</td>
+        <td class="tick">Rápido</td>
+        <td class="partial">Media</td>
+        <td class="tick">✓ asyncio</td>
+      </tr>
+      <tr>
+        <td>BeautifulSoup</td>
+        <td>HTML/XML estático, RSS, APIs que devuelven HTML</td>
+        <td class="cross">✗</td>
+        <td class="tick">Muy rápido</td>
+        <td class="tick">Baja</td>
+        <td class="cross">✗</td>
+      </tr>
+      <tr>
+        <td>Selenium</td>
+        <td>Automatización legacy, testing en múltiples browsers reales</td>
+        <td class="tick">✓ WebDriver</td>
+        <td class="cross">Lento</td>
+        <td class="partial">Media</td>
+        <td class="cross">✗ (principalmente)</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note">💡 Regla general: si la página no usa JS → BeautifulSoup. Si usa JS y querés scraping moderno → Playwright. Si necesitás compatibilidad con proyectos legacy o múltiples browsers → Selenium.</div>
+</section>
+
+<!-- ══════════════════════════════════
+     PLAYWRIGHT
+══════════════════════════════════ -->
+<section class="section s-pw" id="playwright">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Playwright</h2>
+    <span class="section-tag">async · chromium · firefox · webkit</span>
+  </div>
+
+  <div class="intro-box">
+    Playwright es el estándar moderno para scraping y testing E2E. Controla Chromium, Firefox y WebKit desde Python.
+    Soporta JavaScript nativo, tiene una API limpia y es significativamente más rápido que Selenium.
+    Ideal para SPAs (React, Vue, Angular) y cualquier página que cargue datos via JavaScript.
+  </div>
+
+  <div class="install-box">
+    <span class="install-cmd">pip install playwright</span>
+    <span class="install-cmd">playwright install</span>
+    <span style="color: var(--muted); font-size:11px;">← instala los browsers (Chromium, Firefox, WebKit)</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- Navegación básica -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">page.goto() + page.title()</span>
+        <span class="method-desc">Abrir una URL y obtener el título de la página</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.<span class="fn">launch</span>(headless=<span class="kw">True</span>)
+    page = browser.<span class="fn">new_page</span>()
+    page.<span class="fn">goto</span>(<span class="str">"https://example.com"</span>)
+    titulo = page.<span class="fn">title</span>()
+    <span class="fn">print</span>(titulo)
+    browser.<span class="fn">close</span>()
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+<span class="str">Example Domain</span>
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">headless=True</span><span class="arg-val">True = sin ventana visible. False = abre el browser en pantalla (útil para debug)</span></div>
+          <div class="arg-row"><span class="arg-name">goto(url)</span><span class="arg-val">Navega a la URL. Espera a que la página cargue por defecto</span></div>
+          <div class="arg-row"><span class="arg-name">wait_until=</span><span class="arg-val">"load" | "domcontentloaded" | "networkidle" — cuándo considerar la página lista</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selección de elementos -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">page.locator() / page.query_selector()</span>
+        <span class="method-desc">Encontrar elementos en la página</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># locator() — forma moderna y recomendada</span>
+titulo = page.<span class="fn">locator</span>(<span class="str">"h1"</span>).<span class="fn">text_content</span>()
+
+<span class="cm"># por CSS selector</span>
+precio = page.<span class="fn">locator</span>(<span class="str">".product-price"</span>).<span class="fn">text_content</span>()
+
+<span class="cm"># por texto visible</span>
+btn = page.<span class="fn">get_by_text</span>(<span class="str">"Agregar al carrito"</span>)
+
+<span class="cm"># por rol accesible (recomendado para testing)</span>
+btn = page.<span class="fn">get_by_role</span>(<span class="str">"button"</span>, name=<span class="str">"Enviar"</span>)
+
+<span class="cm"># múltiples elementos → lista</span>
+items = page.<span class="fn">locator</span>(<span class="str">".producto"</span>).<span class="fn">all</span>()
+<span class="kw">for</span> item <span class="kw">in</span> items:
+    <span class="fn">print</span>(item.<span class="fn">text_content</span>())
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+Remera negra - $4500
+Pantalón cargo - $8900
+Zapatillas - $12000
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">locator("css")</span><span class="arg-val">Selector CSS estándar. El más usado.</span></div>
+          <div class="arg-row"><span class="arg-name">get_by_text()</span><span class="arg-val">Busca por contenido de texto. exact=True para match exacto</span></div>
+          <div class="arg-row"><span class="arg-name">get_by_role()</span><span class="arg-val">Busca por rol ARIA: button, link, heading, textbox, etc.</span></div>
+          <div class="arg-row"><span class="arg-name">get_by_placeholder()</span><span class="arg-val">Busca input por su placeholder</span></div>
+          <div class="arg-row"><span class="arg-name">get_by_label()</span><span class="arg-val">Busca input por su &lt;label&gt; asociado</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clicks e interacciones -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">click() · fill() · press()</span>
+        <span class="method-desc">Interaccionar con la página como lo haría un usuario</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># Click en un botón</span>
+page.<span class="fn">locator</span>(<span class="str">"#btn-login"</span>).<span class="fn">click</span>()
+
+<span class="cm"># Escribir en un input (limpia y escribe)</span>
+page.<span class="fn">locator</span>(<span class="str">'input[name="email"]'</span>).<span class="fn">fill</span>(<span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ef2fbf1defafbf2f1f7eaeafbb0fdf1f3">[email&#160;protected]</a>"</span>)
+
+<span class="cm"># Presionar una tecla</span>
+page.<span class="fn">locator</span>(<span class="str">"#search"</span>).<span class="fn">press</span>(<span class="str">"Enter"</span>)
+
+<span class="cm"># Seleccionar opción de un dropdown</span>
+page.<span class="fn">locator</span>(<span class="str">"select#pais"</span>).<span class="fn">select_option</span>(<span class="str">"AR"</span>)
+
+<span class="cm"># Hover</span>
+page.<span class="fn">locator</span>(<span class="str">".menu-item"</span>).<span class="fn">hover</span>()
+
+<span class="cm"># Checkbox</span>
+page.<span class="fn">locator</span>(<span class="str">'input[type="checkbox"]'</span>).<span class="fn">check</span>()
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">fill(text)</span><span class="arg-val">Limpia el campo y escribe el texto. Para inputs y textareas</span></div>
+          <div class="arg-row"><span class="arg-name">type(text)</span><span class="arg-val">Simula tecla por tecla (más lento, más real). Útil para autocompletados</span></div>
+          <div class="arg-row"><span class="arg-name">press(key)</span><span class="arg-val">"Enter", "Tab", "ArrowDown", "Control+A", etc.</span></div>
+          <div class="arg-row"><span class="arg-name">select_option(val)</span><span class="arg-val">Por value, label o índice. También acepta lista para multi-select</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Esperas -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">wait_for_selector() · expect()</span>
+        <span class="method-desc">Esperar a que algo ocurra antes de continuar</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># Esperar a que aparezca un elemento</span>
+page.<span class="fn">wait_for_selector</span>(<span class="str">".resultados"</span>)
+
+<span class="cm"># Esperar a que la red esté idle (sin requests activos)</span>
+page.<span class="fn">wait_for_load_state</span>(<span class="str">"networkidle"</span>)
+
+<span class="cm"># Esperar elemento + timeout custom</span>
+page.<span class="fn">wait_for_selector</span>(<span class="str">"#tabla-datos"</span>, timeout=<span class="num">10000</span>)
+
+<span class="cm"># Esperar que un elemento desaparezca</span>
+page.<span class="fn">wait_for_selector</span>(<span class="str">".spinner"</span>, state=<span class="str">"hidden"</span>)
+
+<span class="cm"># Esperar URL específica</span>
+page.<span class="fn">wait_for_url</span>(<span class="str">"**/dashboard"</span>)
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">timeout=30000</span><span class="arg-val">Tiempo máximo en ms antes de lanzar TimeoutError. Default: 30s</span></div>
+          <div class="arg-row"><span class="arg-name">state="visible"</span><span class="arg-val">"attached" | "detached" | "visible" | "hidden"</span></div>
+          <div class="arg-row"><span class="arg-name">"networkidle"</span><span class="arg-val">Espera que no haya requests por 500ms. Ideal para SPAs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extraer datos -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">text_content() · get_attribute() · inner_html()</span>
+        <span class="method-desc">Extraer contenido de los elementos</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># Texto visible</span>
+texto = page.<span class="fn">locator</span>(<span class="str">"h1"</span>).<span class="fn">text_content</span>()
+
+<span class="cm"># Atributo HTML</span>
+href = page.<span class="fn">locator</span>(<span class="str">"a.link"</span>).<span class="fn">get_attribute</span>(<span class="str">"href"</span>)
+src  = page.<span class="fn">locator</span>(<span class="str">"img"</span>).<span class="fn">get_attribute</span>(<span class="str">"src"</span>)
+
+<span class="cm"># HTML interno</span>
+html = page.<span class="fn">locator</span>(<span class="str">".card"</span>).<span class="fn">inner_html</span>()
+
+<span class="cm"># Todos los textos de una lista</span>
+textos = page.<span class="fn">locator</span>(<span class="str">"li"</span>).<span class="fn">all_text_contents</span>()
+<span class="cm"># → ["Item 1", "Item 2", "Item 3"]</span>
+
+<span class="cm"># Valor de un input</span>
+valor = page.<span class="fn">locator</span>(<span class="str">'input[name="precio"]'</span>).<span class="fn">input_value</span>()
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+texto   = <span class="str">"Productos destacados"</span>
+href    = <span class="str">"/productos/remera-negra"</span>
+textos  = [<span class="str">"Remera"</span>, <span class="str">"Pantalón"</span>, <span class="str">"Zapatillas"</span>]
+        </div>
+      </div>
+    </div>
+
+    <!-- Screenshot y PDF -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">screenshot() · pdf()</span>
+        <span class="method-desc">Capturar la página como imagen o PDF</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># Screenshot de toda la página</span>
+page.<span class="fn">screenshot</span>(path=<span class="str">"pagina.png"</span>, full_page=<span class="kw">True</span>)
+
+<span class="cm"># Solo un elemento</span>
+page.<span class="fn">locator</span>(<span class="str">".dashboard"</span>).<span class="fn">screenshot</span>(path=<span class="str">"dashboard.png"</span>)
+
+<span class="cm"># PDF (solo funciona con Chromium)</span>
+page.<span class="fn">pdf</span>(path=<span class="str">"reporte.pdf"</span>, format=<span class="str">"A4"</span>)
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">full_page=False</span><span class="arg-val">True = captura toda la página (incluyendo scroll). False = solo viewport</span></div>
+          <div class="arg-row"><span class="arg-name">clip={x,y,w,h}</span><span class="arg-val">Recorta solo una región específica</span></div>
+          <div class="arg-row"><span class="arg-name">format="A4"</span><span class="arg-val">Para PDF: "A4", "Letter", o dimensiones custom</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Async -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">async playwright</span>
+        <span class="method-desc">Versión async para máxima performance (scraping en paralelo)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — scraping de múltiples URLs en paralelo</div>
+<span class="kw">import</span> asyncio
+<span class="kw">from</span> playwright.async_api <span class="kw">import</span> async_playwright
+
+<span class="kw">async def</span> <span class="fn">scrape_url</span>(browser, url):
+    page = <span class="kw">await</span> browser.<span class="fn">new_page</span>()
+    <span class="kw">await</span> page.<span class="fn">goto</span>(url)
+    titulo = <span class="kw">await</span> page.<span class="fn">title</span>()
+    <span class="kw">await</span> page.<span class="fn">close</span>()
+    <span class="kw">return</span> titulo
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    urls = [<span class="str">"https://site1.com"</span>, <span class="str">"https://site2.com"</span>, <span class="str">"https://site3.com"</span>]
+    <span class="kw">async with</span> async_playwright() <span class="kw">as</span> p:
+        browser = <span class="kw">await</span> p.chromium.<span class="fn">launch</span>()
+        tasks = [<span class="fn">scrape_url</span>(browser, url) <span class="kw">for</span> url <span class="kw">in</span> urls]
+        resultados = <span class="kw">await</span> asyncio.<span class="fn">gather</span>(*tasks)
+        <span class="fn">print</span>(resultados)
+        <span class="kw">await</span> browser.<span class="fn">close</span>()
+
+asyncio.<span class="fn">run</span>(<span class="fn">main</span>())
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+[<span class="str">"Site 1 - Home"</span>, <span class="str">"Site 2 - Bienvenidos"</span>, <span class="str">"Site 3 - Dashboard"</span>]
+<span class="cm"># Las 3 páginas se cargaron en paralelo</span>
+        </div>
+        <div class="note">💡 La versión async permite correr múltiples tabs en simultáneo. Para scraping masivo es la diferencia entre 30 segundos y 5 minutos.</div>
+      </div>
+    </div>
+
+    <!-- Intercept network -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">page.route() · on("response")</span>
+        <span class="method-desc">Interceptar requests de red (útil para APIs internas)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — capturar la respuesta de una API interna</div>
+<span class="kw">import</span> json
+
+datos_api = []
+
+<span class="kw">def</span> <span class="fn">capturar_response</span>(response):
+    <span class="kw">if</span> <span class="str">"api/productos"</span> <span class="kw">in</span> response.url:
+        datos_api.<span class="fn">append</span>(response.<span class="fn">json</span>())
+
+page.<span class="fn">on</span>(<span class="str">"response"</span>, capturar_response)
+page.<span class="fn">goto</span>(<span class="str">"https://tienda.com/catalogo"</span>)
+page.<span class="fn">wait_for_load_state</span>(<span class="str">"networkidle"</span>)
+<span class="fn">print</span>(datos_api)
+        </div>
+        <div class="note">💡 Muchas SPAs cargan datos via fetch/XHR. Interceptar esas requests es más limpio que parsear el HTML resultante.</div>
+      </div>
+    </div>
+
+  </div><!-- /cards -->
+</section>
+
+<!-- ══════════════════════════════════
+     BEAUTIFULSOUP
+══════════════════════════════════ -->
+<section class="section s-bs" id="bs4">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">BeautifulSoup</h2>
+    <span class="section-tag">html · xml · requests</span>
+  </div>
+
+  <div class="intro-box">
+    BeautifulSoup parsea HTML y XML estático. No ejecuta JavaScript, así que necesitás obtener el HTML primero
+    (via requests, httpx, o combinado con Playwright). Es la opción más simple y rápida para páginas clásicas.
+  </div>
+
+  <div class="install-box">
+    <span class="install-cmd">pip install beautifulsoup4 requests lxml</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- Setup básico -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">BeautifulSoup() — Setup</span>
+        <span class="method-desc">Parsear HTML descargado con requests</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+resp = requests.<span class="fn">get</span>(<span class="str">"https://quotes.toscrape.com"</span>)
+soup = <span class="cls">BeautifulSoup</span>(resp.text, <span class="str">"lxml"</span>)  <span class="cm"># o "html.parser"</span>
+
+<span class="fn">print</span>(soup.title.text)
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+Quotes to Scrape
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">"lxml"</span><span class="arg-val">Parser más rápido y leniente. Requiere: pip install lxml</span></div>
+          <div class="arg-row"><span class="arg-name">"html.parser"</span><span class="arg-val">Built-in de Python. Más lento pero sin dependencias extra</span></div>
+          <div class="arg-row"><span class="arg-name">"html5lib"</span><span class="arg-val">Más permisivo con HTML mal formado. Más lento</span></div>
+          <div class="arg-row"><span class="arg-name">"xml"</span><span class="arg-val">Para parsear XML en vez de HTML</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- find / find_all -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">find() · find_all()</span>
+        <span class="method-desc">Buscar uno o todos los elementos que coincidan</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># find() → primer elemento que coincida</span>
+titulo = soup.<span class="fn">find</span>(<span class="str">"h1"</span>)
+texto  = soup.<span class="fn">find</span>(<span class="str">"div"</span>, class_=<span class="str">"quote"</span>)
+precio = soup.<span class="fn">find</span>(<span class="str">"span"</span>, id=<span class="str">"precio-total"</span>)
+
+<span class="cm"># find_all() → todos los que coincidan</span>
+citas  = soup.<span class="fn">find_all</span>(<span class="str">"div"</span>, class_=<span class="str">"quote"</span>)
+links  = soup.<span class="fn">find_all</span>(<span class="str">"a"</span>)
+
+<span class="cm"># Limitar cantidad</span>
+primeros = soup.<span class="fn">find_all</span>(<span class="str">"p"</span>, limit=<span class="num">3</span>)
+
+<span class="cm"># Por múltiples clases</span>
+elems = soup.<span class="fn">find_all</span>(<span class="str">"div"</span>, class_=[<span class="str">"card"</span>, <span class="str">"producto"</span>])
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+<span class="cm"># citas es una lista de Tags</span>
+citas[<span class="num">0</span>].text  → <span class="str">"The world as we have created it..."</span>
+len(citas)    → <span class="num">10</span>
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">class_=</span><span class="arg-val">Atributo class (class es palabra reservada en Python, por eso el _)</span></div>
+          <div class="arg-row"><span class="arg-name">id=</span><span class="arg-val">Busca por id HTML</span></div>
+          <div class="arg-row"><span class="arg-name">attrs={}</span><span class="arg-val">Dict de atributos: attrs={"data-id": "123"}</span></div>
+          <div class="arg-row"><span class="arg-name">string=</span><span class="arg-val">Busca por texto exacto o regex: string=re.compile("precio")</span></div>
+          <div class="arg-row"><span class="arg-name">limit=</span><span class="arg-val">Limita la cantidad de resultados</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSS Selectors -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">select() · select_one()</span>
+        <span class="method-desc">Buscar con selectores CSS (más potente que find)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="cm"># select_one → equivale a find()</span>
+h1     = soup.<span class="fn">select_one</span>(<span class="str">"h1"</span>)
+precio = soup.<span class="fn">select_one</span>(<span class="str">"div.producto > span.precio"</span>)
+
+<span class="cm"># select → equivale a find_all()</span>
+items  = soup.<span class="fn">select</span>(<span class="str">"ul.lista > li"</span>)
+links  = soup.<span class="fn">select</span>(<span class="str">"a[href^='/productos']"</span>)  <span class="cm"># href que empieza con /productos</span>
+imgs   = soup.<span class="fn">select</span>(<span class="str">"img[src$='.jpg']"</span>)        <span class="cm"># src que termina en .jpg</span>
+nth    = soup.<span class="fn">select</span>(<span class="str">"li:nth-of-type(2)"</span>)        <span class="cm"># segundo li</span>
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+links → [&lt;a href="/productos/remera"&gt;, &lt;a href="/productos/pantalon"&gt;, ...]
+        </div>
+        <div class="note">💡 select() usa CSS selectors estándar: >, +, ~, :nth-child(), [attr^=], [attr$=], [attr*=]. Más expresivo que find_all() para estructuras complejas.</div>
+      </div>
+    </div>
+
+    <!-- Extraer datos -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">.text · .get() · .string · .get_text()</span>
+        <span class="method-desc">Obtener el contenido de un Tag encontrado</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — dado: &lt;a href="/ruta" class="link"&gt;Click aquí&lt;/a&gt;</div>
+tag = soup.<span class="fn">find</span>(<span class="str">"a"</span>, class_=<span class="str">"link"</span>)
+
+tag.text          <span class="cm"># → "Click aquí"</span>
+tag.string        <span class="cm"># → "Click aquí" (solo si tiene UN solo nodo hijo)</span>
+tag.<span class="fn">get_text</span>()   <span class="cm"># → "Click aquí" (más seguro, strip=True para limpiar)</span>
+tag.<span class="fn">get</span>(<span class="str">"href"</span>) <span class="cm"># → "/ruta"</span>
+tag[<span class="str">"href"</span>]      <span class="cm"># → "/ruta" (lanza KeyError si no existe)</span>
+tag.attrs         <span class="cm"># → {"href": "/ruta", "class": ["link"]}</span>
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+get_text(strip=<span class="kw">True</span>) → <span class="str">"Click aquí"</span>   <span class="cm"># sin whitespace extra</span>
+get(<span class="str">"href"</span>)         → <span class="str">"/ruta"</span>
+get(<span class="str">"id"</span>, <span class="str">"N/A"</span>)   → <span class="str">"N/A"</span>          <span class="cm"># default si no existe</span>
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">.text</span><span class="arg-val">Texto de todos los descendientes concatenado</span></div>
+          <div class="arg-row"><span class="arg-name">.string</span><span class="arg-val">Solo si el tag tiene exactamente un hijo de texto. Si no, devuelve None</span></div>
+          <div class="arg-row"><span class="arg-name">get_text(sep=" ", strip=True)</span><span class="arg-val">Más control: sep entre bloques, strip limpia whitespace</span></div>
+          <div class="arg-row"><span class="arg-name">.get("attr", default)</span><span class="arg-val">Seguro: devuelve default si el atributo no existe</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación por el árbol -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Navegación del árbol</span>
+        <span class="method-desc">Moverse entre elementos padres, hijos y hermanos</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+tag = soup.<span class="fn">find</span>(<span class="str">"li"</span>, class_=<span class="str">"activo"</span>)
+
+<span class="cm"># Padre</span>
+tag.parent                  <span class="cm"># → &lt;ul&gt;</span>
+tag.parent.name             <span class="cm"># → "ul"</span>
+
+<span class="cm"># Hijos</span>
+tag.children                <span class="cm"># → iterador de hijos directos</span>
+list(tag.children)
+tag.find_all(recursive=<span class="kw">False</span>) <span class="cm"># solo hijos directos</span>
+
+<span class="cm"># Hermanos</span>
+tag.next_sibling            <span class="cm"># puede ser whitespace "\n"</span>
+tag.next_element            <span class="cm"># siguiente elemento (más útil)</span>
+tag.find_next_sibling(<span class="str">"li"</span>) <span class="cm"># siguiente li hermano</span>
+tag.find_previous_sibling(<span class="str">"li"</span>)
+        </div>
+      </div>
+    </div>
+
+    <!-- Ejemplo real completo -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Ejemplo real — scraping de tabla</span>
+        <span class="method-desc">Extraer datos de una tabla HTML a una lista de dicts</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+resp = requests.<span class="fn">get</span>(<span class="str">"https://example.com/tabla"</span>)
+soup = <span class="cls">BeautifulSoup</span>(resp.text, <span class="str">"lxml"</span>)
+
+tabla = soup.<span class="fn">find</span>(<span class="str">"table"</span>, id=<span class="str">"datos-clientes"</span>)
+
+<span class="cm"># Encabezados</span>
+headers = [th.<span class="fn">get_text</span>(strip=<span class="kw">True</span>) <span class="kw">for</span> th <span class="kw">in</span> tabla.<span class="fn">find_all</span>(<span class="str">"th"</span>)]
+
+<span class="cm"># Filas</span>
+rows = []
+<span class="kw">for</span> tr <span class="kw">in</span> tabla.<span class="fn">select</span>(<span class="str">"tbody > tr"</span>):
+    celdas = [td.<span class="fn">get_text</span>(strip=<span class="kw">True</span>) <span class="kw">for</span> td <span class="kw">in</span> tr.<span class="fn">find_all</span>(<span class="str">"td"</span>)]
+    rows.<span class="fn">append</span>(dict(<span class="fn">zip</span>(headers, celdas)))
+
+df = pd.<span class="cls">DataFrame</span>(rows)
+<span class="fn">print</span>(df)
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+  Cliente     CUIT           Monto
+<span class="num">0</span>  Spotify  30-71757936-0  150000.0
+<span class="num">1</span>  PPG      30-68651307-2   89000.0
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SELENIUM
+══════════════════════════════════ -->
+<section class="section s-sel" id="selenium">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Selenium</h2>
+    <span class="section-tag">webdriver · chrome · firefox</span>
+  </div>
+
+  <div class="intro-box">
+    Selenium es el estándar legacy de automatización de browsers. Más lento que Playwright pero con mayor
+    adopción en proyectos legacy y suites de testing enterprise. Desde Selenium 4 no necesita descargar
+    el WebDriver manualmente (usa selenium-manager automáticamente).
+  </div>
+
+  <div class="install-box">
+    <span class="install-cmd">pip install selenium</span>
+    <span style="color: var(--muted); font-size:11px;">← Selenium 4+ gestiona el driver automáticamente</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- Setup -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">webdriver.Chrome() — Setup</span>
+        <span class="method-desc">Inicializar el driver y abrir una página</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">from</span> selenium <span class="kw">import</span> webdriver
+<span class="kw">from</span> selenium.webdriver.chrome.options <span class="kw">import</span> Options
+
+options = <span class="cls">Options</span>()
+options.<span class="fn">add_argument</span>(<span class="str">"--headless"</span>)          <span class="cm"># sin ventana</span>
+options.<span class="fn">add_argument</span>(<span class="str">"--no-sandbox"</span>)
+options.<span class="fn">add_argument</span>(<span class="str">"--disable-gpu"</span>)
+
+driver = webdriver.<span class="cls">Chrome</span>(options=options)
+driver.<span class="fn">get</span>(<span class="str">"https://example.com"</span>)
+
+<span class="fn">print</span>(driver.title)
+driver.<span class="fn">quit</span>()   <span class="cm"># SIEMPRE cerrar el driver</span>
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output</div>
+Example Domain
+        </div>
+        <div class="note">💡 Usar con context manager para evitar browsers huérfanos:
+with webdriver.Chrome(options=options) as driver:
+    driver.get("https://example.com")</div>
+      </div>
+    </div>
+
+    <!-- Localizar elementos -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">find_element() · find_elements()</span>
+        <span class="method-desc">Encontrar elementos en la página</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">from</span> selenium.webdriver.common.by <span class="kw">import</span> By
+
+<span class="cm"># Un elemento</span>
+h1    = driver.<span class="fn">find_element</span>(By.TAG_NAME, <span class="str">"h1"</span>)
+precio= driver.<span class="fn">find_element</span>(By.CSS_SELECTOR, <span class="str">".precio"</span>)
+campo = driver.<span class="fn">find_element</span>(By.ID, <span class="str">"email"</span>)
+link  = driver.<span class="fn">find_element</span>(By.XPATH, <span class="str">"//a[@class='nav-link']"</span>)
+
+<span class="cm"># Múltiples elementos</span>
+items = driver.<span class="fn">find_elements</span>(By.CLASS_NAME, <span class="str">"producto"</span>)
+textos = [el.text <span class="kw">for</span> el <span class="kw">in</span> items]
+        </div>
+        <div class="args-block">
+          <div class="code-label" style="color:#c77dff;font-size:9px;letter-spacing:3px;margin-bottom:8px;">By — estrategias de localización</div>
+          <div class="arg-row"><span class="arg-name">By.ID</span><span class="arg-val">Por atributo id. El más rápido y específico</span></div>
+          <div class="arg-row"><span class="arg-name">By.CSS_SELECTOR</span><span class="arg-val">CSS selector. Recomendado por velocidad y flexibilidad</span></div>
+          <div class="arg-row"><span class="arg-name">By.XPATH</span><span class="arg-val">XPath expressions. Potente pero más lento y frágil</span></div>
+          <div class="arg-row"><span class="arg-name">By.CLASS_NAME</span><span class="arg-val">Solo UNA clase. Para múltiples usar CSS_SELECTOR</span></div>
+          <div class="arg-row"><span class="arg-name">By.NAME</span><span class="arg-val">Por atributo name (útil para forms)</span></div>
+          <div class="arg-row"><span class="arg-name">By.LINK_TEXT</span><span class="arg-val">Texto exacto de un &lt;a&gt;</span></div>
+          <div class="arg-row"><span class="arg-name">By.TAG_NAME</span><span class="arg-val">Por nombre de tag HTML</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">.click() · .send_keys() · .clear()</span>
+        <span class="method-desc">Interaccionar con elementos</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">from</span> selenium.webdriver.common.keys <span class="kw">import</span> Keys
+
+<span class="cm"># Click</span>
+driver.<span class="fn">find_element</span>(By.ID, <span class="str">"btn-submit"</span>).<span class="fn">click</span>()
+
+<span class="cm"># Escribir en un input</span>
+campo = driver.<span class="fn">find_element</span>(By.NAME, <span class="str">"usuario"</span>)
+campo.<span class="fn">clear</span>()                     <span class="cm"># limpiar primero</span>
+campo.<span class="fn">send_keys</span>(<span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="177b72785773727b787e6363723974787a">[email&#160;protected]</a>"</span>)
+campo.<span class="fn">send_keys</span>(Keys.ENTER)        <span class="cm"># presionar Enter</span>
+
+<span class="cm"># Scroll hasta un elemento</span>
+elem = driver.<span class="fn">find_element</span>(By.ID, <span class="str">"footer"</span>)
+driver.execute_script(<span class="str">"arguments[0].scrollIntoView();"</span>, elem)
+
+<span class="cm"># Ejecutar JavaScript arbitrario</span>
+driver.<span class="fn">execute_script</span>(<span class="str">"window.scrollTo(0, document.body.scrollHeight);"</span>)
+        </div>
+      </div>
+    </div>
+
+    <!-- Esperas -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">WebDriverWait + expected_conditions</span>
+        <span class="method-desc">Esperar explícitamente a que un elemento esté listo</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input</div>
+<span class="kw">from</span> selenium.webdriver.support.ui <span class="kw">import</span> WebDriverWait
+<span class="kw">from</span> selenium.webdriver.support <span class="kw">import</span> expected_conditions <span class="kw">as</span> EC
+
+wait = <span class="cls">WebDriverWait</span>(driver, timeout=<span class="num">10</span>)
+
+<span class="cm"># Esperar que el elemento sea clickeable</span>
+btn = wait.<span class="fn">until</span>(EC.<span class="fn">element_to_be_clickable</span>((By.ID, <span class="str">"btn-login"</span>)))
+btn.<span class="fn">click</span>()
+
+<span class="cm"># Esperar que aparezca en el DOM</span>
+tabla = wait.<span class="fn">until</span>(EC.<span class="fn">presence_of_element_located</span>((By.ID, <span class="str">"tabla"</span>)))
+
+<span class="cm"># Esperar que sea visible</span>
+modal = wait.<span class="fn">until</span>(EC.<span class="fn">visibility_of_element_located</span>((By.CLASS_NAME, <span class="str">"modal"</span>)))
+
+<span class="cm"># Esperar que contenga texto</span>
+wait.<span class="fn">until</span>(EC.<span class="fn">text_to_be_present_in_element</span>((By.ID, <span class="str">"status"</span>), <span class="str">"Listo"</span>))
+        </div>
+        <div class="args-block">
+          <div class="arg-row"><span class="arg-name">presence_of_element_located</span><span class="arg-val">El elemento existe en el DOM (puede estar oculto)</span></div>
+          <div class="arg-row"><span class="arg-name">visibility_of_element_located</span><span class="arg-val">El elemento existe Y es visible</span></div>
+          <div class="arg-row"><span class="arg-name">element_to_be_clickable</span><span class="arg-val">El elemento está visible y habilitado (se puede hacer click)</span></div>
+          <div class="arg-row"><span class="arg-name">invisibility_of_element_located</span><span class="arg-val">El elemento desapareció (spinners, loaders)</span></div>
+        </div>
+        <div class="note">⚠️ Nunca usar time.sleep() para esperar. WebDriverWait polling cada 500ms y falla rápido si el elemento aparece. sleep() siempre espera el tiempo completo.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     TESTING
+══════════════════════════════════ -->
+<section class="section s-test" id="testing">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Testing</h2>
+    <span class="section-tag">pytest · unittest · playwright test</span>
+  </div>
+
+  <div class="intro-box">
+    El testing de scrapers y automatizaciones tiene dos capas: unit tests (lógica de parsing) y E2E tests
+    (el browser hace lo correcto). Playwright tiene su propio test runner integrado. Para Selenium y BS4
+    se usa pytest o unittest estándar.
+  </div>
+
+  <div class="cards-wide">
+
+    <!-- Pytest + Playwright -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">pytest + playwright — E2E testing</span>
+        <span class="method-desc">Testing de flujos completos del browser con fixtures automáticos</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — test_login.py</div>
+<span class="cm"># pip install pytest-playwright</span>
+<span class="cm"># playwright install</span>
+
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> Page, expect
+
+<span class="cm"># El fixture "page" lo provee pytest-playwright automáticamente</span>
+
+<span class="kw">def</span> <span class="fn">test_titulo_correcto</span>(page: <span class="cls">Page</span>):
+    page.<span class="fn">goto</span>(<span class="str">"https://example.com"</span>)
+    expect(page).<span class="fn">to_have_title</span>(<span class="str">"Example Domain"</span>)
+
+<span class="kw">def</span> <span class="fn">test_formulario_login</span>(page: <span class="cls">Page</span>):
+    page.<span class="fn">goto</span>(<span class="str">"https://app.com/login"</span>)
+    page.<span class="fn">fill</span>(<span class="str">'input[name="email"]'</span>, <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5a1b0a6a195a1b0a6a1fbb6bab8">[email&#160;protected]</a>"</span>)
+    page.<span class="fn">fill</span>(<span class="str">'input[name="password"]'</span>, <span class="str">"pass123"</span>)
+    page.<span class="fn">click</span>(<span class="str">"button[type='submit']"</span>)
+    <span class="cm"># Verificar que redirige al dashboard</span>
+    expect(page).<span class="fn">to_have_url</span>(<span class="str">"**/dashboard"</span>)
+
+<span class="kw">def</span> <span class="fn">test_elemento_visible</span>(page: <span class="cls">Page</span>):
+    page.<span class="fn">goto</span>(<span class="str">"https://app.com"</span>)
+    heading = page.<span class="fn">locator</span>(<span class="str">"h1"</span>)
+    expect(heading).<span class="fn">to_be_visible</span>()
+    expect(heading).<span class="fn">to_have_text</span>(<span class="str">"Bienvenido"</span>)
+
+<span class="kw">def</span> <span class="fn">test_tabla_tiene_datos</span>(page: <span class="cls">Page</span>):
+    page.<span class="fn">goto</span>(<span class="str">"https://app.com/reportes"</span>)
+    filas = page.<span class="fn">locator</span>(<span class="str">"table tbody tr"</span>)
+    expect(filas).<span class="fn">to_have_count</span>(<span class="num">10</span>)   <span class="cm"># exactamente 10 filas</span>
+    <span class="cm"># O verificar que haya al menos 1:</span>
+    expect(filas.<span class="fn">first</span>()).<span class="fn">to_be_visible</span>()
+        </div>
+        <div class="code-block lbl-test">
+          <div class="code-label">Correr los tests</div>
+<span class="cm"># Correr todos los tests</span>
+$ pytest
+
+<span class="cm"># Con más detalle</span>
+$ pytest -v
+
+<span class="cm"># Solo un archivo</span>
+$ pytest test_login.py
+
+<span class="cm"># Con browser visible (no headless) para debug</span>
+$ pytest --headed
+
+<span class="cm"># Generar reporte HTML</span>
+$ pytest --html=reporte.html
+        </div>
+        <div class="args-block">
+          <div class="code-label" style="color:#c77dff;font-size:9px;letter-spacing:3px;margin-bottom:8px;">expect() — assertions disponibles</div>
+          <div class="arg-row"><span class="arg-name">to_have_title()</span><span class="arg-val">El título de la página coincide</span></div>
+          <div class="arg-row"><span class="arg-name">to_have_url()</span><span class="arg-val">La URL actual coincide (acepta patterns con *)</span></div>
+          <div class="arg-row"><span class="arg-name">to_be_visible()</span><span class="arg-val">El elemento es visible en la pantalla</span></div>
+          <div class="arg-row"><span class="arg-name">to_have_text()</span><span class="arg-val">El texto del elemento coincide</span></div>
+          <div class="arg-row"><span class="arg-name">to_have_count(n)</span><span class="arg-val">El locator apunta exactamente a n elementos</span></div>
+          <div class="arg-row"><span class="arg-name">to_be_enabled()</span><span class="arg-val">El elemento no está disabled</span></div>
+          <div class="arg-row"><span class="arg-name">to_have_value()</span><span class="arg-val">El input tiene el valor esperado</span></div>
+          <div class="arg-row"><span class="arg-name">not_to_be_visible()</span><span class="arg-val">El elemento no es visible (o no existe)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pytest + BeautifulSoup -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">pytest — Unit testing del parser (BeautifulSoup)</span>
+        <span class="method-desc">Testear la lógica de extracción sin levantar un browser</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — test_parser.py</div>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+<span class="cm"># Función a testear</span>
+<span class="kw">def</span> <span class="fn">extraer_productos</span>(html: str) -> list:
+    soup = BeautifulSoup(html, <span class="str">"lxml"</span>)
+    productos = []
+    <span class="kw">for</span> card <span class="kw">in</span> soup.<span class="fn">select</span>(<span class="str">".producto"</span>):
+        productos.<span class="fn">append</span>({
+            <span class="str">"nombre"</span>: card.<span class="fn">select_one</span>(<span class="str">".nombre"</span>).<span class="fn">get_text</span>(strip=<span class="kw">True</span>),
+            <span class="str">"precio"</span>: card.<span class="fn">select_one</span>(<span class="str">".precio"</span>).<span class="fn">get_text</span>(strip=<span class="kw">True</span>)
+        })
+    <span class="kw">return</span> productos
+
+<span class="cm"># HTML de prueba (sin necesitar internet)</span>
+HTML_EJEMPLO = <span class="str">"""
+&lt;div class="producto"&gt;
+    &lt;span class="nombre"&gt;Remera&lt;/span&gt;
+    &lt;span class="precio"&gt;$4500&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="producto"&gt;
+    &lt;span class="nombre"&gt;Pantalón&lt;/span&gt;
+    &lt;span class="precio"&gt;$8900&lt;/span&gt;
+&lt;/div&gt;
+"""</span>
+
+<span class="kw">def</span> <span class="fn">test_extrae_productos_correctamente</span>():
+    resultado = <span class="fn">extraer_productos</span>(HTML_EJEMPLO)
+    <span class="kw">assert</span> len(resultado) == <span class="num">2</span>
+    <span class="kw">assert</span> resultado[<span class="num">0</span>][<span class="str">"nombre"</span>] == <span class="str">"Remera"</span>
+    <span class="kw">assert</span> resultado[<span class="num">0</span>][<span class="str">"precio"</span>] == <span class="str">"$4500"</span>
+
+<span class="kw">def</span> <span class="fn">test_html_vacio_devuelve_lista_vacia</span>():
+    resultado = <span class="fn">extraer_productos</span>(<span class="str">"&lt;html&gt;&lt;/html&gt;"</span>)
+    <span class="kw">assert</span> resultado == []
+
+<span class="cm"># Parametrize: testear múltiples casos en un solo test</span>
+<span class="dec">@pytest.mark.parametrize</span>(<span class="str">"precio_str,esperado"</span>, [
+    (<span class="str">"$4.500"</span>, <span class="num">4500.0</span>),
+    (<span class="str">"$12.000,50"</span>, <span class="num">12000.5</span>),
+    (<span class="str">"$100"</span>, <span class="num">100.0</span>),
+])
+<span class="kw">def</span> <span class="fn">test_limpiar_precio</span>(precio_str, esperado):
+    limpio = <span class="kw">float</span>(precio_str.<span class="fn">replace</span>(<span class="str">"$"</span>, <span class="str">""</span>).<span class="fn">replace</span>(<span class="str">"."</span>, <span class="str">""</span>).<span class="fn">replace</span>(<span class="str">","</span>, <span class="str">"."</span>))
+    <span class="kw">assert</span> limpio == esperado
+        </div>
+        <div class="code-block lbl-output">
+          <div class="code-label">Output — pytest -v</div>
+test_parser.py::test_extrae_productos_correctamente  <span class="tick">PASSED</span>
+test_parser.py::test_html_vacio_devuelve_lista_vacia <span class="tick">PASSED</span>
+test_parser.py::test_limpiar_precio[$4.500-4500.0]   <span class="tick">PASSED</span>
+test_parser.py::test_limpiar_precio[$12.000,50-...]  <span class="tick">PASSED</span>
+test_parser.py::test_limpiar_precio[$100-100.0]      <span class="tick">PASSED</span>
+
+<span class="g1">5 passed in 0.12s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixtures -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">@pytest.fixture — Setup y Teardown</span>
+        <span class="method-desc">Reutilizar configuración entre tests (browser, driver, mocks)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-input">
+          <div class="code-label">Input — conftest.py (fixtures globales)</div>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> selenium <span class="kw">import</span> webdriver
+<span class="kw">from</span> selenium.webdriver.chrome.options <span class="kw">import</span> Options
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"function"</span>)
+<span class="kw">def</span> <span class="fn">driver</span>():
+    <span class="str">"""Setup: se crea antes del test. Teardown: se destruye después."""</span>
+    opts = <span class="cls">Options</span>()
+    opts.<span class="fn">add_argument</span>(<span class="str">"--headless"</span>)
+    d = webdriver.<span class="cls">Chrome</span>(options=opts)
+    d.implicitly_wait(<span class="num">5</span>)
+    <span class="kw">yield</span> d           <span class="cm"># ← el test recibe el driver aquí</span>
+    d.<span class="fn">quit</span>()          <span class="cm"># ← esto se ejecuta siempre al final (teardown)</span>
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"session"</span>)
+<span class="kw">def</span> <span class="fn">base_url</span>():
+    <span class="kw">return</span> <span class="str">"https://app.com"</span>
+
+<span class="cm"># En los tests, simplemente declarás el fixture como parámetro:</span>
+<span class="kw">def</span> <span class="fn">test_home_carga</span>(driver, base_url):
+    driver.<span class="fn">get</span>(base_url)
+    <span class="kw">assert</span> <span class="str">"Bienvenido"</span> <span class="kw">in</span> driver.page_source
+
+<span class="kw">def</span> <span class="fn">test_nav_visible</span>(driver, base_url):
+    driver.<span class="fn">get</span>(base_url)
+    nav = driver.<span class="fn">find_element</span>(By.TAG_NAME, <span class="str">"nav"</span>)
+    <span class="kw">assert</span> nav.<span class="fn">is_displayed</span>()
+        </div>
+        <div class="args-block">
+          <div class="code-label" style="color:#c77dff;font-size:9px;letter-spacing:3px;margin-bottom:8px;">scope= — ciclo de vida del fixture</div>
+          <div class="arg-row"><span class="arg-name">"function"</span><span class="arg-val">Se crea y destruye para cada test (default). Más aislamiento</span></div>
+          <div class="arg-row"><span class="arg-name">"class"</span><span class="arg-val">Compartido entre todos los tests de la misma clase</span></div>
+          <div class="arg-row"><span class="arg-name">"module"</span><span class="arg-val">Compartido entre todos los tests de un mismo archivo</span></div>
+          <div class="arg-row"><span class="arg-name">"session"<

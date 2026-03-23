@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing Python Completo — pytest · Robot Framework · Avanzado</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d14;--surface:#0f1320;--card:#141928;--border:#1e2540;--border2:#2a3560;--text:#e8eef8;--text2:#7a90c8;--text3:#3a4a80;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:13px;font-weight:700;color:var(--text2);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px}
+  pre{font-family:'JetBrains Mono',monospace;background:#060a10;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#b8d0f0}
+  .kw{color:#60a5fa;font-weight:600}
+  .fn{color:#34d399}
+  .str{color:#fcd34d}
+  .cm{color:var(--text3);font-style:italic}
+  .dec{color:#c4b5fd}
+  .cls{color:#f9a8d4}
+  .rf{color:#67e8f9;font-weight:600}
+  .rfv{color:#fbbf24}
+  .rflib{color:#34d399}
+  .num{color:#fb923c}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--card);color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(59,130,246,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#90b8f8}
+  .best{background:rgba(34,197,94,.07);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6ab87a}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+  .b-must{background:rgba(34,197,94,.12);color:var(--green)}
+  .b-adv{background:rgba(168,85,247,.12);color:var(--purple)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>🧪 Testing Python <span>— Completo</span></h1>
+<p class="subtitle">pytest con templates reales del equipo · conftest.py · Robot Framework E2E · smoke tests · mocking · parametrización · testing avanzado</p>
+
+<h2>Stack de testing — cuándo usar cada herramienta</h2>
+<table>
+  <thead><tr><th>Herramienta</th><th>Tipo</th><th>Cuándo</th><th>Nivel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>pytest</strong></td><td>Unitarios + integración</td><td>Lógica de negocio, parsers, validaciones — SIEMPRE</td><td><span class="badge b-must">Siempre</span></td></tr>
+    <tr><td><strong>pytest-cov</strong></td><td>Cobertura de código</td><td>Medir qué porcentaje del código está cubierto</td><td><span class="badge b-must">Siempre</span></td></tr>
+    <tr><td><strong>unittest.mock</strong></td><td>Mocking</td><td>Aislar ARCA, Excel, APIs externas de los tests</td><td><span class="badge b-must">Necesario</span></td></tr>
+    <tr><td><strong>Robot Framework</strong></td><td>E2E / aceptación</td><td>Flujo completo del proceso, QA final del sprint</td><td><span class="badge b-must">QA Final</span></td></tr>
+    <tr><td><strong>hypothesis</strong></td><td>Property-based</td><td>Encontrar edge cases automáticamente</td><td><span class="badge b-adv">Avanzado</span></td></tr>
+    <tr><td><strong>pytest-bdd</strong></td><td>BDD / Gherkin</td><td>Tests legibles por el cliente / analista funcional</td><td><span class="badge b-adv">Avanzado</span></td></tr>
+  </tbody>
+</table>
+
+<h2>pytest — Template base completo del equipo</h2>
+<p>Template real extraído de los proyectos del equipo BPS. Copiar en cada proyecto nuevo bajo <code>tests/unit/</code>.</p>
+
+<pre>
+<span class="str">"""
+Template base para tests unitarios con pytest — BPS Dev Team.
+
+Convenciones:
+  - Un archivo test_módulo.py por módulo a testear.
+  - Una clase TestXxx por clase o función principal.
+  - Método: test_&lt;caso&gt;_&lt;condición&gt;_&lt;resultado_esperado&gt;
+  - Fixtures compartidas en conftest.py
+  - Mocks para TODAS las dependencias externas (ARCA, Excel, APIs).
+"""</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> unittest.mock <span class="kw">import</span> MagicMock, patch
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+
+<span class="kw">from</span> src.project_name.invoice_processor <span class="kw">import</span> (
+    Invoice,
+    validar_comprobante,
+    descargar_comprobantes,
+)
+
+
+<span class="cm"># ── FIXTURES ──────────────────────────────────────────────────────────────────</span>
+<span class="cm"># Las fixtures compartidas van en conftest.py</span>
+<span class="cm"># Acá como ejemplo local para este test</span>
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">factura_valida</span>() -> Invoice:
+    <span class="str">"""Comprobante válido para happy path tests."""</span>
+    <span class="kw">return</span> <span class="cls">Invoice</span>(
+        cuit_emisor=<span class="str">"20123456789"</span>,
+        numero=<span class="str">"0001-00001234"</span>,
+        fecha=date(<span class="num">2024</span>, <span class="num">3</span>, <span class="num">1</span>),
+        importe_total=<span class="num">12100.00</span>,
+        cae=<span class="str">"74123456789012"</span>,
+        tipo=<span class="str">"A"</span>,
+    )
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">cuit_receptor_valido</span>() -> str:
+    <span class="kw">return</span> <span class="str">"30987654321"</span>
+
+
+<span class="cm"># ── TESTS: ValidarComprobante ─────────────────────────────────────────────────</span>
+
+<span class="kw">class</span> <span class="cls">TestValidarComprobante</span>:
+    <span class="str">"""Tests para la función validar_comprobante."""</span>
+
+    <span class="kw">def</span> <span class="fn">test_comprobante_valido_retorna_true</span>(self, factura_valida, cuit_receptor_valido):
+        <span class="str">"""Happy path: comprobante con todos los campos correctos."""</span>
+        resultado = <span class="fn">validar_comprobante</span>(factura_valida, cuit_receptor_valido)
+        <span class="kw">assert</span> resultado <span class="kw">is True</span>
+
+    <span class="kw">def</span> <span class="fn">test_importe_negativo_retorna_false</span>(self, factura_valida, cuit_receptor_valido):
+        <span class="str">"""Importe negativo no es un comprobante válido."""</span>
+        factura_valida.importe_total = -<span class="num">100.0</span>
+        resultado = <span class="fn">validar_comprobante</span>(factura_valida, cuit_receptor_valido)
+        <span class="kw">assert</span> resultado <span class="kw">is False</span>
+
+    <span class="kw">def</span> <span class="fn">test_cuit_receptor_invalido_lanza_value_error</span>(self, factura_valida):
+        <span class="str">"""CUIT con longitud incorrecta debe levantar ValueError."""</span>
+        <span class="kw">with</span> pytest.<span class="fn">raises</span>(<span class="cls">ValueError</span>, match=<span class="str">"11 dígitos"</span>):
+            <span class="fn">validar_comprobante</span>(factura_valida, <span class="str">"123"</span>)
+
+    <span class="kw">def</span> <span class="fn">test_none_como_invoice_lanza_type_error</span>(self, cuit_receptor_valido):
+        <span class="str">"""Pasar None como invoice debe levantar TypeError."""</span>
+        <span class="kw">with</span> pytest.<span class="fn">raises</span>(<span class="cls">TypeError</span>):
+            <span class="fn">validar_comprobante</span>(<span class="kw">None</span>, cuit_receptor_valido)
+
+    <span class="dec">@pytest.mark.parametrize</span>(<span class="str">"importe"</span>, [<span class="num">0.0</span>, -<span class="num">1.0</span>, -<span class="num">999.99</span>])
+    <span class="kw">def</span> <span class="fn">test_importes_invalidos_retornan_false</span>(self, factura_valida, cuit_receptor_valido, importe):
+        <span class="str">"""Parametrize: mismo test para múltiples valores de importe inválido."""</span>
+        factura_valida.importe_total = importe
+        <span class="kw">assert</span> <span class="fn">validar_comprobante</span>(factura_valida, cuit_receptor_valido) <span class="kw">is False</span>
+
+
+<span class="cm"># ── TESTS: DescargarComprobantes — con mocks ──────────────────────────────────</span>
+
+<span class="kw">class</span> <span class="cls">TestDescargarComprobantes</span>:
+    <span class="str">"""Tests para descargar_comprobantes — mockea la conexión a ARCA."""</span>
+
+    <span class="dec">@patch</span>(<span class="str">"src.project_name.invoice_processor._conectar_arca"</span>)
+    <span class="kw">def</span> <span class="fn">test_retorna_lista_vacia_si_no_hay_comprobantes</span>(self, mock_arca):
+        <span class="str">"""Si ARCA devuelve vacío, la función retorna lista vacía sin error."""</span>
+        mock_arca.return_value.consultar.return_value = []
+        resultado = <span class="fn">descargar_comprobantes</span>(<span class="str">"20123456789"</span>, date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">1</span>), date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">31</span>))
+        <span class="kw">assert</span> resultado == []
+
+    <span class="dec">@patch</span>(<span class="str">"src.project_name.invoice_processor._conectar_arca"</span>)
+    <span class="kw">def</span> <span class="fn">test_error_conexion_se_propaga_como_connection_error</span>(self, mock_arca):
+        <span class="str">"""Si ARCA no responde, debe propagarse ConnectionError al caller."""</span>
+        mock_arca.side_effect = <span class="cls">ConnectionError</span>(<span class="str">"Timeout ARCA"</span>)
+        <span class="kw">with</span> pytest.<span class="fn">raises</span>(<span class="cls">ConnectionError</span>):
+            <span class="fn">descargar_comprobantes</span>(<span class="str">"20123456789"</span>, date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">1</span>), date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">31</span>))</pre>
+
+<h2>conftest.py — Fixtures compartidas entre todos los tests</h2>
+
+<pre>
+<span class="str">"""
+conftest.py — Fixtures compartidas entre todos los tests del proyecto.
+pytest las descubre automáticamente en tests/. No necesitan ser importadas.
+"""</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+<span class="kw">from</span> unittest.mock <span class="kw">import</span> MagicMock
+<span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine
+<span class="kw">from</span> sqlalchemy.orm <span class="kw">import</span> sessionmaker
+
+<span class="kw">from</span> src.project_name.invoice_processor <span class="kw">import</span> Invoice
+
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"session"</span>)
+<span class="kw">def</span> <span class="fn">arca_mock</span>():
+    <span class="str">"""Mock del cliente ARCA — reutilizable en todos los tests."""</span>
+    mock = <span class="fn">MagicMock</span>()
+    mock.consultar.return_value = [
+        <span class="cls">Invoice</span>(<span class="str">"20123456789"</span>, <span class="str">"0001-00000001"</span>, date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">5</span>), <span class="num">12100.0</span>, <span class="str">"74000000000001"</span>, <span class="str">"A"</span>),
+        <span class="cls">Invoice</span>(<span class="str">"20123456789"</span>, <span class="str">"0001-00000002"</span>, date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">12</span>), <span class="num">5500.0</span>,  <span class="str">"74000000000002"</span>, <span class="str">"B"</span>),
+    ]
+    <span class="kw">return</span> mock
+
+
+<span class="dec">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">factura_valida</span>():
+    <span class="str">"""Comprobante válido para happy path. Reset por cada test."""</span>
+    <span class="kw">return</span> <span class="cls">Invoice</span>(
+        cuit_emisor=<span class="str">"20123456789"</span>,
+        numero=<span class="str">"0001-00001234"</span>,
+        fecha=date(<span class="num">2024</span>, <span class="num">3</span>, <span class="num">1</span>),
+        importe_total=<span class="num">12100.00</span>,
+        cae=<span class="str">"74123456789012"</span>,
+        tipo=<span class="str">"A"</span>,
+    )
+
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"session"</span>)
+<span class="kw">def</span> <span class="fn">engine</span>():
+    <span class="str">"""SQLite en memoria — cero setup, tests rápidos."""</span>
+    <span class="kw">return</span> <span class="fn">create_engine</span>(<span class="str">"sqlite:///:memory:"</span>)
+
+
+<span class="dec">@pytest.fixture</span>(scope=<span class="str">"function"</span>)
+<span class="kw">def</span> <span class="fn">db_session</span>(engine):
+    <span class="str">"""Sesión con rollback automático — cada test arranca con DB limpia."""</span>
+    connection = engine.<span class="fn">connect</span>()
+    transaction = connection.<span class="fn">begin</span>()
+    Session = <span class="fn">sessionmaker</span>(bind=connection)
+    session = <span class="fn">Session</span>()
+    <span class="kw">yield</span> session
+    session.<span class="fn">close</span>()
+    transaction.<span class="fn">rollback</span>()
+    connection.<span class="fn">close</span>()</pre>
+
+<h2>Robot Framework — Template E2E completo del equipo</h2>
+<p>Robot Framework es el estándar del equipo para tests de aceptación y E2E. Sintaxis legible por no-técnicos. Keywords en inglés para compatibilidad nativa, Test Cases en español.</p>
+
+<pre>
+<span class="rf">*** Settings ***</span>
+<span class="rflib">Documentation</span>    Suite: Procesamiento de comprobantes ARCA
+...              Cubre: Happy path y casos principales
+...              Sprint: 03 — Release 1.2
+<span class="rflib">Resource</span>         ../resources/keywords.resource
+<span class="rflib">Resource</span>         ../resources/variables.resource
+<span class="rflib">Suite Setup</span>      Initialize Test Environment
+<span class="rflib">Suite Teardown</span>   Clean Test Environment
+
+<span class="rf">*** Test Cases ***</span>
+
+<span class="rfv">TC-001 Descarga exitosa de comprobantes del período</span>
+    <span class="rflib">[Documentation]</span>    Valida que el proceso descarga y persiste correctamente
+    ...                los comprobantes de un período con datos reales.
+    <span class="rflib">[Tags]</span>    happy-path    smoke    p1
+    Given the ARCA service is available
+    And the period is <span class="str">"2024-01-01"</span> to <span class="str">"2024-01-31"</span>
+    When the download process runs for CUIT <span class="str">"${VALID_CUIT}"</span>
+    Then the result table should have more than 0 rows
+    And each row should have a valid CAE format
+    And the output file should exist at <span class="str">"${OUTPUT_PATH}"</span>
+
+<span class="rfv">TC-002 Proceso con período sin comprobantes</span>
+    <span class="rflib">[Documentation]</span>    Valida que el proceso maneja correctamente un período
+    ...                sin comprobantes sin lanzar error.
+    <span class="rflib">[Tags]</span>    edge-case    p2
+    Given the ARCA service is available
+    And the period is <span class="str">"2000-01-01"</span> to <span class="str">"2000-01-31"</span>
+    When the download process runs for CUIT <span class="str">"${VALID_CUIT}"</span>
+    Then the result table should have 0 rows
+    And no error should be logged
+
+<span class="rfv">TC-003 CUIT inválido produce error de negocio</span>
+    <span class="rflib">[Documentation]</span>    CUIT con formato incorrecto debe generar Business Exception.
+    <span class="rflib">[Tags]</span>    business-exception    p1
+    Given the ARCA service is available
+    When the download process runs for CUIT <span class="str">"INVALIDO"</span>
+    Then a business exception should be raised
+    And the error should be logged with message containing <span class="str">"CUIT"</span>
+
+<span class="rf">*** Keywords ***</span>
+<span class="cm"># Los keywords detallados van en resources/keywords.resource</span></pre>
+
+<pre>
+<span class="rf">*** Settings ***</span>    <span class="cm"># resources/keywords.resource</span>
+<span class="rflib">Library</span>    Collections
+<span class="rflib">Library</span>    DateTime
+<span class="rflib">Library</span>    OperatingSystem
+<span class="rflib">Library</span>    <span class="str">${CURDIR}/../../../src/project_name/invoice_processor.py</span>
+
+<span class="rf">*** Keywords ***</span>
+
+<span class="rfv">Initialize Test Environment</span>
+    <span class="rflib">[Documentation]</span>    Setup antes de la suite — prepara entorno y datos de prueba.
+    Log    Iniciando entorno de prueba    INFO
+    <span class="rflib">${time}=</span>    Get Current Date    result_format=%Y%m%d_%H%M%S
+    Set Global Variable    <span class="rflib">${TEST_START_TIME}</span>    <span class="rflib">${time}</span>
+
+<span class="rfv">Clean Test Environment</span>
+    <span class="rflib">[Documentation]</span>    Limpia archivos temporales y conexiones post-suite.
+    Run Keyword And Ignore Error    Remove File    <span class="rflib">${OUTPUT_PATH}</span>
+
+<span class="rfv">The ARCA Service Is Available</span>
+    <span class="rflib">[Documentation]</span>    Verifica que ARCA responde antes de los tests.
+    Log    Verificando disponibilidad de ARCA    INFO
+
+<span class="rfv">The Period Is "${date_from}" To "${date_to}"</span>
+    Set Test Variable    <span class="rflib">${PERIOD_FROM}</span>    <span class="rflib">${date_from}</span>
+    Set Test Variable    <span class="rflib">${PERIOD_TO}</span>      <span class="rflib">${date_to}</span>
+
+<span class="rfv">The Download Process Runs For CUIT "${cuit}"</span>
+    <span class="rflib">${result}=</span>    Descargar Comprobantes    <span class="rflib">${cuit}</span>    <span class="rflib">${PERIOD_FROM}</span>    <span class="rflib">${PERIOD_TO}</span>
+    Set Test Variable    <span class="rflib">${DOWNLOAD_RESULT}</span>    <span class="rflib">${result}</span>
+
+<span class="rfv">The Result Table Should Have More Than 0 Rows</span>
+    <span class="rflib">${count}=</span>    Get Length    <span class="rflib">${DOWNLOAD_RESULT}</span>
+    Should Be True    <span class="rflib">${count}</span> > 0
+    ...    msg=Se esperaban comprobantes pero el resultado está vacío.
+
+<span class="rfv">Each Row Should Have A Valid CAE Format</span>
+    FOR    <span class="rflib">${invoice}</span>    IN    @{DOWNLOAD_RESULT}
+        Should Match Regexp    <span class="rflib">${invoice.cae}</span>    ^\\d{14}$
+        ...    msg=CAE inválido: <span class="rflib">${invoice.cae}</span>
+    END
+
+<span class="rfv">A Business Exception Should Be Raised</span>
+    Should Not Be Empty    <span class="rflib">${LAST_EXCEPTION}</span>
+    Should Contain    <span class="rflib">${LAST_EXCEPTION}</span>    BusinessException</pre>
+
+<h2>Smoke Tests — verificación post-deploy</h2>
+<p>Suite mínima que verifica que el sistema está vivo. Se corre <strong>después de cada deploy a producción</strong>. Máximo 30 segundos en total.</p>
+
+<pre>
+<span class="cm"># tests/smoke/test_smoke.py</span>
+<span class="str">"""
+Smoke tests — verificación rápida post-deploy.
+Reglas:
+  - Máximo 30 segundos de ejecución total
+  - NO modifican datos de producción
+  - NO fallan por datos variables (fecha, monto, etc.)
+  - Solo verifican que el sistema responde y las funciones críticas existen
+"""</span>
+<span class="kw">import</span> pytest
+<span class="kw">import</span> requests
+
+BASE_URL = <span class="str">"http://localhost:8000"</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_api_responde</span>():
+    <span class="str">"""La API debe estar viva."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/health"</span>, timeout=<span class="num">5</span>)
+    <span class="kw">assert</span> resp.status_code == <span class="num">200</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_base_de_datos_accesible</span>():
+    <span class="str">"""La DB debe responder al health check."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/health/db"</span>, timeout=<span class="num">5</span>)
+    <span class="kw">assert</span> resp.json()[<span class="str">"status"</span>] == <span class="str">"ok"</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_endpoint_critico_responde</span>():
+    <span class="str">"""El endpoint principal del proceso debe responder."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/api/comprobantes"</span>, timeout=<span class="num">10</span>)
+    <span class="kw">assert</span> resp.status_code <span class="kw">in</span> (<span class="num">200</span>, <span class="num">401</span>)  <span class="cm"># OK o requiere auth — ambos = "vivo"</span>
+
+<span class="dec">@pytest.mark.smoke</span>
+<span class="kw">def</span> <span class="fn">test_version_es_la_esperada</span>():
+    <span class="str">"""La versión desplegada debe coincidir con la versión del release."""</span>
+    resp = requests.<span class="fn">get</span>(<span class="str">f"{BASE_URL}/health"</span>, timeout=<span class="num">5</span>)
+    data = resp.<span class="fn">json</span>()
+    <span class="kw">assert</span> <span class="str">"version"</span> <span class="kw">in</span> data</pre>
+
+<h2>Testing avanzado — Mocking, parametrización y property-based</h2>
+
+<pre>
+<span class="kw">from</span> unittest.mock <span class="kw">import</span> MagicMock, patch, call
+<span class="kw">from</span> hypothesis   <span class="kw">import</span> given, strategies <span class="kw">as</span> st
+
+<span class="cm"># ── Verificar llamadas con argumentos específicos ──────────────────────────────</span>
+<span class="dec">@patch</span>(<span class="str">"mymodule.ArcaClient"</span>)
+<span class="kw">def</span> <span class="fn">test_cliente_arca_recibe_cuit_correcto</span>(mock_client):
+    mock_instance = mock_client.return_value
+    mock_instance.consultar.return_value = []
+
+    <span class="fn">descargar_comprobantes</span>(<span class="str">"20123456789"</span>, date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">1</span>), date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">31</span>))
+
+    mock_instance.consultar.<span class="fn">assert_called_once_with</span>(
+        cuit=<span class="str">"20123456789"</span>,
+        fecha_desde=date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">1</span>),
+        fecha_hasta=date(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">31</span>)
+    )
+
+<span class="cm"># ── Mutation testing con hypothesis ───────────────────────────────────────────</span>
+<span class="dec">@given</span>(st.<span class="fn">floats</span>(min_value=<span class="num">0.01</span>, max_value=<span class="num">10_000_000</span>))
+<span class="kw">def</span> <span class="fn">test_margen_nunca_supera_uno_con_datos_aleatorios</span>(precio):
+    margen = <span class="fn">calcular_margen</span>(precio, precio * <span class="num">0.6</span>)
+    <span class="kw">assert</span> <span class="num">0</span> <= margen <= <span class="num">1</span>
+
+<span class="cm"># ── Test doubles — Mock vs Stub vs Fake ───────────────────────────────────────</span>
+<span class="cm"># Stub: retorna valor fijo — "qué devuelve"</span>
+mock_arca = <span class="fn">MagicMock</span>()
+mock_arca.consultar.return_value = [<span class="str">"factura_1"</span>, <span class="str">"factura_2"</span>]
+
+<span class="cm"># Mock: también verifica llamadas — "cómo se usa"</span>
+mock_arca.consultar.<span class="fn">assert_called_once</span>()
+mock_arca.consultar.<span class="fn">assert_called_with</span>(cuit=<span class="str">"20123456789"</span>)
+
+<span class="cm"># Spy — capturar argumentos para inspeccionarlos</span>
+args_capturados = []
+mock_arca.consultar.side_effect = <span class="kw">lambda</span> **kw: args_capturados.append(kw) <span class="kw">or</span> []</pre>
+
+<h2>Comandos esenciales de pytest</h2>
+
+<pre>
+pytest                               <span class="cm"># todos los tests</span>
+pytest -v                            <span class="cm"># verbose — nombre completo de cada test</span>
+pytest -k <span class="str">"validar"</span>                 <span class="cm"># solo tests con "validar" en el nombre</span>
+pytest -m smoke                      <span class="cm"># solo tests marcados como @pytest.mark.smoke</span>
+pytest --cov=src --cov-report=html   <span class="cm"># coverage + reporte HTML en htmlcov/</span>
+pytest --cov=src --cov-report=term   <span class="cm"># coverage en terminal</span>
+pytest --tb=short                    <span class="cm"># traceback corto al fallar (más legible)</span>
+pytest -x                            <span class="cm"># parar al primer fallo</span>
+pytest --lf                          <span class="cm"># solo los tests que fallaron la última vez</span>
+pytest -n 4                          <span class="cm"># correr en paralelo con 4 workers (pytest-xdist)</span>
+pytest tests/smoke/ -m smoke         <span class="cm"># correr solo la suite de smoke</span>
+
+<span class="cm"># Robot Framework</span>
+robot tests/e2e/                     <span class="cm"># todos los tests E2E</span>
+robot --include smoke tests/          <span class="cm"># solo tests con tag smoke</span>
+robot --output results/ tests/        <span class="cm"># guardar resultados en results/</span>
+robot --variable ENV:staging tests/  <span class="cm"># pasar variable de entorno</span></pre>
+
+<div class="best">✅ Regla del equipo: cobertura ≥ 80% en lógica de negocio. No buscar el 100% — testear los caminos críticos, los casos borde y los errores. Las getters/setters triviales no necesitan test.</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

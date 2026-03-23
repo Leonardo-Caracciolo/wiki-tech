@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAX — Referencia Completa Power BI</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #f5f3ee;
+    --surface:  #ffffff;
+    --card:     #ffffff;
+    --border:   #e5e0d6;
+    --border2:  #d4cdc0;
+    --dax:      #1a3a6b;    /* navy */
+    --dax2:     #2563eb;    /* blue */
+    --acc:      #dc2626;    /* red accent */
+    --acc2:     #059669;    /* green */
+    --acc3:     #d97706;    /* amber */
+    --acc4:     #7c3aed;    /* purple */
+    --text:     #1c1917;
+    --muted:    #78716c;
+    --light:    #a8a29e;
+    --codebg:   #1e1e2e;
+    --codefg:   #cdd6f4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--dax);
+    padding: 56px 72px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: 'DAX';
+    position: absolute;
+    right: 40px; bottom: -20px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 200px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hdr-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 0.95;
+    color: #ffffff;
+    letter-spacing: -2px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .hdr-desc {
+    margin-top: 20px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    max-width: 560px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .hdr-pillbar {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    background: var(--surface);
+    padding: 0 72px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    overflow-x: auto;
+  }
+
+  nav a {
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--muted);
+    padding: 16px 20px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+    margin-bottom: -2px;
+  }
+
+  nav a:hover { color: var(--dax); border-bottom-color: var(--dax); }
+
+  /* ─── MAIN ─── */
+  main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 64px 72px;
+  }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 88px; }
+
+  .section-header {
+    margin-bottom: 36px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--border);
+    font-style: italic;
+    margin-bottom: -8px;
+  }
+
+  .section-info h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--dax);
+  }
+
+  .section-info p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .s-conceptos .section-tag { background: rgba(26,58,107,0.08); color: var(--dax); }
+  .s-medidas   .section-tag { background: rgba(37,99,235,0.08); color: var(--dax2); }
+  .s-columnas  .section-tag { background: rgba(220,38,38,0.08); color: var(--acc); }
+  .s-filtros   .section-tag { background: rgba(5,150,105,0.08); color: var(--acc2); }
+  .s-tiempo    .section-tag { background: rgba(217,119,6,0.08); color: var(--acc3); }
+  .s-iteracion .section-tag { background: rgba(124,58,237,0.08); color: var(--acc4); }
+  .s-tabla     .section-tag { background: rgba(26,58,107,0.06); color: var(--dax); }
+
+  /* ─── CARDS ─── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(540px, 1fr));
+    gap: 16px;
+  }
+
+  .cards-wide { grid-template-columns: 1fr; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+  }
+
+  .card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #faf9f6;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .method-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .s-conceptos .method-name { color: var(--dax); }
+  .s-medidas   .method-name { color: var(--dax2); }
+  .s-columnas  .method-name { color: var(--acc); }
+  .s-filtros   .method-name { color: var(--acc2); }
+  .s-tiempo    .method-name { color: var(--acc3); }
+  .s-iteracion .method-name { color: var(--acc4); }
+  .s-tabla     .method-name { color: var(--dax); }
+
+  .method-desc {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .card-body { padding: 16px 20px; }
+
+  /* ─── CONCEPT BOX ─── */
+  .concept-box {
+    background: rgba(26,58,107,0.04);
+    border: 1px solid rgba(26,58,107,0.12);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* ─── CODE ─── */
+  .code-block {
+    background: var(--codebg);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: var(--codefg);
+  }
+
+  .code-block:last-child { margin-bottom: 0; }
+
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .lbl-dax    .code-label { color: #89b4fa; }
+  .lbl-result .code-label { color: #a6e3a1; }
+  .lbl-note   .code-label { color: #fab387; }
+  .lbl-ctx    .code-label { color: #cba6f7; }
+
+  /* DAX syntax */
+  .kw   { color: #89b4fa; }   /* keywords: VAR, RETURN, IF, SWITCH */
+  .fn   { color: #cba6f7; }   /* functions */
+  .tbl  { color: #a6e3a1; }   /* table names */
+  .col  { color: #fab387; }   /* column refs */
+  .str  { color: #a6e3a1; }   /* strings */
+  .num  { color: #fab387; }   /* numbers */
+  .cm   { color: #585b70; font-style: italic; }  /* comments */
+  .op   { color: #cdd6f4; }   /* operators */
+  .msr  { color: #f38ba8; }   /* measure refs [Measure] */
+
+  /* ─── ARGS TABLE ─── */
+  .args-block {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+
+  .args-header {
+    padding: 7px 14px;
+    background: #faf9f6;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .arg-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .arg-row:last-child { border-bottom: none; }
+
+  .arg-name {
+    padding: 7px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--dax2);
+    background: rgba(37,99,235,0.03);
+    border-right: 1px solid var(--border);
+  }
+
+  .arg-val {
+    padding: 7px 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ─── NOTE / WARNING ─── */
+  .note {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-left: 3px solid var(--border2);
+    margin-top: 10px;
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+    background: rgba(0,0,0,0.02);
+  }
+
+  .warn {
+    font-size: 12px;
+    color: #92400e;
+    padding: 10px 14px;
+    border-left: 3px solid var(--acc3);
+    margin-top: 10px;
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+    background: rgba(217,119,6,0.05);
+  }
+
+  .tip {
+    font-size: 12px;
+    color: #065f46;
+    padding: 10px 14px;
+    border-left: 3px solid var(--acc2);
+    margin-top: 10px;
+    line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+    background: rgba(5,150,105,0.05);
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+
+  .diff-table th {
+    padding: 10px 16px;
+    background: #faf9f6;
+    border-bottom: 1px solid var(--border);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+  }
+
+  .diff-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .diff-table tr:last-child td { border-bottom: none; }
+  .diff-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--dax2); }
+
+  /* ─── INLINE CODE ─── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(26,58,107,0.08);
+    color: var(--dax);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--dax);
+    padding: 24px 72px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 700px) {
+    header, main, footer { padding: 28px 20px; }
+    nav { padding: 0 20px; }
+    .cards { grid-template-columns: 1fr; }
+    .section-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-label">// Power BI · Data Analysis Expressions</div>
+  <h1>DAX<br><em>Referencia</em></h1>
+  <p class="hdr-desc">Medidas, columnas calculadas y las funciones más utilizadas en Power BI. Con contexto de filtro, ejemplos reales y buenas prácticas.</p>
+  <div class="hdr-pillbar">
+    <span class="pill">Medidas</span>
+    <span class="pill">Columnas Calculadas</span>
+    <span class="pill">CALCULATE</span>
+    <span class="pill">Time Intelligence</span>
+    <span class="pill">Iteradores</span>
+    <span class="pill">Funciones de Tabla</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#conceptos">Conceptos base</a>
+  <a href="#medidas">Medidas</a>
+  <a href="#columnas">Columnas Calculadas</a>
+  <a href="#filtros">Filtros (CALCULATE)</a>
+  <a href="#tiempo">Time Intelligence</a>
+  <a href="#iteracion">Iteradores</a>
+  <a href="#tablas">Funciones de Tabla</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════
+     00 — CONCEPTOS BASE
+══════════════════════════════════ -->
+<section class="section s-conceptos" id="conceptos">
+  <div class="section-header">
+    <div class="section-num">00</div>
+    <div class="section-info">
+      <h2>Conceptos Fundamentales</h2>
+      <p>Lo que tenés que entender antes de escribir tu primera medida DAX</p>
+    </div>
+    <span class="section-tag">fundamentos</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- Medida vs Columna -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Medida vs Columna Calculada</span>
+        <span class="method-desc">La diferencia más importante de DAX</span>
+      </div>
+      <div class="card-body">
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th>Característica</th>
+              <th>Medida</th>
+              <th>Columna Calculada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>¿Cuándo se calcula?</td>
+              <td>En tiempo de consulta (cada vez que el visual se renderiza)</td>
+              <td>Al refrescar los datos (se guarda en el modelo)</td>
+            </tr>
+            <tr>
+              <td>Contexto de fila</td>
+              <td>❌ No tiene acceso directo a la fila</td>
+              <td>✅ Se evalúa fila por fila</td>
+            </tr>
+            <tr>
+              <td>Contexto de filtro</td>
+              <td>✅ Lo recibe del visual/segmentación</td>
+              <td>❌ No lo recibe</td>
+            </tr>
+            <tr>
+              <td>Consume memoria</td>
+              <td>Mínima (no almacena resultados)</td>
+              <td>Alta (una columna más en la tabla)</td>
+            </tr>
+            <tr>
+              <td>¿Para qué sirve?</td>
+              <td>Métricas y KPIs: ventas totales, % margen, variaciones</td>
+              <td>Clasificaciones, categorías, combinar columnas, flags</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="warn">⚠️ El error más común: usar columnas calculadas para cosas que deberían ser medidas. Si el valor cambia según el filtro aplicado → usá medida.</div>
+      </div>
+    </div>
+
+    <!-- Contexto de filtro y fila -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Contexto de Filtro vs Contexto de Fila</span>
+        <span class="method-desc">El corazón del motor de evaluación de DAX</span>
+      </div>
+      <div class="card-body">
+        <div class="concept-box">
+          <strong>Contexto de filtro</strong> — son todos los filtros activos cuando se evalúa una medida: segmentaciones, filtros de página, filtros de visual, jerarquías. Una medida <code>SUM(Ventas[Monto])</code> suma distinto en cada celda de una matriz porque el contexto de filtro cambia por fila/columna.<br><br>
+          <strong>Contexto de fila</strong> — existe al iterar una tabla (en columnas calculadas y en funciones iteradoras como SUMX). Permite acceder al valor de cada celda: <code>Ventas[Precio] * Ventas[Cantidad]</code>.
+        </div>
+        <div class="code-block lbl-ctx">
+          <div class="code-label">Ejemplo — por qué esto importa</div>
+<span class="cm">-- Contexto de filtro en una medida</span>
+<span class="cm">-- Si el usuario filtra por "Argentina", DAX solo suma las ventas de AR</span>
+<span class="fn">Total Ventas</span> = <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+
+<span class="cm">-- Contexto de fila en columna calculada</span>
+<span class="cm">-- Se evalúa para CADA fila de la tabla Ventas</span>
+<span class="tbl">Ventas</span>[<span class="col">Subtotal</span>] = <span class="tbl">Ventas</span>[<span class="col">Precio</span>] * <span class="tbl">Ventas</span>[<span class="col">Cantidad</span>]
+        </div>
+        <div class="tip">💡 CALCULATE convierte el contexto de fila en contexto de filtro. Es por eso que es la función más poderosa de DAX.</div>
+      </div>
+    </div>
+
+    <!-- Sintaxis básica -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Sintaxis DAX — Referencia rápida</span>
+        <span class="method-desc">Cómo referenciar tablas, columnas y medidas</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">Sintaxis</div>
+<span class="cm">-- Columna de tabla</span>
+<span class="tbl">Ventas</span>[<span class="col">Monto</span>]
+
+<span class="cm">-- Medida (corchetes sin tabla)</span>
+<span class="msr">[Total Ventas]</span>
+
+<span class="cm">-- Strings con comillas dobles</span>
+<span class="kw">IF</span>(<span class="tbl">Clientes</span>[<span class="col">Pais</span>] <span class="op">=</span> <span class="str">"Argentina"</span>, ...)
+
+<span class="cm">-- Variables (muy recomendado)</span>
+<span class="kw">VAR</span> _ventas = <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="kw">VAR</span> _meta   = <span class="fn">SUM</span>(<span class="tbl">Metas</span>[<span class="col">Valor</span>])
+<span class="kw">RETURN</span>
+    <span class="fn">DIVIDE</span>(_ventas, _meta, <span class="num">0</span>)
+
+<span class="cm">-- Comentarios</span>
+<span class="cm">-- Una línea</span>
+<span class="cm">/* Múltiples
+   líneas */</span>
+        </div>
+        <div class="note">La convención _varName para variables locales es estándar en la comunidad DAX. Hace más fácil distinguirlas de columnas y medidas.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     01 — MEDIDAS
+══════════════════════════════════ -->
+<section class="section s-medidas" id="medidas">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-info">
+      <h2>Medidas</h2>
+      <p>Las funciones de agregación más utilizadas para KPIs y métricas</p>
+    </div>
+    <span class="section-tag">aggregation · kpi</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- SUM / SUMX -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">SUM() · AVERAGE() · COUNT() · MIN() · MAX()</span>
+        <span class="method-desc">Agregaciones básicas — las más usadas en cualquier modelo</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="fn">Total Ventas</span>     = <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="fn">Ticket Promedio</span>  = <span class="fn">AVERAGE</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="fn">Cant Transacc</span>    = <span class="fn">COUNT</span>(<span class="tbl">Ventas</span>[<span class="col">ID_Venta</span>])    <span class="cm">-- solo numéricos</span>
+<span class="fn">Cant Registros</span>   = <span class="fn">COUNTA</span>(<span class="tbl">Ventas</span>[<span class="col">ID_Venta</span>])   <span class="cm">-- cualquier tipo</span>
+<span class="fn">Clientes Únicos</span>  = <span class="fn">DISTINCTCOUNT</span>(<span class="tbl">Ventas</span>[<span class="col">ID_Cliente</span>])
+<span class="fn">Precio Mínimo</span>    = <span class="fn">MIN</span>(<span class="tbl">Productos</span>[<span class="col">Precio</span>])
+<span class="fn">Precio Máximo</span>    = <span class="fn">MAX</span>(<span class="tbl">Productos</span>[<span class="col">Precio</span>])
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado (ejemplo con filtro "Argentina Q1")</div>
+Total Ventas    → <span class="num">1,250,000</span>
+Ticket Promedio → <span class="num">4,350</span>
+Cant Transacc   → <span class="num">287</span>
+Clientes Únicos → <span class="num">43</span>
+        </div>
+        <div class="args-block">
+          <div class="args-header">Diferencias clave</div>
+          <div class="arg-row"><span class="arg-name">COUNT</span><span class="arg-val">Solo cuenta valores numéricos. Ignora blancos y texto</span></div>
+          <div class="arg-row"><span class="arg-name">COUNTA</span><span class="arg-val">Cuenta cualquier valor no vacío (números, texto, fechas)</span></div>
+          <div class="arg-row"><span class="arg-name">COUNTROWS</span><span class="arg-val">Cuenta filas de una tabla: COUNTROWS(Ventas). Más explícito</span></div>
+          <div class="arg-row"><span class="arg-name">DISTINCTCOUNT</span><span class="arg-val">Cuenta valores únicos. Para métricas de cardinalidad</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">DIVIDE()</span>
+        <span class="method-desc">División segura — nunca uses "/" para dividir medidas</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- ❌ Incorrecto: si denominador = 0 → error</span>
+<span class="fn">% Margen</span> = <span class="msr">[Margen Bruto]</span> <span class="op">/</span> <span class="msr">[Total Ventas]</span>
+
+<span class="cm">-- ✅ Correcto: si denominador = 0 → devuelve 0 (o lo que definas)</span>
+<span class="fn">% Margen</span> = <span class="fn">DIVIDE</span>(<span class="msr">[Margen Bruto]</span>, <span class="msr">[Total Ventas]</span>, <span class="num">0</span>)
+
+<span class="cm">-- Ejemplo real: % cumplimiento de meta</span>
+<span class="fn">% vs Meta</span> =
+<span class="kw">VAR</span> _ventas = <span class="msr">[Total Ventas]</span>
+<span class="kw">VAR</span> _meta   = <span class="fn">SUM</span>(<span class="tbl">Metas</span>[<span class="col">Meta</span>])
+<span class="kw">RETURN</span>
+    <span class="fn">DIVIDE</span>(_ventas, _meta, <span class="num">0</span>)
+        </div>
+        <div class="args-block">
+          <div class="args-header">DIVIDE(numerador, denominador, [alternateResult])</div>
+          <div class="arg-row"><span class="arg-name">numerador</span><span class="arg-val">Expresión numérica del dividendo</span></div>
+          <div class="arg-row"><span class="arg-name">denominador</span><span class="arg-val">Expresión numérica del divisor</span></div>
+          <div class="arg-row"><span class="arg-name">alternateResult</span><span class="arg-val">Qué devolver si denominador = 0 o BLANK. Default: BLANK()</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IF / SWITCH -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">IF() · SWITCH()</span>
+        <span class="method-desc">Lógica condicional en medidas y columnas</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — IF</div>
+<span class="cm">-- IF básico</span>
+<span class="fn">Estado Meta</span> =
+<span class="kw">IF</span>(<span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">1</span>, <span class="str">"✅ Cumplió"</span>, <span class="str">"❌ No cumplió"</span>)
+
+<span class="cm">-- IF anidado (máximo 2-3 niveles, después usar SWITCH)</span>
+<span class="fn">Semáforo</span> =
+<span class="kw">IF</span>(<span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">1</span>, <span class="str">"Verde"</span>,
+    <span class="kw">IF</span>(<span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">0.8</span>, <span class="str">"Amarillo"</span>, <span class="str">"Rojo"</span>)
+)
+        </div>
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — SWITCH (más limpio que IF anidado)</div>
+<span class="cm">-- SWITCH(TRUE()) → evalúa condiciones en orden</span>
+<span class="fn">Semáforo</span> =
+<span class="kw">SWITCH</span>(<span class="kw">TRUE</span>(),
+    <span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">1</span>,   <span class="str">"🟢 Verde"</span>,
+    <span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">0.8</span>, <span class="str">"🟡 Amarillo"</span>,
+    <span class="msr">[% vs Meta]</span> <span class="op">>=</span> <span class="num">0.6</span>, <span class="str">"🟠 Naranja"</span>,
+    <span class="str">"🔴 Rojo"</span>    <span class="cm">-- default</span>
+)
+
+<span class="cm">-- SWITCH sobre valor exacto</span>
+<span class="fn">Nombre Region</span> =
+<span class="kw">SWITCH</span>(<span class="tbl">Clientes</span>[<span class="col">Cod_Pais</span>],
+    <span class="str">"AR"</span>, <span class="str">"Argentina"</span>,
+    <span class="str">"BR"</span>, <span class="str">"Brasil"</span>,
+    <span class="str">"CL"</span>, <span class="str">"Chile"</span>,
+    <span class="str">"Otro"</span>
+)
+        </div>
+      </div>
+    </div>
+
+    <!-- VAR / RETURN -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">VAR / RETURN</span>
+        <span class="method-desc">Variables locales — hacen el DAX legible y más rápido</span>
+      </div>
+      <div class="card-body">
+        <div class="concept-box">
+          <code>VAR</code> almacena un resultado intermedio. <code>RETURN</code> define qué devuelve la medida. Las variables mejoran la performance porque evitan que DAX evalúe la misma expresión varias veces.
+        </div>
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — sin VAR (repetitivo y lento)</div>
+<span class="fn">Variación %</span> =
+<span class="fn">DIVIDE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]) <span class="op">-</span> <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">SAMEPERIODLASTYEAR</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])),
+    <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">SAMEPERIODLASTYEAR</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])),
+    <span class="num">0</span>
+)
+        </div>
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — con VAR (limpio y eficiente)</div>
+<span class="fn">Variación %</span> =
+<span class="kw">VAR</span> _actual    = <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="kw">VAR</span> _anio_ant  = <span class="fn">CALCULATE</span>(
+                    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+                    <span class="fn">SAMEPERIODLASTYEAR</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+                 )
+<span class="kw">RETURN</span>
+    <span class="fn">DIVIDE</span>(_actual <span class="op">-</span> _anio_ant, _anio_ant, <span class="num">0</span>)
+        </div>
+        <div class="tip">💡 Usá VAR siempre que repitas una expresión más de una vez. También son clave para debugging: podés hacer RETURN _varIntermediate para inspeccionar valores.</div>
+      </div>
+    </div>
+
+    <!-- BLANK y manejo de nulos -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">BLANK() · ISBLANK() · COALESCE()</span>
+        <span class="method-desc">Manejo de valores vacíos (el NULL de DAX)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- BLANK() es el null de DAX</span>
+<span class="cm">-- Una medida devuelve BLANK cuando no hay datos en el filtro actual</span>
+
+<span class="cm">-- Detectar si una medida está en blanco</span>
+<span class="fn">Tiene Ventas</span> = <span class="fn">IF</span>(<span class="fn">ISBLANK</span>(<span class="msr">[Total Ventas]</span>), <span class="str">"Sin datos"</span>, <span class="str">"Con datos"</span>)
+
+<span class="cm">-- COALESCE: devuelve el primer valor no-blank</span>
+<span class="fn">Precio Final</span> = <span class="fn">COALESCE</span>(<span class="tbl">Productos</span>[<span class="col">PrecioEsp</span>], <span class="tbl">Productos</span>[<span class="col">PrecioBase</span>], <span class="num">0</span>)
+
+<span class="cm">-- Forzar que una medida muestre 0 en vez de BLANK</span>
+<span class="fn">Ventas c/ceros</span> = <span class="fn">IF</span>(<span class="fn">ISBLANK</span>(<span class="msr">[Total Ventas]</span>), <span class="num">0</span>, <span class="msr">[Total Ventas]</span>)
+<span class="cm">-- Forma más corta:</span>
+<span class="fn">Ventas c/ceros</span> = <span class="msr">[Total Ventas]</span> <span class="op">+</span> <span class="num">0</span>
+        </div>
+        <div class="warn">⚠️ BLANK no es lo mismo que 0. En gráficos y tablas, BLANK omite la fila. A veces eso es lo que querés (no mostrar clientes sin ventas), a veces no.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     02 — COLUMNAS CALCULADAS
+══════════════════════════════════ -->
+<section class="section s-columnas" id="columnas">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-info">
+      <h2>Columnas Calculadas</h2>
+      <p>Se evalúan fila por fila al refrescar. Ideales para clasificaciones y enriquecimiento del modelo.</p>
+    </div>
+    <span class="section-tag">row context · model</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- Concatenar y formatear -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">CONCATENATE() · FORMAT() · LEFT/RIGHT/MID()</span>
+        <span class="method-desc">Manipulación de texto en columnas calculadas</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Concatenar columnas (el & es más corto)</span>
+<span class="tbl">Clientes</span>[<span class="col">NombreCompleto</span>] = <span class="tbl">Clientes</span>[<span class="col">Nombre</span>] <span class="op">&</span> <span class="str">" "</span> <span class="op">&</span> <span class="tbl">Clientes</span>[<span class="col">Apellido</span>]
+
+<span class="cm">-- Formatear números como texto</span>
+<span class="tbl">Ventas</span>[<span class="col">MontoFmt</span>] = <span class="str">"$"</span> <span class="op">&</span> <span class="fn">FORMAT</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>], <span class="str">"#,##0.00"</span>)
+
+<span class="cm">-- Formatear fecha</span>
+<span class="tbl">Ventas</span>[<span class="col">MesAnio</span>] = <span class="fn">FORMAT</span>(<span class="tbl">Ventas</span>[<span class="col">Fecha</span>], <span class="str">"MMMM YYYY"</span>)
+
+<span class="cm">-- Extraer parte de un string</span>
+<span class="tbl">Clientes</span>[<span class="col">Iniciales</span>] = <span class="fn">LEFT</span>(<span class="tbl">Clientes</span>[<span class="col">Nombre</span>], <span class="num">1</span>)
+<span class="tbl">Clientes</span>[<span class="col">Sufijo</span>]    = <span class="fn">RIGHT</span>(<span class="tbl">Clientes</span>[<span class="col">CUIT</span>], <span class="num">1</span>)    <span class="cm">-- dígito verificador</span>
+<span class="tbl">Clientes</span>[<span class="col">CodPais</span>]   = <span class="fn">MID</span>(<span class="tbl">Clientes</span>[<span class="col">Telefono</span>], <span class="num">2</span>, <span class="num">2</span>) <span class="cm">-- posición 2, 2 chars</span>
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado</div>
+NombreCompleto → <span class="str">"Leonardo García"</span>
+MesAnio        → <span class="str">"Enero 2025"</span>
+CodPais        → <span class="str">"54"</span>
+        </div>
+        <div class="args-block">
+          <div class="args-header">FORMAT — códigos de formato comunes</div>
+          <div class="arg-row"><span class="arg-name">"#,##0.00"</span><span class="arg-val">Número con separador de miles y 2 decimales: 1,250.50</span></div>
+          <div class="arg-row"><span class="arg-name">"0%"</span><span class="arg-val">Porcentaje sin decimales: 85%</span></div>
+          <div class="arg-row"><span class="arg-name">"0.0%"</span><span class="arg-val">Porcentaje con 1 decimal: 85.3%</span></div>
+          <div class="arg-row"><span class="arg-name">"DD/MM/YYYY"</span><span class="arg-val">Fecha: 15/03/2025</span></div>
+          <div class="arg-row"><span class="arg-name">"MMMM"</span><span class="arg-val">Nombre del mes completo: Marzo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columnas de fecha -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">YEAR() · MONTH() · DAY() · WEEKDAY() · EOMONTH()</span>
+        <span class="method-desc">Extraer partes de fechas (clave para tablas Calendario)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — construir tabla Calendario completa</div>
+<span class="cm">-- En la tabla Calendario (generada con CALENDARAUTO o CALENDAR)</span>
+<span class="tbl">Calendario</span>[<span class="col">Anio</span>]        = <span class="fn">YEAR</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+<span class="tbl">Calendario</span>[<span class="col">Mes</span>]         = <span class="fn">MONTH</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+<span class="tbl">Calendario</span>[<span class="col">NombreMes</span>]   = <span class="fn">FORMAT</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="str">"MMMM"</span>)
+<span class="tbl">Calendario</span>[<span class="col">Trimestre</span>]   = <span class="str">"Q"</span> <span class="op">&</span> <span class="fn">QUARTER</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+<span class="tbl">Calendario</span>[<span class="col">Semana</span>]      = <span class="fn">WEEKNUM</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="num">2</span>)
+<span class="tbl">Calendario</span>[<span class="col">EsFinSemana</span>] = <span class="fn">IF</span>(<span class="fn">WEEKDAY</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="num">2</span>) <span class="op">></span> <span class="num">5</span>, <span class="num">1</span>, <span class="num">0</span>)
+<span class="tbl">Calendario</span>[<span class="col">FinMes</span>]      = <span class="fn">EOMONTH</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="num">0</span>)
+        </div>
+        <div class="args-block">
+          <div class="args-header">WEEKDAY — parámetro return_type</div>
+          <div class="arg-row"><span class="arg-name">return_type=1</span><span class="arg-val">Domingo=1 ... Sábado=7</span></div>
+          <div class="arg-row"><span class="arg-name">return_type=2</span><span class="arg-val">Lunes=1 ... Domingo=7 (estándar europeo/LATAM)</span></div>
+          <div class="arg-row"><span class="arg-name">EOMONTH(date, 0)</span><span class="arg-val">Último día del mismo mes. EOMONTH(date, 1) = último del mes siguiente</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED para columnas -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">RELATED() · RELATEDTABLE()</span>
+        <span class="method-desc">Traer valores de tablas relacionadas (como un VLOOKUP en DAX)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- RELATED: trae una columna de la tabla del lado "1" de la relación</span>
+<span class="cm">-- (equivale a VLOOKUP desde la tabla "muchos" hacia "uno")</span>
+<span class="tbl">Ventas</span>[<span class="col">CategoriaProducto</span>] = <span class="fn">RELATED</span>(<span class="tbl">Productos</span>[<span class="col">Categoria</span>])
+<span class="tbl">Ventas</span>[<span class="col">NombreCliente</span>]     = <span class="fn">RELATED</span>(<span class="tbl">Clientes</span>[<span class="col">RazonSocial</span>])
+
+<span class="cm">-- RELATEDTABLE: desde el lado "1" hacia "muchos" — devuelve una tabla</span>
+<span class="cm">-- Se usa con funciones que aceptan tablas como COUNTROWS</span>
+<span class="tbl">Clientes</span>[<span class="col">CantCompras</span>] = <span class="fn">COUNTROWS</span>(<span class="fn">RELATEDTABLE</span>(<span class="tbl">Ventas</span>))
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado</div>
+<span class="cm">-- En tabla Ventas:</span>
+Fila 1: ID_Producto=5 → CategoriaProducto = "Electrónica"
+Fila 2: ID_Producto=5 → CategoriaProducto = "Electrónica"
+Fila 3: ID_Producto=9 → CategoriaProducto = "Ropa"
+
+<span class="cm">-- En tabla Clientes:</span>
+Spotify → CantCompras = 127
+PPG     → CantCompras = 43
+        </div>
+        <div class="warn">⚠️ RELATED solo funciona en columnas calculadas (contexto de fila). En medidas, usá LOOKUPVALUE() o modelá la relación correctamente.</div>
+      </div>
+    </div>
+
+    <!-- Rangos y clasificaciones -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">Columna de clasificación / segmento</span>
+        <span class="method-desc">Agrupar en rangos o segmentos con SWITCH + TRUE()</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — segmentar clientes por monto de compra</div>
+<span class="tbl">Clientes</span>[<span class="col">Segmento</span>] =
+<span class="kw">VAR</span> _monto = <span class="fn">SUMX</span>(<span class="fn">RELATEDTABLE</span>(<span class="tbl">Ventas</span>), <span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="kw">RETURN</span>
+<span class="kw">SWITCH</span>(<span class="kw">TRUE</span>(),
+    _monto <span class="op">>=</span> <span class="num">500000</span>, <span class="str">"A - Premium"</span>,
+    _monto <span class="op">>=</span> <span class="num">100000</span>, <span class="str">"B - Standard"</span>,
+    _monto <span class="op">>=</span>  <span class="num">10000</span>, <span class="str">"C - Básico"</span>,
+    _monto <span class="op">></span>       <span class="num">0</span>, <span class="str">"D - Mínimo"</span>,
+    <span class="str">"Sin compras"</span>
+)
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado en la tabla Clientes</div>
+Spotify  → <span class="str">"A - Premium"</span>
+PPG      → <span class="str">"B - Standard"</span>
+Verizon  → <span class="str">"A - Premium"</span>
+NuevoX   → <span class="str">"Sin compras"</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     03 — CALCULATE y FILTROS
+══════════════════════════════════ -->
+<section class="section s-filtros" id="filtros">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-info">
+      <h2>CALCULATE y Modificadores de Filtro</h2>
+      <p>La función más importante de DAX. Evalúa una expresión en un contexto de filtro modificado.</p>
+    </div>
+    <span class="section-tag">filter context · all · allexcept</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- CALCULATE base -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">CALCULATE()</span>
+        <span class="method-desc">Evaluar una expresión cambiando el contexto de filtro activo</span>
+      </div>
+      <div class="card-body">
+        <div class="concept-box">
+          <code>CALCULATE(expresión, filtro1, filtro2, ...)</code><br><br>
+          Primero aplica los filtros (reemplazando o extendiendo el contexto actual), luego evalúa la expresión. Si no ponés filtros, convierte el contexto de fila en contexto de filtro.
+        </div>
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — ejemplos básicos</div>
+<span class="cm">-- Ventas solo de Argentina (fija el filtro sin importar qué seleccionó el usuario)</span>
+<span class="fn">Ventas AR</span> = <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="tbl">Clientes</span>[<span class="col">Pais</span>] <span class="op">=</span> <span class="str">"Argentina"</span>)
+
+<span class="cm">-- Ventas de múltiples países</span>
+<span class="fn">Ventas LATAM</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="tbl">Clientes</span>[<span class="col">Pais</span>] <span class="op">IN</span> {<span class="str">"Argentina"</span>, <span class="str">"Brasil"</span>, <span class="str">"Chile"</span>}
+)
+
+<span class="cm">-- Ventas de productos con precio > 1000</span>
+<span class="fn">Ventas Premium</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="tbl">Productos</span>[<span class="col">Precio</span>] <span class="op">></span> <span class="num">1000</span>
+)
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL, ALLEXCEPT, ALLSELECTED -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">ALL() · ALLEXCEPT() · ALLSELECTED()</span>
+        <span class="method-desc">Remover filtros del contexto — esenciales para % del total</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- ALL(): elimina TODOS los filtros de una tabla o columna</span>
+<span class="fn">Total General</span> = <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">ALL</span>(<span class="tbl">Ventas</span>))
+
+<span class="cm">-- % del total (el más usado)</span>
+<span class="fn">% del Total</span> =
+<span class="kw">VAR</span> _actual = <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+<span class="kw">VAR</span> _total  = <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">ALL</span>(<span class="tbl">Ventas</span>))
+<span class="kw">RETURN</span> <span class="fn">DIVIDE</span>(_actual, _total, <span class="num">0</span>)
+
+<span class="cm">-- ALLEXCEPT(): elimina filtros de TODAS las columnas EXCEPTO las indicadas</span>
+<span class="cm">-- % dentro de cada categoría (mantiene el filtro de Categoria)</span>
+<span class="fn">% en Categoria</span> =
+<span class="fn">DIVIDE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">ALLEXCEPT</span>(<span class="tbl">Productos</span>, <span class="tbl">Productos</span>[<span class="col">Categoria</span>])),
+    <span class="num">0</span>
+)
+
+<span class="cm">-- ALLSELECTED(): respeta los filtros del usuario (segmentaciones) pero ignora el filtro del visual</span>
+<span class="cm">-- Útil para % que se actualiza según las selecciones del usuario</span>
+<span class="fn">% Seleccionado</span> =
+<span class="fn">DIVIDE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="fn">ALLSELECTED</span>(<span class="tbl">Ventas</span>)),
+    <span class="num">0</span>
+)
+        </div>
+        <div class="args-block">
+          <div class="args-header">Diferencias clave</div>
+          <div class="arg-row"><span class="arg-name">ALL(Tabla)</span><span class="arg-val">Ignora TODOS los filtros externos. El denominador es siempre el gran total</span></div>
+          <div class="arg-row"><span class="arg-name">ALLEXCEPT(Tabla, Col)</span><span class="arg-val">Ignora filtros de todas las columnas menos las indicadas</span></div>
+          <div class="arg-row"><span class="arg-name">ALLSELECTED(Tabla)</span><span class="arg-val">El total respeta segmentaciones pero no el filtro del visual. El más intuitivo para el usuario final</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEEPFILTERS / REMOVEFILTERS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">KEEPFILTERS() · REMOVEFILTERS()</span>
+        <span class="method-desc">Control fino del comportamiento de los filtros en CALCULATE</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Sin KEEPFILTERS: el filtro de CALCULATE REEMPLAZA al filtro del visual</span>
+<span class="cm">-- Si el usuario filtra "Electrónica" y vos ponés Pais="AR", el resultado</span>
+<span class="cm">-- es ventas de AR sin importar la categoría seleccionada.</span>
+
+<span class="cm">-- Con KEEPFILTERS: el filtro de CALCULATE se INTERSECTA con el filtro activo</span>
+<span class="fn">Ventas AR (respeta visual)</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">KEEPFILTERS</span>(<span class="tbl">Clientes</span>[<span class="col">Pais</span>] <span class="op">=</span> <span class="str">"Argentina"</span>)
+)
+
+<span class="cm">-- REMOVEFILTERS: alias moderno de ALL() como argumento de CALCULATE</span>
+<span class="fn">Total sin filtros</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">REMOVEFILTERS</span>(<span class="tbl">Ventas</span>)
+)
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER como tabla -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">FILTER()</span>
+        <span class="method-desc">Filtrar una tabla con condiciones complejas — devuelve una tabla</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- FILTER devuelve una tabla filtrada — se usa dentro de CALCULATE</span>
+<span class="cm">-- cuando necesitás condiciones más complejas que un simple =</span>
+
+<span class="cm">-- Ventas de clientes con más de 10 compras</span>
+<span class="fn">Ventas Frecuentes</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">FILTER</span>(
+        <span class="tbl">Clientes</span>,
+        <span class="fn">COUNTROWS</span>(<span class="fn">RELATEDTABLE</span>(<span class="tbl">Ventas</span>)) <span class="op">></span> <span class="num">10</span>
+    )
+)
+
+<span class="cm">-- Ventas de los últimos 30 días</span>
+<span class="fn">Ventas 30d</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">FILTER</span>(
+        <span class="tbl">Calendario</span>,
+        <span class="tbl">Calendario</span>[<span class="col">Fecha</span>] <span class="op">>=</span> <span class="fn">TODAY</span>() <span class="op">-</span> <span class="num">30</span>
+    )
+)
+        </div>
+        <div class="warn">⚠️ Preferí filtros simples col=valor dentro de CALCULATE cuando sea posible. FILTER itera la tabla completa, lo que puede ser lento en tablas grandes. Usalo solo cuando la condición lo requiera.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     04 — TIME INTELLIGENCE
+══════════════════════════════════ -->
+<section class="section s-tiempo" id="tiempo">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-info">
+      <h2>Time Intelligence</h2>
+      <p>Comparaciones temporales — YTD, MTD, variación vs año anterior, períodos móviles.</p>
+    </div>
+    <span class="section-tag">fechas · ytd · yoy</span>
+  </div>
+
+  <div class="note" style="margin-bottom:24px; font-size:13px;">
+    ⚙️ <strong>Requisito previo:</strong> para que funcionen todas las funciones de Time Intelligence necesitás una tabla Calendario marcada como "Tabla de fechas" en Power BI, con fechas continuas (sin días faltantes) que cubran todo el rango de datos. La forma más simple: <code>Calendario = CALENDARAUTO()</code>
+  </div>
+
+  <div class="cards">
+
+    <!-- YTD / MTD / QTD -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">TOTALYTD() · TOTALMTD() · TOTALQTD()</span>
+        <span class="method-desc">Acumulados desde inicio de año / mes / trimestre</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Ventas acumuladas desde el 1° de enero hasta la fecha del filtro</span>
+<span class="fn">Ventas YTD</span> = <span class="fn">TOTALYTD</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="tbl">Calendario</span>[<span class="col">Fecha</span>]
+)
+
+<span class="cm">-- Desde inicio de mes</span>
+<span class="fn">Ventas MTD</span> = <span class="fn">TOTALMTD</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+
+<span class="cm">-- Desde inicio de trimestre</span>
+<span class="fn">Ventas QTD</span> = <span class="fn">TOTALQTD</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]), <span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+
+<span class="cm">-- YTD con año fiscal diferente (ej: año fiscal termina el 30/6)</span>
+<span class="fn">Ventas YTD Fiscal</span> = <span class="fn">TOTALYTD</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="tbl">Calendario</span>[<span class="col">Fecha</span>],
+    <span class="str">"06/30"</span>  <span class="cm">-- fin del año fiscal</span>
+)
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado — si el usuario filtra Marzo 2025</div>
+Ventas MTD → suma de 1 al 31 de Marzo 2025
+Ventas QTD → suma de Enero a Marzo 2025 (Q1)
+Ventas YTD → suma de Enero a Marzo 2025
+        </div>
+      </div>
+    </div>
+
+    <!-- SAMEPERIODLASTYEAR / variación YoY -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">SAMEPERIODLASTYEAR() · variación YoY</span>
+        <span class="method-desc">Comparar el período actual con el mismo período del año anterior</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Ventas del mismo período del año pasado</span>
+<span class="fn">Ventas Año Ant</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">SAMEPERIODLASTYEAR</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>])
+)
+
+<span class="cm">-- Variación absoluta</span>
+<span class="fn">Δ vs Año Ant</span> = <span class="msr">[Total Ventas]</span> <span class="op">-</span> <span class="msr">[Ventas Año Ant]</span>
+
+<span class="cm">-- Variación porcentual (YoY%)</span>
+<span class="fn">Var% YoY</span> =
+<span class="kw">VAR</span> _actual   = <span class="msr">[Total Ventas]</span>
+<span class="kw">VAR</span> _anterior = <span class="msr">[Ventas Año Ant]</span>
+<span class="kw">RETURN</span>
+    <span class="fn">DIVIDE</span>(_actual <span class="op">-</span> _anterior, _anterior, <span class="fn">BLANK</span>())
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Resultado en un gráfico de barras por mes</div>
+Ene 2025: Ventas=120k | Ventas Año Ant=95k | Var% YoY=+26.3%
+Feb 2025: Ventas= 98k | Ventas Año Ant=88k | Var% YoY=+11.4%
+Mar 2025: Ventas=145k | Ventas Año Ant=BLANK| Var% YoY=BLANK  ← no hay datos de Mar 2024
+        </div>
+      </div>
+    </div>
+
+    <!-- DATEADD / PARALLELPERIOD -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">DATEADD() · PARALLELPERIOD() · DATESBETWEEN()</span>
+        <span class="method-desc">Navegar entre períodos con más control que SAMEPERIODLASTYEAR</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- DATEADD: desplazarse N períodos en el tiempo</span>
+<span class="fn">Ventas Mes Ant</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">DATEADD</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="op">-</span><span class="num">1</span>, MONTH)
+)
+
+<span class="fn">Ventas 3 Meses Ant</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">DATEADD</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="op">-</span><span class="num">3</span>, MONTH)
+)
+
+<span class="cm">-- DATESBETWEEN: rango explícito de fechas</span>
+<span class="fn">Ventas H1 2025</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">DATESBETWEEN</span>(<span class="tbl">Calendario</span>[<span class="col">Fecha</span>], <span class="fn">DATE</span>(<span class="num">2025</span>,<span class="num">1</span>,<span class="num">1</span>), <span class="fn">DATE</span>(<span class="num">2025</span>,<span class="num">6</span>,<span class="num">30</span>))
+)
+        </div>
+        <div class="args-block">
+          <div class="args-header">DATEADD — interval</div>
+          <div class="arg-row"><span class="arg-name">DAY</span><span class="arg-val">Desplaza N días</span></div>
+          <div class="arg-row"><span class="arg-name">MONTH</span><span class="arg-val">Desplaza N meses</span></div>
+          <div class="arg-row"><span class="arg-name">QUARTER</span><span class="arg-val">Desplaza N trimestres</span></div>
+          <div class="arg-row"><span class="arg-name">YEAR</span><span class="arg-val">Desplaza N años (igual que SAMEPERIODLASTYEAR con -1)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     05 — ITERADORES
+══════════════════════════════════ -->
+<section class="section s-iteracion" id="iteracion">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-info">
+      <h2>Funciones Iteradoras (X)</h2>
+      <p>Itera fila por fila una tabla, evalúa una expresión en cada fila y agrega los resultados.</p>
+    </div>
+    <span class="section-tag">sumx · averagex · rankx</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- SUMX / AVERAGEX -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">SUMX() · AVERAGEX() · MINX() · MAXX() · COUNTX()</span>
+        <span class="method-desc">Calcular una expresión por fila y luego agregar el resultado</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- SUMX: para cada fila de Ventas, calcula Precio*Cantidad y suma todo</span>
+<span class="cm">-- Necesario cuando no hay columna Subtotal precalculada</span>
+<span class="fn">Ingresos</span> = <span class="fn">SUMX</span>(<span class="tbl">Ventas</span>, <span class="tbl">Ventas</span>[<span class="col">Precio</span>] <span class="op">*</span> <span class="tbl">Ventas</span>[<span class="col">Cantidad</span>])
+
+<span class="cm">-- Con descuento</span>
+<span class="fn">Ingresos Neto</span> = <span class="fn">SUMX</span>(
+    <span class="tbl">Ventas</span>,
+    <span class="tbl">Ventas</span>[<span class="col">Precio</span>] <span class="op">*</span> <span class="tbl">Ventas</span>[<span class="col">Cantidad</span>] <span class="op">*</span> (<span class="num">1</span> <span class="op">-</span> <span class="tbl">Ventas</span>[<span class="col">Descuento</span>])
+)
+
+<span class="cm">-- AVERAGEX: promedio ponderado (ticket promedio real)</span>
+<span class="fn">Ticket Prom Pond</span> = <span class="fn">AVERAGEX</span>(
+    <span class="fn">VALUES</span>(<span class="tbl">Ventas</span>[<span class="col">ID_Venta</span>]),
+    <span class="fn">CALCULATE</span>(<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]))
+)
+        </div>
+        <div class="code-block lbl-result">
+          <div class="code-label">Comparación SUM vs SUMX</div>
+<span class="cm">-- Si tenés columna Subtotal ya calculada:</span>
+<span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Subtotal</span>])  → más rápido, usa columna precalculada
+
+<span class="cm">-- Si solo tenés Precio y Cantidad por separado:</span>
+<span class="fn">SUMX</span>(<span class="tbl">Ventas</span>, <span class="tbl">Ventas</span>[<span class="col">Precio</span>] <span class="op">*</span> <span class="tbl">Ventas</span>[<span class="col">Cantidad</span>])  → necesario
+        </div>
+      </div>
+    </div>
+
+    <!-- RANKX -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">RANKX()</span>
+        <span class="method-desc">Ranking de elementos dentro de un contexto (Top N, posición)</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Ranking de clientes por ventas (1 = mayor venta)</span>
+<span class="fn">Ranking Cliente</span> = <span class="fn">RANKX</span>(
+    <span class="fn">ALL</span>(<span class="tbl">Clientes</span>),       <span class="cm">-- tabla donde rankear (ALL ignora filtros)</span>
+    <span class="msr">[Total Ventas]</span>,     <span class="cm">-- expresión a evaluar para cada elemento</span>
+    ,                     <span class="cm">-- valor a rankear (si se omite, usa la expresión)</span>
+    DESC,                 <span class="cm">-- DESC = mayor valor = rank 1</span>
+    Dense                 <span class="cm">-- Dense = sin saltos. Skip = salta si hay empates</span>
+)
+
+<span class="cm">-- Mostrar solo el Top 5</span>
+<span class="fn">Es Top 5</span> = <span class="kw">IF</span>(<span class="msr">[Ranking Cliente]</span> <span class="op"><=</span> <span class="num">5</span>, <span class="str">"Top 5"</span>, <span class="str">"Resto"</span>)
+        </div>
+        <div class="args-block">
+          <div class="args-header">RANKX(tabla, expr, [val], [orden], [ties])</div>
+          <div class="arg-row"><span class="arg-name">tabla</span><span class="arg-val">Sobre qué conjunto rankear. Usar ALL() para rankear globalmente</span></div>
+          <div class="arg-row"><span class="arg-name">expresión</span><span class="arg-val">Qué valor comparar para determinar el ranking</span></div>
+          <div class="arg-row"><span class="arg-name">orden DESC/ASC</span><span class="arg-val">DESC: mayor=1. ASC: menor=1 (para rankings de costo, errores, etc.)</span></div>
+          <div class="arg-row"><span class="arg-name">Dense / Skip</span><span class="arg-val">Dense: sin saltos (1,2,2,3). Skip: con saltos si hay empate (1,2,2,4)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOPN -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">TOPN()</span>
+        <span class="method-desc">Devuelve las N filas con el valor más alto/bajo de una expresión</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- Ventas de los 3 mejores clientes</span>
+<span class="fn">Ventas Top 3</span> = <span class="fn">CALCULATE</span>(
+    <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>]),
+    <span class="fn">TOPN</span>(<span class="num">3</span>, <span class="fn">ALL</span>(<span class="tbl">Clientes</span>), <span class="msr">[Total Ventas]</span>, DESC)
+)
+
+<span class="cm">-- Usar con SUMX para sumar algo del Top N</span>
+<span class="fn">Suma Top 5 Prods</span> = <span class="fn">SUMX</span>(
+    <span class="fn">TOPN</span>(<span class="num">5</span>, <span class="fn">ALL</span>(<span class="tbl">Productos</span>), <span class="msr">[Total Ventas]</span>, DESC),
+    <span class="msr">[Total Ventas]</span>
+)
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     06 — FUNCIONES DE TABLA
+══════════════════════════════════ -->
+<section class="section s-tabla" id="tablas">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-info">
+      <h2>Funciones de Tabla</h2>
+      <p>Retornan tablas. Se usan dentro de otras funciones o para crear tablas calculadas en el modelo.</p>
+    </div>
+    <span class="section-tag">values · distinct · summarize</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- VALUES / DISTINCT -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">VALUES() · DISTINCT() · HASONEVALUE()</span>
+        <span class="method-desc">Obtener los valores únicos de una columna respetando el contexto de filtro</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX</div>
+<span class="cm">-- VALUES: valores únicos + fila de BLANK si hay relaciones con blancos</span>
+<span class="cm">-- Se usa para iterar valores únicos</span>
+<span class="fn">Clientes Con Ventas</span> = <span class="fn">COUNTROWS</span>(<span class="fn">VALUES</span>(<span class="tbl">Ventas</span>[<span class="col">ID_Cliente</span>]))
+
+<span class="cm">-- HASONEVALUE: devuelve TRUE si el filtro dejó exactamente UN valor</span>
+<span class="cm">-- Útil para mostrar el valor cuando hay uno solo, o un mensaje si hay varios</span>
+<span class="fn">Pais Seleccionado</span> =
+<span class="kw">IF</span>(
+    <span class="fn">HASONEVALUE</span>(<span class="tbl">Clientes</span>[<span class="col">Pais</span>]),
+    <span class="fn">VALUES</span>(<span class="tbl">Clientes</span>[<span class="col">Pais</span>]),
+    <span class="str">"Múltiples países"</span>
+)
+
+<span class="cm">-- SELECTEDVALUE: shortcut de HASONEVALUE + VALUES</span>
+<span class="fn">Pais</span> = <span class="fn">SELECTEDVALUE</span>(<span class="tbl">Clientes</span>[<span class="col">Pais</span>], <span class="str">"Todos"</span>)
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARIZE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">SUMMARIZE() · ADDCOLUMNS()</span>
+        <span class="method-desc">Agrupar y agregar datos — el GROUP BY de DAX</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — tabla calculada</div>
+<span class="cm">-- Resumen de ventas por País y Categoría</span>
+Resumen =
+<span class="fn">SUMMARIZE</span>(
+    <span class="tbl">Ventas</span>,
+    <span class="tbl">Clientes</span>[<span class="col">Pais</span>],          <span class="cm">-- columna de agrupación 1</span>
+    <span class="tbl">Productos</span>[<span class="col">Categoria</span>],   <span class="cm">-- columna de agrupación 2</span>
+    <span class="str">"Total"</span>, <span class="fn">SUM</span>(<span class="tbl">Ventas</span>[<span class="col">Monto</span>])
+)
+
+<span class="cm">-- ADDCOLUMNS: agrega columnas a una tabla existente</span>
+<span class="cm">-- Patrón recomendado: SUMMARIZE para agrupar + ADDCOLUMNS para métricas</span>
+Resumen2 =
+<span class="fn">ADDCOLUMNS</span>(
+    <span class="fn">SUMMARIZE</span>(<span class="tbl">Ventas</span>, <span class="tbl">Clientes</span>[<span class="col">Pais</span>]),
+    <span class="str">"Ventas"</span>,  <span class="msr">[Total Ventas]</span>,
+    <span class="str">"Clientes"</span>, <span class="msr">[Clientes Únicos]</span>
+)
+        </div>
+        <div class="tip">💡 La combinación ADDCOLUMNS + SUMMARIZE es el patrón más correcto y performante para construir tablas de resumen en DAX. Evitá poner medidas directamente dentro de SUMMARIZE.</div>
+      </div>
+    </div>
+
+    <!-- LOOKUPVALUE -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">LOOKUPVALUE()</span>
+        <span class="method-desc">Buscar un valor en una tabla sin necesitar relación — el VLOOKUP de DAX</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — columna calculada</div>
+<span class="cm">-- LOOKUPVALUE(col_a_devolver, col_a_buscar, valor_buscado)</span>
+<span class="tbl">Ventas</span>[<span class="col">NombreProducto</span>] =
+<span class="fn">LOOKUPVALUE</span>(
+    <span class="tbl">Productos</span>[<span class="col">Nombre</span>],      <span class="cm">-- qué columna devolver</span>
+    <span class="tbl">Productos</span>[<span class="col">ID_Producto</span>],  <span class="cm">-- columna donde buscar</span>
+    <span class="tbl">Ventas</span>[<span class="col">ID_Producto</span>],    <span class="cm">-- valor a buscar</span>
+    <span class="str">"Sin nombre"</span>              <span class="cm">-- valor si no encuentra (opcional)</span>
+)
+
+<span class="cm">-- Con múltiples condiciones (como VLOOKUP con clave compuesta)</span>
+<span class="tbl">Precios</span>[<span class="col">PrecioEspecial</span>] =
+<span class="fn">LOOKUPVALUE</span>(
+    <span class="tbl">ListaPrecios</span>[<span class="col">Precio</span>],
+    <span class="tbl">ListaPrecios</span>[<span class="col">ID_Producto</span>], <span class="tbl">Precios</span>[<span class="col">ID_Producto</span>],
+    <span class="tbl">ListaPrecios</span>[<span class="col">Pais</span>],        <span class="tbl">Precios</span>[<span class="col">Pais</span>],
+    <span class="num">0</span>
+)
+        </div>
+        <div class="note">💡 Si podés modelar una relación entre las tablas, preferí RELATED() — es más rápido. LOOKUPVALUE es para cuando no hay relación posible.</div>
+      </div>
+    </div>
+
+    <!-- CALENDAR / CALENDARAUTO -->
+    <div class="card">
+      <div class="card-header">
+        <span class="method-name">CALENDAR() · CALENDARAUTO() · GENERATE()</span>
+        <span class="method-desc">Crear tablas calculadas de fechas y combinaciones</span>
+      </div>
+      <div class="card-body">
+        <div class="code-block lbl-dax">
+          <div class="code-label">DAX — tablas calculadas</div>
+<span class="cm">-- CALENDARAUTO: detecta el rango de fechas de todo el modelo</span>
+Calendario = <span class="fn">CALENDARAUTO</span>()
+
+<span class="cm">-- CALENDAR: rango manual</span>
+Calendario = <span class="fn">CALENDAR</span>(<span class="fn">DATE</span>(<span class="num">2020</span>,<span class="num">1</span>,<span class="num">1</span>), <span class="fn">DATE</span>(<span class="num">2025</span>,<span class="num">12</span>,<span class="num">31</span>))
+
+<span class="cm">-- GENERATE: producto cartesiano de dos tablas (todas las combinaciones)</span>
+<span class="cm">-- Útil para tablas de escenarios o matrices de simulación</span>
+Escenarios = <span class="fn">GENERATE</span>(
+    <span class="fn">VALUES</span>(<span class="tbl">Regiones</span>[<span class="col">Region</span>]),
+    <span class="fn">VALUES</span>(<span class="tbl">Productos</span>[<span class="col">Categoria</span>])
+)
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>dax referencia · Leo @ Deloitte BPS</span>
+  <span>power bi · data analysis expressions · 2025</span>
+</footer>
+
+</body>
+</html>

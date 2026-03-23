@@ -1,0 +1,17 @@
+{
+  "pandas_referencia.html": {
+    "titulo": "Referencia Pandas",
+    "descripcion": "Métodos más usados: limpieza, merge, filtrado, agrupación y export con ejemplos",
+    "tags": ["pandas", "dataframe", "merge", "groupby", "limpieza", "excel"]
+  },
+  "scraping_playwright_bs4_selenium.html": {
+    "titulo": "Web Scraping — Playwright, BS4 y Selenium",
+    "descripcion": "Referencia completa con ejemplos input/output y testing con pytest",
+    "tags": ["playwright", "beautifulsoup", "selenium", "scraping", "pytest"]
+  },
+  "dax_referencia_powerbi.html": {
+    "titulo": "DAX — Referencia Power BI",
+    "descripcion": "Medidas, columnas calculadas, CALCULATE, Time Intelligence e iteradores",
+    "tags": ["dax", "powerbi", "medidas", "calculate", "kpi"]
+  }
+}

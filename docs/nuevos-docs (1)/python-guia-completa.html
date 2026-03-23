@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python — Guía Completa BPS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0d14;--surface:#0f1320;--card:#141928;--border:#1e2540;--border2:#2a3560;--text:#e8eef8;--text2:#7a90c8;--text3:#3a4a80;--accent:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--purple:#a855f7;--cyan:#06b6d4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:48px 64px;max-width:980px;margin:0 auto;line-height:1.7;-webkit-font-smoothing:antialiased}
+  h1{font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .subtitle{font-size:14px;color:var(--text2);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+  h2{font-size:19px;font-weight:700;margin:44px 0 18px;display:flex;align-items:center;gap:10px;color:var(--text)}
+  h2::before{content:'';display:block;width:3px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+  h3{font-size:14px;font-weight:700;color:var(--text2);margin:20px 0 10px;text-transform:uppercase;letter-spacing:.8px}
+  p{color:var(--text2);font-size:14px;margin-bottom:14px;line-height:1.7}
+  pre{font-family:'JetBrains Mono',monospace;background:#060a10;border:1px solid var(--border);border-radius:8px;padding:20px 24px;font-size:12.5px;line-height:1.85;overflow-x:auto;margin:10px 0 20px;color:#b8d0f0}
+  .kw{color:#60a5fa;font-weight:600}
+  .fn{color:#34d399}
+  .str{color:#fcd34d}
+  .cm{color:var(--text3);font-style:italic}
+  .dec{color:#c4b5fd}
+  .cls{color:#f9a8d4}
+  .num{color:#fb923c}
+  code{font-family:'JetBrains Mono',monospace;font-size:12px;background:#141928;color:#60a5fa;padding:2px 7px;border-radius:4px;border:1px solid var(--border2)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--card)}
+  .tip{background:rgba(59,130,246,.08);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#90b8f8}
+  .warn{background:rgba(245,158,11,.08);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#c4900a}
+  .best{background:rgba(34,197,94,.07);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 18px;margin:14px 0;font-size:13px;color:#6ab87a}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+  .card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .card-desc{font-size:12.5px;color:var(--text2);line-height:1.55}
+  .badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px;margin-left:8px}
+  .b-best{background:rgba(34,197,94,.12);color:var(--green)}
+  .b-adv{background:rgba(168,85,247,.12);color:var(--purple)}
+  .b-must{background:rgba(59,130,246,.12);color:var(--accent)}
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+</style>
+</head>
+<body>
+
+<h1>🐍 Python <span>—</span> Guía Completa</h1>
+<p class="subtitle">Ecosistema, buenas prácticas, docstrings, tipado, estructura de proyectos y stack recomendado para el equipo BPS.</p>
+
+<h2>Stack recomendado por tipo de proyecto</h2>
+<table>
+  <thead><tr><th>Tipo de proyecto</th><th>Stack principal</th><th>Testing</th><th>Docs</th></tr></thead>
+  <tbody>
+    <tr><td><strong>API REST</strong></td><td>FastAPI + SQLAlchemy + PostgreSQL</td><td>pytest + httpx</td><td>MkDocs + mkdocstrings</td></tr>
+    <tr><td><strong>Bot RPA</strong></td><td>Python + pywin32 / openpyxl</td><td>pytest + unittest.mock</td><td>Docstrings Google-style</td></tr>
+    <tr><td><strong>Script / ETL</strong></td><td>pandas + sqlalchemy</td><td>pytest</td><td>README + docstrings</td></tr>
+    <tr><td><strong>Scraping</strong></td><td>Playwright + BeautifulSoup</td><td>pytest</td><td>README</td></tr>
+  </tbody>
+</table>
+
+<h2>Estructura de proyecto recomendada</h2>
+
+<pre>
+mi-proyecto/
+├── src/
+│   └── mi_proyecto/          <span class="cm"># Código fuente — siempre dentro de src/</span>
+│       ├── __init__.py
+│       ├── main.py           <span class="cm"># Punto de entrada</span>
+│       ├── config.py         <span class="cm"># Settings desde variables de entorno</span>
+│       ├── models/           <span class="cm"># Modelos de datos (Pydantic / SQLAlchemy)</span>
+│       ├── services/         <span class="cm"># Lógica de negocio</span>
+│       ├── repositories/     <span class="cm"># Acceso a datos</span>
+│       └── utils/            <span class="cm"># Funciones auxiliares</span>
+├── tests/
+│   ├── conftest.py           <span class="cm"># Fixtures compartidas</span>
+│   ├── unit/                 <span class="cm"># Tests unitarios</span>
+│   └── integration/          <span class="cm"># Tests de integración</span>
+├── docs/                     <span class="cm"># MkDocs — generado automáticamente</span>
+├── .env.example              <span class="cm"># Variables de entorno — sin valores reales</span>
+├── pyproject.toml            <span class="cm"># Dependencias y config del proyecto</span>
+├── README.md
+└── .gitignore</pre>
+
+<div class="tip">💡 La carpeta <code>src/</code> evita importaciones accidentales del directorio raíz. Es el estándar recomendado para proyectos que se distribuyen como paquete.</div>
+
+<h2>Tipado estático — Type Hints</h2>
+<p>Desde Python 3.10+, el tipado es expresivo y no requiere importar todo desde <code>typing</code>. Usarlo hace el código más legible y permite que los IDEs detecten errores antes de ejecutar.</p>
+
+<pre>
+<span class="cm"># Python 3.10+ — sintaxis moderna</span>
+<span class="kw">from</span> __future__ <span class="kw">import</span> annotations
+
+<span class="kw">def</span> <span class="fn">procesar_clientes</span>(
+    clientes:   list[dict[str, str]],
+    activo:     bool = <span class="kw">True</span>,
+    limite:     int | <span class="kw">None</span> = <span class="kw">None</span>,
+) -> list[str]:
+    <span class="str">"""Filtra y devuelve nombres de clientes activos."""</span>
+    resultado = [c[<span class="str">"nombre"</span>] <span class="kw">for</span> c <span class="kw">in</span> clientes <span class="kw">if</span> c.get(<span class="str">"activo"</span>) == activo]
+    <span class="kw">return</span> resultado[:limite] <span class="kw">if</span> limite <span class="kw">else</span> resultado
+
+<span class="cm"># Dataclasses con tipado — preferir sobre dicts</span>
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+
+<span class="dec">@dataclass</span>
+<span class="kw">class</span> <span class="cls">Cliente</span>:
+    id:       int
+    nombre:   str
+    cuit:     str
+    activo:   bool = <span class="kw">True</span>
+    tags:     list[str] = field(default_factory=list)
+
+<span class="cm"># Pydantic — validación en runtime (ideal para APIs y config)</span>
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel, Field
+
+<span class="kw">class</span> <span class="cls">ClienteSchema</span>(BaseModel):
+    id:     int
+    nombre: str = Field(min_length=1, max_length=200)
+    cuit:   str = Field(pattern=<span class="str">r"^\d{2}-\d{8}-\d$"</span>)
+    activo: bool = <span class="kw">True</span></pre>
+
+<h2>Docstrings — Formato Google Style <span class="badge b-best">Recomendado</span></h2>
+<p>El stack recomendado es <strong>docstrings Google-style</strong> en el código → <code>mkdocstrings</code> los lee → <code>MkDocs</code> genera el sitio automáticamente.</p>
+
+<pre>
+<span class="kw">def</span> <span class="fn">calcular_margen</span>(
+    precio_venta: float,
+    costo:        float,
+    descuento:    float = <span class="num">0.0</span>,
+) -> float:
+    <span class="str">"""Calcula el margen bruto sobre el precio de venta.
+
+    Aplica el descuento antes de calcular el margen. Si el precio
+    de venta es cero, retorna 0.0 para evitar división por cero.
+
+    Args:
+        precio_venta: Precio final de venta sin impuestos.
+        costo:        Costo directo del producto o servicio.
+        descuento:    Descuento porcentual (0.0 a 1.0). Default 0.0.
+
+    Returns:
+        Margen bruto como proporción (0.0 a 1.0).
+        Ejemplo: 0.35 = 35% de margen.
+
+    Raises:
+        ValueError: Si descuento no está entre 0.0 y 1.0.
+
+    Example:
+        >>> calcular_margen(100.0, 65.0)
+        0.35
+        >>> calcular_margen(100.0, 65.0, descuento=0.1)
+        0.2778
+    """</span>
+    <span class="kw">if</span> <span class="kw">not</span> (<span class="num">0.0</span> <= descuento <= <span class="num">1.0</span>):
+        <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">f"descuento debe estar entre 0.0 y 1.0, got {descuento}"</span>)
+    precio_efectivo = precio_venta * (<span class="num">1</span> - descuento)
+    <span class="kw">if</span> precio_efectivo == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="num">0.0</span>
+    <span class="kw">return</span> (precio_efectivo - costo) / precio_efectivo</pre>
+
+<h2>MkDocs — Generación automática de docs</h2>
+
+<pre>
+<span class="cm"># Instalar</span>
+pip install mkdocs mkdocstrings[python] mkdocs-material
+
+<span class="cm"># mkdocs.yml — configuración</span>
+site_name: Wiki Proyecto BPS
+theme:
+  name: material
+  palette:
+    scheme: slate     <span class="cm"># tema oscuro</span>
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+
+nav:
+  - Inicio: index.md
+  - API Reference: reference/
+
+<span class="cm"># Generar y servir en local</span>
+mkdocs serve    <span class="cm"># → http://localhost:8000</span>
+mkdocs build    <span class="cm"># → genera carpeta site/</span></pre>
+
+<h2>Manejo de errores y logging</h2>
+
+<pre>
+<span class="kw">import</span> logging
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="cm"># Configuración estándar del equipo</span>
+logging.<span class="fn">basicConfig</span>(
+    level=logging.INFO,
+    format=<span class="str">"%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"</span>,
+    handlers=[
+        logging.<span class="cls">StreamHandler</span>(),
+        logging.<span class="cls">FileHandler</span>(<span class="str">"logs/app.log"</span>, encoding=<span class="str">"utf-8"</span>),
+    ]
+)
+logger = logging.<span class="fn">getLogger</span>(__name__)
+
+<span class="cm"># Excepciones personalizadas — siempre definirlas</span>
+<span class="kw">class</span> <span class="cls">BPSError</span>(Exception):
+    <span class="str">"""Error base del proyecto."""</span>
+
+<span class="kw">class</span> <span class="cls">ValidationError</span>(<span class="cls">BPSError</span>):
+    <span class="str">"""Error de validación de datos de negocio."""</span>
+
+<span class="kw">class</span> <span class="cls">ExternalServiceError</span>(<span class="cls">BPSError</span>):
+    <span class="str">"""Error al conectar con un servicio externo (ARCA, SharePoint, etc.)."""</span>
+
+<span class="cm"># Uso</span>
+<span class="kw">def</span> <span class="fn">procesar</span>(data: dict) -> dict:
+    logger.<span class="fn">info</span>(<span class="str">"Iniciando procesamiento"</span>, extra={<span class="str">"id"</span>: data.get(<span class="str">"id"</span>)})
+    <span class="kw">try</span>:
+        resultado = <span class="fn">_procesar_interno</span>(data)
+        logger.<span class="fn">info</span>(<span class="str">"Procesamiento exitoso"</span>)
+        <span class="kw">return</span> resultado
+    <span class="kw">except</span> <span class="cls">ValidationError</span> <span class="kw">as</span> e:
+        logger.<span class="fn">warning</span>(<span class="str">f"Dato inválido: {e}"</span>)
+        <span class="kw">raise</span>
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        logger.<span class="fn">error</span>(<span class="str">f"Error inesperado: {e}"</span>, exc_info=<span class="kw">True</span>)
+        <span class="kw">raise</span> <span class="cls">BPSError</span>(<span class="str">"Error interno"</span>) <span class="kw">from</span> e</pre>
+
+<h2>Variables de entorno — configuración segura</h2>
+
+<pre>
+<span class="cm"># config.py — nunca hardcodear credenciales</span>
+<span class="kw">from</span> pydantic_settings <span class="kw">import</span> BaseSettings
+
+<span class="kw">class</span> <span class="cls">Settings</span>(BaseSettings):
+    db_host:     str = <span class="str">"localhost"</span>
+    db_port:     int = <span class="num">5432</span>
+    db_name:     str
+    db_user:     str
+    db_password: str
+    debug:       bool = <span class="kw">False</span>
+
+    <span class="kw">class</span> <span class="cls">Config</span>:
+        env_file = <span class="str">".env"</span>
+        env_file_encoding = <span class="str">"utf-8"</span>
+
+settings = <span class="cls">Settings</span>()  <span class="cm"># Lee de .env automáticamente</span>
+
+<span class="cm"># .env.example — commitear esto (sin valores reales)</span>
+<span class="cm"># DB_HOST=localhost</span>
+<span class="cm"># DB_PORT=5432</span>
+<span class="cm"># DB_NAME=mi_db</span>
+<span class="cm"># DB_USER=usuario</span>
+<span class="cm"># DB_PASSWORD=secreto</span></pre>
+
+<h2>Patrones comunes en proyectos BPS</h2>
+
+<pre>
+<span class="cm"># ── Context Manager para archivos Excel ──────────────────────</span>
+<span class="kw">from</span> contextlib <span class="kw">import</span> contextmanager
+<span class="kw">import</span> openpyxl
+
+<span class="dec">@contextmanager</span>
+<span class="kw">def</span> <span class="fn">abrir_excel</span>(path: str, read_only: bool = <span class="kw">False</span>):
+    wb = openpyxl.<span class="fn">load_workbook</span>(path, read_only=read_only)
+    <span class="kw">try</span>:
+        <span class="kw">yield</span> wb
+    <span class="kw">finally</span>:
+        wb.<span class="fn">close</span>()
+
+<span class="cm"># Uso limpio</span>
+<span class="kw">with</span> <span class="fn">abrir_excel</span>(<span class="str">"datos.xlsx"</span>) <span class="kw">as</span> wb:
+    ws = wb.active
+    datos = [[c.value <span class="kw">for</span> c <span class="kw">in</span> row] <span class="kw">for</span> row <span class="kw">in</span> ws.iter_rows(min_row=<span class="num">2</span>)]
+
+<span class="cm"># ── Retry con backoff (para servicios externos) ───────────────</span>
+<span class="kw">import</span> time
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+
+<span class="kw">def</span> <span class="fn">retry</span>(max_attempts: int = <span class="num">3</span>, delay: float = <span class="num">1.0</span>):
+    <span class="kw">def</span> <span class="fn">decorator</span>(func):
+        <span class="dec">@wraps</span>(func)
+        <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+            <span class="kw">for</span> attempt <span class="kw">in</span> range(max_attempts):
+                <span class="kw">try</span>:
+                    <span class="kw">return</span> <span class="fn">func</span>(*args, **kwargs)
+                <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                    <span class="kw">if</span> attempt == max_attempts - <span class="num">1</span>:
+                        <span class="kw">raise</span>
+                    time.<span class="fn">sleep</span>(delay * (<span class="num">2</span> ** attempt))
+        <span class="kw">return</span> wrapper
+    <span class="kw">return</span> decorator
+
+<span class="dec">@retry</span>(max_attempts=<span class="num">3</span>, delay=<span class="num">2.0</span>)
+<span class="kw">def</span> <span class="fn">consultar_arca</span>(cuit: str) -> dict: ...</pre>
+
+<h2>Checklist de calidad — antes de cada PR</h2>
+
+<div class="grid">
+  <div class="card"><div class="card-title">✅ Código</div><div class="card-desc">Sin prints de debug · Sin credenciales hardcodeadas · Type hints en todas las funciones públicas · Sin código comentado</div></div>
+  <div class="card"><div class="card-title">✅ Tests</div><div class="card-desc">Cobertura ≥ 80% en lógica de negocio · Tests nombrados descriptivamente · Sin sleeps en tests</div></div>
+  <div class="card"><div class="card-title">✅ Docs</div><div class="card-desc">Docstring en todas las funciones públicas · README actualizado · .env.example actualizado</div></div>
+  <div class="card"><div class="card-title">✅ Seguridad</div><div class="card-desc">Sin secretos en el código · .env en .gitignore · Dependencias sin vulnerabilidades conocidas</div></div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--text3);text-align:center">Wiki BPS · Dev Team · Deloitte</p>
+</body>
+</html>

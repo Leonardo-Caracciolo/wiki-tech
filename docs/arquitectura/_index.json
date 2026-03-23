@@ -1,0 +1,17 @@
+{
+  "tipos-arquitectura.html": {
+    "titulo": "Tipos de Arquitectura de Software",
+    "descripcion": "Monolítica, capas, hexagonal, microservicios y event-driven con comparativa y estructura de carpetas",
+    "tags": ["arquitectura", "monolito", "microservicios", "hexagonal", "capas", "event-driven"]
+  },
+  "sdd-pdd-templates-libros.html": {
+    "titulo": "Templates SDD/PDD + Libros de Arquitectura",
+    "descripcion": "Templates IEEE, FastAPI, Arc42, secciones clave de un SDD y libros GoF, Cosmic Python, Clean Architecture",
+    "tags": ["sdd", "pdd", "template", "ieee", "arc42", "clean-architecture", "ddd", "libros"]
+  },
+  "patrones-diseno.html": {
+    "titulo": "Patrones de Diseño GoF",
+    "descripcion": "Singleton, Factory, Builder, Adapter, Decorator, Facade, Strategy y Observer con ejemplos en Python",
+    "tags": ["patrones", "gof", "singleton", "factory", "strategy", "observer", "decorator"]
+  }
+}

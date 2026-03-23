@@ -1,0 +1,12 @@
+{
+  "flujo-proyecto.html": {
+    "titulo": "Flujo de Proyecto E2E",
+    "descripcion": "Las 7 etapas del equipo BPS: Detección → Kick-Off → Relevamiento → Sprints → UAT → Cierre",
+    "tags": ["flujo", "proyecto", "pdd", "sdd", "uat", "sprints", "relevamiento"]
+  },
+  "metodologias-agiles.html": {
+    "titulo": "Metodologías Ágiles",
+    "descripcion": "Scrum, Kanban, XP, Lean — roles, eventos, artefactos y cuándo usar cada una",
+    "tags": ["scrum", "kanban", "xp", "lean", "agile", "sprint", "retrospectiva", "kanban"]
+  }
+}
