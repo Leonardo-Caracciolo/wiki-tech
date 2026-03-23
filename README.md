@@ -53,7 +53,7 @@ docshub/
 
 ### 1. Dependencias Python
 ```bash
-pip install fastapi uvicorn markdown docx2pdf mammoth
+pip install -r requirements.txt
 ```
 
 ### 2. Dependencias frontend
