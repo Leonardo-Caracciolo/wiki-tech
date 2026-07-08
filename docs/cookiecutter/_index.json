@@ -1,7 +1,0 @@
-{
-  "guia-cookiecutter.html": {
-    "titulo": "Guía Cookiecutter",
-    "descripcion": "Cómo crear y usar templates de proyectos para estandarizar la estructura",
-    "tags": ["cookiecutter", "template", "scaffold", "proyecto", "estructura"]
-  }
-}

@@ -2,16 +2,47 @@
   "testing-python-completo.html": {
     "titulo": "Testing Python — Completo",
     "descripcion": "pytest con templates reales, conftest.py, Robot Framework E2E, smoke tests, mocking avanzado e hypothesis",
-    "tags": ["pytest", "robot-framework", "unittest", "mocking", "smoke-test", "coverage", "bdd"]
+    "tags": [
+      "pytest",
+      "robot-framework",
+      "unittest",
+      "mocking",
+      "smoke-test",
+      "coverage",
+      "bdd"
+    ]
   },
   "testing-csharp.html": {
     "titulo": "Testing C# / .NET",
     "descripcion": "xUnit, NUnit, Moq, FluentAssertions — patrón AAA, Theory parametrizado y mocking completo",
-    "tags": ["xunit", "nunit", "moq", "fluent-assertions", "aaa", "theory", "csharp"]
+    "tags": [
+      "xunit",
+      "nunit",
+      "moq",
+      "fluent-assertions",
+      "aaa",
+      "theory",
+      "csharp"
+    ]
   },
   "testing-vba.html": {
     "titulo": "Testing VBA",
     "descripcion": "Rubberduck unit testing, suite manual sin add-ins y principios de código VBA testeable",
-    "tags": ["vba", "rubberduck", "unit-testing", "excel", "testeable"]
+    "tags": [
+      "vba",
+      "rubberduck",
+      "unit-testing",
+      "excel",
+      "testeable"
+    ]
+  },
+  "documentacion-y-testing.html": {
+    "titulo": "Documentación & QA — Guía de Tecnologías",
+    "descripcion": "Referencia interactiva de documentación y testing por tecnología (Python, VBA, C#, UiPath)",
+    "tags": [
+      "documentacion",
+      "testing",
+      "interactivo"
+    ]
   }
 }

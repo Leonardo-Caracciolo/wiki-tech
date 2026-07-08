@@ -2,26 +2,147 @@
   "metodologias-completas.html": {
     "titulo": "Metodologías de Desarrollo — Guía Completa",
     "descripcion": "Scrum, Kanban, XP, Lean, Crystal, FDD, Waterfall, V-Model, Espiral y SAFe con roles, eventos y cuándo aplicar cada una",
-    "tags": ["scrum", "kanban", "xp", "lean", "waterfall", "agile", "sprint", "retrospectiva"]
+    "tags": [
+      "scrum",
+      "kanban",
+      "xp",
+      "lean",
+      "waterfall",
+      "agile",
+      "sprint",
+      "retrospectiva"
+    ]
   },
   "flujo-proyecto-devops-commits.html": {
     "titulo": "Flujo de Proyecto · Azure DevOps · Commits",
     "descripcion": "7 etapas E2E, Azure Boards, User Stories, Definition of Done y Conventional Commits con ejemplos reales del equipo",
-    "tags": ["flujo", "proyecto", "pdd", "sdd", "uat", "sprints", "dod", "commits", "azure-devops"]
+    "tags": [
+      "flujo",
+      "proyecto",
+      "pdd",
+      "sdd",
+      "uat",
+      "sprints",
+      "dod",
+      "commits",
+      "azure-devops"
+    ]
   },
   "documentacion-por-tecnologia.html": {
     "titulo": "Documentación por Tecnología",
     "descripcion": "Cómo documentar en Python (MkDocs + docstrings), VBA (Rubberduck) y C# (XML Docs + DocFX) con código real",
-    "tags": ["documentacion", "mkdocs", "docstrings", "rubberduck", "xml-docs", "python", "vba", "csharp"]
+    "tags": [
+      "documentacion",
+      "mkdocs",
+      "docstrings",
+      "rubberduck",
+      "xml-docs",
+      "python",
+      "vba",
+      "csharp"
+    ]
   },
   "guia-github.html": {
     "titulo": "Flujo de trabajo GitHub",
     "descripcion": "Branching, commits convencionales, PRs, code review y comandos útiles del equipo",
-    "tags": ["github", "git", "branching", "commits", "pull-request", "workflow"]
+    "tags": [
+      "github",
+      "git",
+      "branching",
+      "commits",
+      "pull-request",
+      "workflow"
+    ]
   },
   "guia-cookiecutter.html": {
     "titulo": "Guía Cookiecutter — Templates de proyectos",
     "descripcion": "Cómo crear y usar templates para estandarizar la estructura de proyectos del equipo",
-    "tags": ["cookiecutter", "template", "scaffold", "proyecto", "estructura", "jinja2"]
+    "tags": [
+      "cookiecutter",
+      "template",
+      "scaffold",
+      "proyecto",
+      "estructura",
+      "jinja2"
+    ]
+  },
+  "flujo-proyecto.html": {
+    "titulo": "Flujo de Proyecto E2E",
+    "descripcion": "Las 7 etapas del equipo BPS: Detección → Kick-Off → Relevamiento → Sprints → UAT → Cierre",
+    "tags": [
+      "flujo",
+      "proyecto",
+      "pdd",
+      "sdd",
+      "uat",
+      "sprints",
+      "relevamiento"
+    ]
+  },
+  "metodologias-agiles.html": {
+    "titulo": "Metodologías Ágiles",
+    "descripcion": "Scrum, Kanban, XP, Lean — roles, eventos, artefactos y cuándo usar cada una",
+    "tags": [
+      "scrum",
+      "kanban",
+      "xp",
+      "lean",
+      "agile",
+      "sprint",
+      "retrospectiva"
+    ]
+  },
+  "ciclo-vida-proyecto-agil.md": {
+    "titulo": "Ciclo de Vida de Proyectos — Metodología Ágil",
+    "descripcion": "Fases 0-7 del proyecto, manifiesto ágil, BDD, arquitecturas y patrones, elementos transversales (riesgos, NFRs, ambientes)",
+    "tags": [
+      "metodologia",
+      "agil",
+      "scrum",
+      "ciclo-de-vida",
+      "bdd"
+    ]
+  },
+  "mejores-practicas-agiles-qa.md": {
+    "titulo": "Mejores Prácticas Ágiles y QA",
+    "descripcion": "DoD, refinement, criterios de aceptación, QA continuo por tecnología (Python/VBA/UiPath), pirámide de testing, bug tracking",
+    "tags": [
+      "qa",
+      "testing",
+      "agil",
+      "azure-devops",
+      "dod"
+    ]
+  },
+  "guia-git-github-azuredevops.md": {
+    "titulo": "Guía Profesional de Git, GitHub y Azure DevOps",
+    "descripcion": "Comandos básicos/intermedios/avanzados, nomenclatura de ramas, workflow feature-dev-main, Conventional Commits, PR/MR",
+    "tags": [
+      "git",
+      "github",
+      "azure-devops",
+      "branches",
+      "pull-request"
+    ]
+  },
+  "decisiones-tecnicas-python-csharp.md": {
+    "titulo": "Diseño Profesional de Proyectos y Decisiones Técnicas (Python / C#)",
+    "descripcion": "COM vs No-COM, estructura modular config/core/infra/app, plantillas para proyecto estándar, Streamlit y PyQt",
+    "tags": [
+      "python",
+      "csharp",
+      "arquitectura",
+      "com"
+    ]
+  },
+  "metodologia-sprints.html": {
+    "titulo": "Metodología de Desarrollo (interactivo)",
+    "descripcion": "Vista interactiva del flujo de relevamiento a entrega, sprints de 2 semanas",
+    "tags": [
+      "metodologia",
+      "agil",
+      "sprints",
+      "interactivo"
+    ]
   }
 }
