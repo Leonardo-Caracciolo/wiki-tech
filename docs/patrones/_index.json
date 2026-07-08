@@ -1,7 +1,0 @@
-{
-  "patrones-diseno.html": {
-    "titulo": "Patrones de Diseño GoF",
-    "descripcion": "Singleton, Factory, Strategy, Observer, Decorator y más con ejemplos en Python",
-    "tags": ["patrones", "gof", "singleton", "factory", "strategy", "observer"]
-  }
-}
